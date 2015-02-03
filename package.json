@@ -1,0 +1,26 @@
+{
+  "name": "kenthackenough",
+  "version": "0.0.0",
+  "description": "The world's best hackathon website.",
+  "scripts": {
+    "test": "mocha",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hacksu/kenthackenough.git"
+  },
+  "author": "Paul Dilyard",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hacksu/kenthackenough/issues"
+  },
+  "homepage": "http://khe.io",
+  "dependencies": {
+    "bower": "1.3.x",
+    "express": "4.11.x",
+    "grunt": "0.4.x",
+    "mocha": "2.1.x",
+    "mongoose": "^3.8.22"
+  }
+}

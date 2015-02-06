@@ -1,13 +1,33 @@
 var app = getAppInstance();
+var User = require('./model');
 
-
-
-app.route('/users')
-.get(function (req, res) {
-
+/**
+* Get a list of users
+*/
+app.get('/users', User.Auth([User.STAFF, User.ATTENDEE]), function (req, res) {
+  res.send('yay');
 });
 
+/**
+* /users/register
+*/
 app.route('/users/register')
+/**
+* POST: username, email, password
+*/
 .post(function (req, res) {
-
+  var salt = User.Helpers.salt();
+  var user = new User({
+    username: req.body.username,
+    email: req.body.email,
+    password: User.Helpers.hash(req.body.password, salt),
+    role: model.ATTENDEE,
+    salt: salt
+  });
+  user.save(function (err, user) {
+    if (err) return res.send({error: err.code});
+    return res.send({
+      username: user.username
+    });
+  });
 });

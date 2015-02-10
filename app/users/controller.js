@@ -4,24 +4,24 @@ var User = require('./model');
 /**
 * Get a list of users
 */
-app.get('/users', User.Auth([User.STAFF, User.ATTENDEE]), function (req, res) {
-  res.send('yay');
+app.get('/users', User.Auth(), function (req, res) {
+  User.find({}, 'username email role', function (err, users) {
+    if (err) return res.send({error: err.code});
+    return res.send(users);
+  });
 });
 
 /**
-* /users/register
-*/
-app.route('/users/register')
-/**
+* Create a new user
 * POST: username, email, password
 */
-.post(function (req, res) {
+app.post('/users/register', function (req, res) {
   var salt = User.Helpers.salt();
   var user = new User({
     username: req.body.username,
     email: req.body.email,
     password: User.Helpers.hash(req.body.password, salt),
-    role: model.ATTENDEE,
+    role: User.ATTENDEE,
     salt: salt
   });
   user.save(function (err, user) {

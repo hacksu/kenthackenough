@@ -1,3 +1,29 @@
+/*
+
+User Model
+@author Paul Dilyard
+
+@dependencies:
+  mongoose, bcrypt, auth
+
+@usage:
+  var User = require('./model');
+
+  // Create a new user
+  var user = new User({
+    username: ...,
+    password: ...,
+    ...
+  });
+
+  // Protect a route
+  app.get('/', User.Auth(), function (req, res) {});
+
+  // Admins only
+  app.get('/admin', User.Auth([User.ADMIN]), function (req, res) {});
+
+*/
+
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 var auth = require('basic-auth');

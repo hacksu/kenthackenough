@@ -38,7 +38,8 @@ GLOBAL.getAppInstance = function () {
 
 // Include modules
 [
-  'users'
+  'users',
+  'applications'
 ].forEach(function (module) {
   require('./app/' + module + '/controller');
 });

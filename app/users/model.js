@@ -4,14 +4,14 @@ User Model
 @author Paul Dilyard
 
 @dependencies:
-  mongoose, bcrypt, auth
+  mongoose, bcrypt, auth, validate
 
 @usage:
   var User = require('./model');
 
   // Create a new user
   var user = new User({
-    username: ...,
+    email: ...,
     password: ...,
     ...
   });
@@ -27,13 +27,15 @@ User Model
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 var auth = require('basic-auth');
+var schema = require('validate');
 
 var User = mongoose.model('User', {
-  username: {type: String, unique: true},
   email: {type: String, unique: true},
   role: String,
   password: String,
-  salt: String
+  salt: String,
+  activated: Boolean,
+  application: {type: mongoose.Schema.Types.ObjectId, ref: 'Application'}
 });
 
 /**
@@ -45,12 +47,15 @@ var Auth = function (roles) {
   return function (req, res, next) {
     var credentials = auth(req);
     if (!credentials) {
-      Helpers.authError(res);
+      return Helpers.authError(res);
     } else {
-      User.findOne({username: credentials.name}, function (err, user) {
-        if (err) Helpers.authError(res);
+      User.findOne({email: credentials.name}, function (err, user) {
+        if (err) return Helpers.authError(res);
+        if (!user) return Helpers.authError(res);
+        if (!user.activated) return res.send({errors: ['You have not yet activated your account']});
         if (Helpers.checkPassword(user.password, credentials.pass, user.salt)
           && roles.indexOf(user.role) >= 0) {
+          req.user = user;
           next();
         } else {
           Helpers.authError(res);
@@ -99,10 +104,29 @@ var Helpers = {
   * @param res A response object
   */
   authError: function (res) {
-    res.writeHead(401, {
-      'WWW-Authenticate': 'Basic realm="example"'
-    });
-    res.end();
+    return res.send({errors: ['You must be logged in to access this area']});
+  },
+
+  /**
+  * Validate a user
+  * @param user An object representing the potential user
+  * @return An array of error messages
+  */
+  validate: function (user) {
+    var test = schema({
+      email: {
+        type: 'string',
+        required: true,
+        message: 'A valid email address is required'
+      },
+      password: {
+        type: 'string',
+        required: true,
+        match: /.{2,32}/,
+        message: 'Your password must be between 2 and 32 characters long.'
+      }
+    }, {typecast: true});
+    return test.validate(user);
   }
 
 };
@@ -110,6 +134,7 @@ var Helpers = {
 module.exports = User;
 module.exports.Auth = Auth;
 module.exports.Helpers = Helpers;
+module.exports.validate = Helpers.validate;
 var ATTENDEE = module.exports.ATTENDEE = 'attendee';
 var STAFF = module.exports.STAFF = 'staff';
 var ADMIN = module.exports.ADMIN = 'admin';

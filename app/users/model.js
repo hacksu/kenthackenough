@@ -28,6 +28,7 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 var auth = require('basic-auth');
 var schema = require('validate');
+var Application = require('../applications/model');
 
 var User = mongoose.model('User', {
   email: {type: String, unique: true},
@@ -35,7 +36,7 @@ var User = mongoose.model('User', {
   password: String,
   salt: String,
   activated: Boolean,
-  application: {type: mongoose.Schema.Types.ObjectId, ref: 'Application'}
+  application: Application.Schema
 });
 
 /**

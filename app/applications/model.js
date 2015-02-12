@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
 var schema = require('validate');
 
-var Application = mongoose.model('Application', {
+var ApplicationSchema = {
+  submitted: Boolean,     // app submitted?
   name: String,           // full name
   school: String,         // name of school
   phone: String,          // phone number
@@ -16,7 +17,7 @@ var Application = mongoose.model('Application', {
   conduct: Boolean,       // agree to MLH code of conduct?
   travel: Boolean,        // need travel reimbursement?
   waiver: Boolean         // agreed to waiver?
-});
+};
 
 var Helpers = {
 
@@ -59,6 +60,10 @@ var Helpers = {
         type: 'boolean',
         message: 'You must specify whether this is your first hackathon'
       },
+      dietary: {
+        type: 'string',
+        message: 'Dietary restrictions must be a string'
+      },
       year: {
         required: true,
         type: 'string',
@@ -68,6 +73,11 @@ var Helpers = {
         required: true,
         type: 'number',
         message: 'You must specify your age'
+      },
+      gender: {
+        required: true,
+        type: 'string',
+        message: 'You must specify a gender'
       },
       major: {
         required: true,
@@ -94,5 +104,5 @@ var Helpers = {
 
 };
 
-module.exports = Application;
+module.exports.Schema = ApplicationSchema;
 module.exports.validate = Helpers.validate;

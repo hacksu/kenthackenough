@@ -1,7 +1,7 @@
 var app = getAppInstance();
 var User = require('../users/model');
 var Application = require('./model');
-var chance = require('chance');
+var chance = require('chance')();
 var schema = require('validate');
 
 /**
@@ -17,8 +17,8 @@ app.post('/application/submit', User.Auth(), function (req, res) {
   if (req.user.application.submitted) return res.singleError('You have already submitted your application');
   var errors = Application.validate(req.body);
   if (errors.length) return res.multiError(errors);
-  if (req.body.dietary) req.user.application.dietary = req.body.dietary.split('|');
   req.user.application = req.body;
+  if (req.body.dietary) req.user.application.dietary = req.body.dietary.split('|');
   req.user.application.submitted = true;
   req.user.application.status = Application.PENDING;
   req.user.save(function (err, u) {
@@ -40,8 +40,8 @@ app.post('/application/update', User.Auth(), function (req, res) {
   if (!req.user.application.submitted) return res.singleError('You haven\'t submitted an application yet');
   var errors = Application.validate(req.body);
   if (errors.length) return res.multiError(errors);
-  if (req.body.dietary) req.body.dietary = req.body.dietary.split('|');
   req.user.application = req.body;
+  if (req.body.dietary) req.body.dietary = req.body.dietary.split('|');
   req.user.application.submitted = true;
   req.user.save(function (err, u) {
     if (err) return res.internalError();
@@ -114,7 +114,7 @@ app.post('/application/remove', User.Auth([User.ADMIN, User.STAFF]), function (r
 * AUTH: staff, admin
 * POST: name, email, phone
 */
-app.post('application/quick', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+app.post('/application/quick', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
   var test = schema({
     name: {
       required: true,
@@ -133,7 +133,7 @@ app.post('application/quick', User.Auth([User.ADMIN, User.STAFF]), function (req
       match: /^[0-9]{10,20}$/,
       message: 'You must provide a valid phone number'
     }
-  });
+  }, {typecast: true});
   var errors = test.validate(req.body);
   if (errors.length) return res.multiError(errors);
   var salt = User.Helpers.salt();

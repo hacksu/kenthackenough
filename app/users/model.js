@@ -35,36 +35,10 @@ var User = mongoose.model('User', {
   role: {type: String, enum: ['attendee', 'staff', 'admin']},
   password: String,
   salt: String,
+  subscribe: Boolean,                 // subscribe to the mailing list?
   activated: Boolean,                 // account activated?
   application: Application.Schema     // user's application
 });
-
-/**
-* Authenticate a user (protect a route)
-* @param roles An array of roles that are allowed into the route
-*/
-var Auth = function (roles) {
-  if (!roles) roles = [ATTENDEE, STAFF, ADMIN];
-  return function (req, res, next) {
-    var credentials = auth(req);
-    if (!credentials) {
-      return Helpers.authError(res);
-    } else {
-      User.findOne({email: credentials.name}, function (err, user) {
-        if (err) return Helpers.authError(res);
-        if (!user) return Helpers.authError(res);
-        if (!user.activated) return res.send({errors: ['You have not yet activated your account']});
-        if (Helpers.checkPassword(user.password, credentials.pass, user.salt)
-          && roles.indexOf(user.role) >= 0) {
-          req.user = user;
-          next();
-        } else {
-          Helpers.authError(res);
-        }
-      });
-    }
-  }
-};
 
 var Helpers = {
 
@@ -130,6 +104,33 @@ var Helpers = {
     return test.validate(user);
   }
 
+};
+
+/**
+* Authenticate a user (protect a route)
+* @param roles An array of roles that are allowed into the route
+*/
+var Auth = function (roles) {
+  if (!roles) roles = [ATTENDEE, STAFF, ADMIN];
+  return function (req, res, next) {
+    var credentials = auth(req);
+    if (!credentials) {
+      return Helpers.authError(res);
+    } else {
+      User.findOne({email: credentials.name}, function (err, user) {
+        if (err) return Helpers.authError(res);
+        if (!user) return Helpers.authError(res);
+        if (!user.activated) return res.send({errors: ['You have not yet activated your account']});
+        if (Helpers.checkPassword(user.password, credentials.pass, user.salt)
+          && roles.indexOf(user.role) >= 0) {
+          req.user = user;
+          next();
+        } else {
+          Helpers.authError(res);
+        }
+      });
+    }
+  }
 };
 
 module.exports = User;

@@ -2,16 +2,6 @@ var app = getAppInstance();
 var User = require('./model');
 
 /**
-* Get a list of users
-*/
-app.get('/users', User.Auth(), function (req, res) {
-  User.find({}, 'email role activated', function (err, users) {
-    if (err) return res.internalError();
-    return res.send(users);
-  });
-});
-
-/**
 * Create a new user
 * POST: email, password
 */
@@ -29,6 +19,7 @@ app.post('/users/register', function (req, res) {
   user.save(function (err, user) {
     if (err) return res.internalError();
     return res.send({
+      _id: user._id,
       email: user.email
     });
   });
@@ -45,10 +36,39 @@ app.get('/users/activate/:userId', function (req, res) {
       return res.singleError('User is already activated');
     } else {
       user.activated = true;
+      user.subscribe = true;
       user.save(function (err, user) {
         if (err) return res.internalError();
         return res.send({});
       });
     }
   })
+});
+
+/**
+* Unsubscribe a user from the mailing list
+* AUTH: admin, staff
+* POST: userId
+*/
+app.post('/users/unsubscribe', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+  User.findById(req.body.userId, function (err, user) {
+    if (err) return res.internalError();
+    user.subscribe = false;
+    user.save(function (err, user) {
+      if (err) return res.internalError();
+      return res.send(user);
+    });
+  });
+});
+
+/**
+* Completely delete a user (for emergencies)
+* AUTH: admin
+* POST: userId
+*/
+app.post('/users/delete', User.Auth([User.ADMIN]), function (req, res) {
+  User.findByIdAndRemove(req.body.userId, function (err) {
+    if (err) return res.internalError();
+    return res.send({});
+  });
 });

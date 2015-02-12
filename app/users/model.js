@@ -32,11 +32,11 @@ var Application = require('../applications/model');
 
 var User = mongoose.model('User', {
   email: {type: String, unique: true},
-  role: String,
+  role: {type: String, enum: ['attendee', 'staff', 'admin']},
   password: String,
   salt: String,
-  activated: Boolean,
-  application: Application.Schema
+  activated: Boolean,                 // account activated?
+  application: Application.Schema     // user's application
 });
 
 /**

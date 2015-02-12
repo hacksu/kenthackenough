@@ -6,7 +6,7 @@ var User = require('./model');
 */
 app.get('/users', User.Auth(), function (req, res) {
   User.find({}, 'email role activated', function (err, users) {
-    if (err) return res.send({errors: ['Internal error']});
+    if (err) return res.internalError();
     return res.send(users);
   });
 });
@@ -17,7 +17,7 @@ app.get('/users', User.Auth(), function (req, res) {
 */
 app.post('/users/register', function (req, res) {
   var errors = User.validate(req.body);
-  if (errors.length) return res.send({errors: errors});
+  if (errors.length) return res.multiError(errors);
   var salt = User.Helpers.salt();
   var user = new User({
     email: req.body.email,
@@ -27,7 +27,7 @@ app.post('/users/register', function (req, res) {
     activated: false
   });
   user.save(function (err, user) {
-    if (err) return res.send({errors: ['Internal error']});
+    if (err) return res.internalError();
     return res.send({
       email: user.email
     });
@@ -40,13 +40,13 @@ app.post('/users/register', function (req, res) {
 */
 app.get('/users/activate/:userId', function (req, res) {
   User.findById(req.params.userId, function (err, user) {
-    if (err) return res.send({errors: ['Internal error']});
+    if (err) return res.internalError();
     if (user.activated) {
-      return res.send({errors: ['User is already activated']});
+      return res.singleError('User is already activated');
     } else {
       user.activated = true;
       user.save(function (err, user) {
-        if (err) return res.send({errors: ['Internal error']});
+        if (err) return res.internalError();
         return res.send({});
       });
     }

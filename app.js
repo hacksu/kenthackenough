@@ -13,12 +13,14 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var multer = require('multer');
+var error = require('./app/error');
 
 // Start up server
 var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(multer({dest: './uploads/'}));
+app.use(error);
 var port = process.env.PORT || 3000;
 var server = app.listen(port, function () {
   var host = server.address().address;

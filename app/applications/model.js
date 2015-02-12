@@ -1,8 +1,18 @@
 var mongoose = require('mongoose');
 var schema = require('validate');
 
+var _APPROVED = 'approved',
+    _DENIED = 'denied',
+    _WAITLISTED = 'waitlisted',
+    _PENDING = 'pending';
+
 var ApplicationSchema = {
   submitted: Boolean,     // app submitted?
+  status: {type: String, enum: [_APPROVED, _DENIED, _WAITLISTED, _PENDING]},
+  going: Boolean,         // rsvp status
+  checked: Boolean,       // check-in status
+
+  // Actual application form
   name: String,           // full name
   school: String,         // name of school
   phone: String,          // phone number
@@ -104,5 +114,11 @@ var Helpers = {
 
 };
 
-module.exports.Schema = ApplicationSchema;
-module.exports.validate = Helpers.validate;
+module.exports = {
+  Schema: ApplicationSchema,
+  validate: Helpers.validate,
+  APPROVED: _APPROVED,
+  DENIED: _DENIED,
+  WAITLISTED: _WAITLISTED,
+  PENDING: _PENDING
+};

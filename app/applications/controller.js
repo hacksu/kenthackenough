@@ -1,22 +1,26 @@
 var app = getAppInstance();
 var User = require('../users/model');
 var Application = require('./model');
+var chance = require('chance');
+var schema = require('validate');
 
 /**
 * Submit application
+* AUTH: any user
 * POST:
 *   name (string), school (string), phone (string), shirt (string),
 *   demographic (bool), first (bool), dietary (string, separate each by |),
 *   year (string), age (number), gender (string), major (string),
 *   conduct (bool), travel (bool), waiver (bool)
 */
-app.post('/applications/submit', User.Auth(), function (req, res) {
+app.post('/application/submit', User.Auth(), function (req, res) {
   if (req.user.application.submitted) return res.singleError('You have already submitted your application');
   var errors = Application.validate(req.body);
   if (errors.length) return res.multiError(errors);
   if (req.body.dietary) req.user.application.dietary = req.body.dietary.split('|');
   req.user.application = req.body;
   req.user.application.submitted = true;
+  req.user.application.status = Application.PENDING;
   req.user.save(function (err, u) {
     if (err) return res.internalError();
     return res.send(u.application);
@@ -25,13 +29,14 @@ app.post('/applications/submit', User.Auth(), function (req, res) {
 
 /**
 * Update application
+* AUTH: any user
 * POST (all params are required, submit old data if you want it to stay):
 *   name (string), school (string), phone (string), shirt (string),
 *   demographic (bool), first (bool), dietary (string, separate each by |),
 *   year (string), age (number), gender (string), major (string),
 *   conduct (bool), travel (bool), waiver (bool)
 */
-app.post('/applications/update', User.Auth(), function (req, res) {
+app.post('/application/update', User.Auth(), function (req, res) {
   if (!req.user.application.submitted) return res.singleError('You haven\'t submitted an application yet');
   var errors = Application.validate(req.body);
   if (errors.length) return res.multiError(errors);
@@ -45,18 +50,106 @@ app.post('/applications/update', User.Auth(), function (req, res) {
 });
 
 /**
-* RSVP
 * Update RSVP status
+* AUTH: any user
 * POST:
 *   going (bool)
 */
-app.post('/applications/rsvp', User.Auth(), function (req, res) {
-
+app.post('/application/rsvp', User.Auth(), function (req, res) {
+  if (req.user.application.status == Application.APPROVED) {
+    req.user.application.going = req.body.going;
+    req.user.save(function (err, user) {
+      if (err) return res.internalError();
+      return res.send(user.application);
+    });
+  } else {
+    return res.singleError('Your application has not been approved');
+  }
 });
 
 /**
 * Return the attendee status
+* AUTH: any user
 */
 app.get('/application', User.Auth(), function (req, res) {
+  if (req.user.application.submitted) {
+    return res.send(req.user.application);
+  } else {
+    return res.singleError('You have not submitted an application yet');
+  }
+});
 
+/**
+* Set the status of an application
+* AUTH: staff, admin
+* POST: userId, status (approved, denied, waitlisted, pending)
+*/
+app.post('/application/status', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+  User.findById(req.body.userId, function (err, user) {
+    if (err) return res.internalError();
+    user.application.status = req.body.status;
+    user.save(function (err, user) {
+      if (err) return res.internalError();
+      return res.send(user.application);
+    });
+  });
+});
+
+/**
+* Remove a user's application (gently)
+* Sets application.submitted to false
+* AUTH: staff, admin
+* POST: userId
+*/
+app.post('/application/remove', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+  User.findById(req.body.userId, function (err, user) {
+    if (err) return res.internalError();
+    return res.send(user.application);
+  });
+});
+
+/**
+* Quickly register a user
+* (Use for people who show up without registering)
+* AUTH: staff, admin
+* POST: name, email, phone
+*/
+app.post('application/quick', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+  var test = schema({
+    name: {
+      required: true,
+      type: 'string',
+      match: /.{2,32}/,
+      message: 'Your name is required'
+    },
+    email: {
+      type: 'string',
+      required: true,
+      message: 'A valid email address is required'
+    },
+    phone: {
+      required: true,
+      type: 'number',
+      match: /^[0-9]{10,20}$/,
+      message: 'You must provide a valid phone number'
+    }
+  });
+  var errors = test.validate(req.body);
+  if (errors.length) return res.multiError(errors);
+  var salt = User.Helpers.salt();
+  var user = new User({
+    email: req.body.email,
+    role: User.ATTENDEE,
+    password: User.Helpers.hash(chance.string(), salt),
+    salt: salt,
+    activated: true,
+    application: {
+      name: req.body.name,
+      phone: req.body.phone
+    }
+  });
+  user.save(function (err, user) {
+    if (err) return res.internalError();
+    return res.send(user);
+  });
 });

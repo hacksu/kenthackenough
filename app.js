@@ -22,11 +22,7 @@ app.use(bodyParser.json());
 app.use(multer({dest: './uploads/'}));
 app.use(error);
 var port = process.env.PORT || 3000;
-var server = app.listen(port, function () {
-  var host = server.address().address;
-  var port = server.address().port;
-  console.log('\n  🎉  Kent Hack Enough listening at %s%s\n', host, port);
-});
+var server = app.listen(port);
 
 // Connect to database
 var mongo = process.env.MONGO_URI || 'mongodb://localhost:27017/khe';

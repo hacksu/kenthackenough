@@ -10,6 +10,7 @@ To get a db connection, require('mongoose')
 
 */
 var express = require('express');
+var cors = require('cors');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var multer = require('multer');
@@ -17,10 +18,16 @@ var error = require('./app/error');
 
 // Start up server
 var app = express();
+app.use(cors());
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(multer({dest: './uploads/'}));
 app.use(error);
+app.use(function (req, res, next) {
+  console.log(req.method + ' ' + req.url);
+  next();
+});
 var port = process.env.PORT || 3000;
 var server = app.listen(port);
 

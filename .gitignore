@@ -1,6 +1,7 @@
 .DS_Store
 uploads
 .vagrant
+public/bower_components
 
 # Logs
 logs

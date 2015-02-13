@@ -1,0 +1,18 @@
+{
+  "name": "kenthackenough",
+  "version": "0.0.1",
+  "homepage": "https://github.com/hacksu/kenthackenough",
+  "authors": [
+    "Paul Dilyard <paul.dilyard@gmail.com>"
+  ],
+  "description": "Angular app that hooks up to Express API",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular-resource": "~1.3.13",
+    "angular": "~1.3.13",
+    "angular-route": "~1.3.13",
+    "foundation": "~5.5.1"
+  }
+}

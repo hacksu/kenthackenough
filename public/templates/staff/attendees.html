@@ -1,0 +1,22 @@
+<staffheader></staffheader>
+
+<div class="row" ng-controller="StaffController">
+  <div class="column small-3">
+    <ul class="side-nav">
+      <li><a ng-click="all()">All</a></li>
+      <li><a ng-click="approved()">Approved</a></li>
+      <li><a ng-click="rsvp()">RSVPs</a></li>
+      <li><a ng-click="travel()">Travel Requests</a></li>
+    </ul>
+  </div>
+
+  <table class="column small-9">
+    <tbody>
+
+      <tr ng-repeat="user in users" class="row">
+        <td>{{user.email}}</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>

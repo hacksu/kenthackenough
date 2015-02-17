@@ -17,7 +17,7 @@
         templateUrl: '/templates/staff/index.html'
       })
       .when('/staff/attendees', {
-        templateUrl: '/templates/staff/attendees/all.html'
+        templateUrl: '/templates/staff/attendees.html'
       });
   }]);
 

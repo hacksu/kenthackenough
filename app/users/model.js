@@ -37,7 +37,8 @@ var User = mongoose.model('User', {
   salt: String,
   subscribe: Boolean,                 // subscribe to the mailing list?
   activated: Boolean,                 // account activated?
-  application: Application.Schema     // user's application
+  application: Application.Schema,    // user's application
+  time : { type : Date, default: Date.now }
 });
 
 var Helpers = {

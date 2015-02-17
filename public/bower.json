@@ -10,9 +10,13 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "angular-resource": "~1.3.13",
-    "angular": "~1.3.13",
-    "angular-route": "~1.3.13",
-    "foundation": "~5.5.1"
+    "angular-resource": "1.3.x",
+    "angular": "1.3.x",
+    "angular-route": "1.3.x",
+    "foundation": "5.5.x",
+    "fastclick": "1.0.x",
+    "font-awesome": "4.3.x",
+    "jquery": "2.1.x",
+    "modernizr": "2.8.x"
   }
 }

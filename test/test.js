@@ -199,7 +199,7 @@ describe('API', function () {
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;
-          res.body.users.length.should.equal(3);
+          res.body.users.length.should.be.above(2);
           done();
         });
     });

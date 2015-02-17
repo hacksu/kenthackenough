@@ -40,9 +40,13 @@ app.post('/application/update', User.Auth(), function (req, res) {
   if (!req.user.application.submitted) return res.singleError('You haven\'t submitted an application yet');
   var errors = Application.validate(req.body);
   if (errors.length) return res.multiError(errors);
+  var oldStatus = req.user.application.status;
+  var oldTime = req.user.application.time;
   req.user.application = req.body;
   if (req.body.dietary) req.body.dietary = req.body.dietary.split('|');
   req.user.application.submitted = true;
+  req.user.application.status = oldStatus;
+  req.user.application.time = oldTime;
   req.user.save(function (err, u) {
     if (err) return res.internalError();
     return res.send(u.application);

@@ -1,0 +1,27 @@
+.bold {
+  font-weight: bold;
+}
+
+.large {
+  font-size: 20px;
+}
+
+.grey {
+  color: #4d4e51;
+}
+
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.align-left {
+  text-align: left;
+}

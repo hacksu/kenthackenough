@@ -50,7 +50,11 @@ app.get('/users/activate/:userId', function (req, res) {
 * AUTH: admin, staff
 */
 app.get('/users', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
-  User.find({}, function (err, users) {
+  User
+    .find({})
+    .sort({'application.submitted': 1})
+    .sort({'application.time': 1})
+    .exec(function (err, users) {
     if (err) return res.internalError();
     return res.send({users: users});
   });

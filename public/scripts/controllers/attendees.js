@@ -1,11 +1,15 @@
-(function () {
-
-  var app = angular.module('khe.controllers', []);
-
-  /**
-  * Staff Controller
-  */
-  app.controller('StaffController', ['$http', '$scope', function ($http, $scope) {
+/**
+* Staff Controller
+*/
+angular
+  .module('kheStaff')
+  .config(['$routeProvider', function ($router) {
+    $router
+      .when('/staff/attendees', {
+        templateUrl: '/views/staff/attendees.html'
+      });
+  }])
+  .controller('AttendeesCtrl', ['$http', '$scope', function ($http, $scope) {
     $scope.select = function (user) {
       if (user._id == $scope.selected_id) {
         $scope.selected_id = '';
@@ -57,20 +61,3 @@
         console.log(data);
       });
   }]);
-
-  /**
-  * Directives
-  */
-  app
-    .directive('staffheader', function () {
-      return {
-        templateUrl: '/partials/staff-header.html'
-      };
-    })
-    .directive('staffattendeesidebar', function () {
-      return {
-        templateUrl: '/partials/staff-attendee-sidebar.html'
-      };
-    });
-
-})();

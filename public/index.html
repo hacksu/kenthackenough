@@ -2,23 +2,41 @@
 <html ng-app="khe">
 <head>
   <title>Kent Hack Enough</title>
+
+  <!-- Vendor -->
+  <script src="bower_components/modernizr/modernizr.js"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/fastclick/lib/fastclick.js"></script>
   <script src="bower_components/angular/angular.min.js"></script>
-  <script src="bower_components/angular-resource/angular-resource.min.js"></script>
   <script src="bower_components/angular-route/angular-route.min.js"></script>
-  <script src="js/helpers.js"></script>
-  <script src="js/staff.ctrl.js"></script>
-  <script src="js/app.js"></script>
+
+  <!-- App -->
+  <script src="scripts/app.js"></script>
+
+  <!-- Library -->
+  <script src="scripts/library/helpers.js"></script>
+
+  <!-- Controllers -->
+  <script src="scripts/controllers/attendees.js"></script>
+
+  <!-- Directives -->
+  <script src="scripts/directives/kheAttendeesSidebar.js"></script>
+  <script src="scripts/directives/kheStaffHeader.js"></script>
+
+  <!-- Services -->
+  <!-- Filters -->
+
+  <!-- Styles -->
   <link rel="stylesheet" href="bower_components/foundation/css/foundation.css">
   <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="styles/app.css">
+
 </head>
 <body>
 
   <div ng-view></div>
 
-  <script src="bower_components/modernizr/modernizr.js"></script>
-  <script src="bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="bower_components/fastclick/lib/fastclick.js"></script>
+  <!-- UI Scripts -->
   <script src="bower_components/foundation/js/foundation.min.js"></script>
   <script>
     $(document).foundation();

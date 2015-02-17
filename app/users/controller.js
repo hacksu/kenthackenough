@@ -26,6 +26,21 @@ app.post('/users/register', function (req, res) {
 });
 
 /**
+* Check login credentials
+* POST: email, password
+*/
+app.post('/users/login', function (req, res) {
+  User.findOne({email: req.body.email}, function (err, user) {
+    if (err || !user) return res.singleError('Username or password incorrect');
+    if (User.Helpers.checkPassword(user.password, req.body.password, user.hash)) {
+      return res.send({});
+    } else {
+      return res.singleError('Username or password incorrect');
+    }
+  });
+});
+
+/**
 * Acivate a user
 * URL param: userId
 */

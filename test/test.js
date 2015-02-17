@@ -53,6 +53,36 @@ describe('API', function () {
         });
     });
 
+    it('should successfully check login credentials', function (done) {
+      request(app)
+        .post('/users/login')
+        .send({
+          email: 'user@test.com',
+          password: 'pass'
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          JSON.stringify(res.body).should.equal("{}");
+          done();
+        });
+    });
+
+    it('should tell me that the username or password is incorrect', function (done) {
+      request(app)
+        .post('/users/login')
+        .send({
+          email: 'user@test.com',
+          password: 'wrong'
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.errors[0].should.equal('Username or password incorrect');
+          done();
+        });
+    });
+
     it('should submit an application for the test user', function (done) {
       request(app)
         .post('/application/submit')

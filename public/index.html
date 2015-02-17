@@ -9,11 +9,18 @@
   <script src="js/app.js"></script>
   <link rel="stylesheet" href="bower_components/foundation/css/foundation.css">
   <link rel="stylesheet" href="css/app.css">
-  <script src="bower_components/modernizr/modernizr.js"></script>
 </head>
 <body>
 
   <div ng-view></div>
+
+  <script src="bower_components/modernizr/modernizr.js"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/fastclick/lib/fastclick.js"></script>
+  <script src="bower_components/foundation/js/foundation.min.js"></script>
+  <script>
+    $(document).foundation();
+  </script>
 
 </body>
 </html>

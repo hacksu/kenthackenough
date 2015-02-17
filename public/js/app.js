@@ -1,3 +1,6 @@
+/**
+* Configure all routes in here
+*/
 (function () {
 
   var app = angular.module('khe', ['ngRoute', 'khe.controllers']);
@@ -12,6 +15,9 @@
       })
       .when('/staff', {
         templateUrl: '/templates/staff/index.html'
+      })
+      .when('/staff/attendees', {
+        templateUrl: '/templates/staff/attendees/all.html'
       });
   }]);
 

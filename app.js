@@ -35,6 +35,7 @@ var server = app.listen(port);
 var mongo = process.env.MONGO_URI || 'mongodb://localhost:27017/khe';
 mongoose.connect(mongo);
 
+module.exports.router =
 module.exports.app = app;
 module.exports.mongoose = mongoose;
 GLOBAL.getAppInstance = function () {

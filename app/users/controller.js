@@ -46,6 +46,17 @@ app.get('/users/activate/:userId', function (req, res) {
 });
 
 /**
+* Get a list of all users
+* AUTH: admin, staff
+*/
+app.get('/users', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+  User.find({}, function (err, users) {
+    if (err) return res.internalError();
+    return res.send({users: users});
+  });
+});
+
+/**
 * Unsubscribe a user from the mailing list
 * AUTH: admin, staff
 * POST: userId

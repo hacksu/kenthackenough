@@ -126,6 +126,12 @@ HTTP Basic Auth (staff, admin)
 }
 ```
 
+#### Get a list of all users
+```javascript
+GET /users
+HTTP Basic Auth (staff, admin)
+```
+
 #### Unsubscribe a user (remove them from mailing list)
 ```javascript
 POST /users/unsubscribe

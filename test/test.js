@@ -192,6 +192,18 @@ describe('API', function () {
         });
     });
 
+    it('should get a list of all users', function (done) {
+      request(app)
+        .get('/users')
+        .auth('admin@test.com', 'pass')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.users.length.should.equal(3);
+          done();
+        });
+    });
+
     it('should unsubscribe a user', function (done) {
       request(app)
         .post('/users/unsubscribe')

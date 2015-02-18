@@ -33,7 +33,11 @@ app.post('/users/login', function (req, res) {
   User.findOne({email: req.body.email}, function (err, user) {
     if (err || !user) return res.singleError('Username or password incorrect');
     if (User.Helpers.checkPassword(user.password, req.body.password, user.salt)) {
-      return res.send({});
+      return res.send({
+        email: user.email,
+        password: user.password,
+        role: user.role
+      });
     } else {
       return res.singleError('Username or password incorrect');
     }

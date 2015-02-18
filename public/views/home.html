@@ -1,5 +1,19 @@
-<h1>
+<div ng-controller="UserCtrl as user">
 
-  {{ message }}
+  <div ng-if="user.me">
+    <a href="/#/application">My Application</a>
+    <a ng-click="logout()">Logout</a>
+  </div>
 
-</h1>
+  <div ng-if="!user.me">
+    <a href="/#/register"><button>Register</button></a>
+
+    <a ng-click="showSignIn = true">Sign in</a>
+    <form name="user.loginForm" ng-submit="login()" ng-if="showSignIn">
+      <input ng-model="user.email" type="text" placeholder="Email">
+      <input ng-model="user.password" type="password" placeholder="Password">
+      <button>Sign in</button>
+    </form>
+  </div>
+
+</div>

@@ -17,10 +17,12 @@ app.post('/users/register', function (req, res) {
     activated: false
   });
   user.save(function (err, user) {
-    if (err) return res.internalError();
+    if (err) return res.singleError('That email is already in use');
     return res.send({
       _id: user._id,
-      email: user.email
+      email: user.email,
+      password: req.body.password,
+      role: user.role
     });
   });
 });
@@ -35,7 +37,7 @@ app.post('/users/login', function (req, res) {
     if (User.Helpers.checkPassword(user.password, req.body.password, user.salt)) {
       return res.send({
         email: user.email,
-        password: user.password,
+        password: req.body.password,
         role: user.role
       });
     } else {

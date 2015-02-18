@@ -28,12 +28,35 @@ POST /users/register
   email: String,
   password: String
 }
+
+RESPONSE:
+{
+  _id: String,
+  email: String
+}
 ```
 
 #### Activate a user
 ```javascript
 GET /users/activate/<user_id>
+
+RESPONSE:
+{}
 ```
+
+#### Login a user (check their credentials)
+```javascript
+POST /users/login
+{
+  email: String,
+  password: String
+}
+
+RESPONSE:
+{}
+```
+
+####
 
 ### Application
 
@@ -57,6 +80,9 @@ HTTP Basic Auth (attendee, staff, admin)
   travel: Boolean,        // need travel reimbursement?
   waiver: Boolean         // agreed to waiver?
 }
+
+RESPONSE:
+// the created application object
 ```
 
 #### Update an application
@@ -79,6 +105,9 @@ HTTP Basic Auth (attendee, staff, admin)
   travel: Boolean,        // need travel reimbursement?
   waiver: Boolean         // agreed to waiver?
 }
+
+RESPONSE:
+// the updated application object
 ```
 
 #### RSVP to an application

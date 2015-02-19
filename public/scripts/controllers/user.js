@@ -4,9 +4,6 @@ angular
     $router
       .when('/', {
         templateUrl: '/views/home.html'
-      })
-      .when('/users', {
-        templateUrl: '/views/home.html'
       });
   }])
   .controller('UserCtrl', ['$location', 'User', function ($location, User) {
@@ -21,36 +18,42 @@ angular
     * Register a new user and log them in
     */
     self.register = function () {
-      user.register(self.email, self.password)
-        .success(function (data) {
-          self.errors = data.errors;
-          if (!data.errors) {
-            self.me = data;
-            user.setMe(self.me);
-            $location.path('/application');
-          }
-        })
-        .error(function (data, status) {
-          self.errors = ['An internal error has occurred'];
-        });
+      user.register({
+        email: self.email,
+        password: self.password
+      }).
+      success(function (data) {
+        self.errors = data.errors;
+        if (!data.errors) {
+          self.me = data;
+          user.setMe(self.me);
+          $location.path('/application');
+        }
+      }).
+      error(function (data, status) {
+        self.errors = ['An internal error has occurred'];
+      });
     };
 
     /**
     * Login the user
     */
     self.login = function () {
-      user.login(self.email, self.password)
-        .success(function (data) {
-          self.errors = data.errors;
-          if (!data.errors) {
-            self.me = data;
-            user.setMe(self.me);
-          }
-        })
-        .error(function (data, status) {
-          console.log(data);
-          self.errors = ['An internal error has occurred'];
-        });
+      user.login({
+        email: self.email,
+        password: self.password
+      }).
+      success(function (data) {
+        self.errors = data.errors;
+        if (!data.errors) {
+          self.me = data;
+          user.setMe(self.me);
+        }
+      }).
+      error(function (data, status) {
+        console.log(data);
+        self.errors = ['An internal error has occurred'];
+      });
     };
 
     /**

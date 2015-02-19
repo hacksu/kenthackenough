@@ -106,10 +106,7 @@ router.post('/application/status', User.Auth([User.ADMIN, User.STAFF]), function
 * POST: userId
 */
 router.post('/application/remove', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
-  User.findById(req.body.userId, function (err, user) {
-    if (err) return res.internalError();
-    return res.send(user.application);
-  });
+  return res.send('Method stub');
 });
 
 /**

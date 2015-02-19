@@ -37,6 +37,7 @@ RESPONSE:
 ```
 
 #### Activate a user
+**Note:** Currently deprecated (we're not requiring email verification)
 ```javascript
 GET /users/activate/<user_id>
 

@@ -6,7 +6,7 @@ angular
         templateUrl: '/views/home.html'
       });
   }])
-  .controller('UserCtrl', ['$location', 'User', function ($location, User) {
+  .controller('HomeCtrl', ['$location', 'User', function ($location, User) {
 
     var self = this;
     var user = new User();

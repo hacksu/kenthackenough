@@ -1,0 +1,10 @@
+<div ng-if="user">
+  <div ng-transclude></div>
+</div>
+
+<div ng-if="!user && error">
+  <div data-alert class="alert-box alert">
+    You must be logged in to access this area
+    <a href="#" class="close">&times;</a>
+  </div>
+</div>

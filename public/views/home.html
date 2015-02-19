@@ -1,36 +1,36 @@
-<div ng-controller="UserCtrl as user">
+<div ng-controller="HomeCtrl as home">
 
   <!-- Display any error messages -->
-  <div ng-if="user.errors">
+  <div ng-if="home.errors">
     <div data-alert class="alert-box alert">
-      <span ng-repeat="error in user.errors">{{error}}</span>
+      <span ng-repeat="error in home.errors">{{error}}</span>
       <a href="#" class="close">&times;</a>
     </div>
   </div>
 
   <!-- Show if user is logged in -->
-  <div ng-if="user.me">
+  <requirelogin user="home.me">
     <a href="/#/application">My Application</a>
-    <a ng-click="user.logout()">Logout</a>
-  </div>
+    <a ng-click="home.logout()">Logout</a>
+  </requirelogin>
 
   <!-- Show if user is not logged in -->
-  <div ng-if="!user.me">
+  <div ng-if="!home.me">
     <!-- Buttons to show forms -->
     <a ng-click="currentForm = 'register'"><button>Register</button></a>
     <a ng-click="currentForm = 'login'">Sign in</a>
 
     <!-- Register form -->
-    <form ng-if="currentForm == 'register'" name="user.forms.register" ng-submit="user.register()">
-      <input ng-model="user.email" type="text" placeholder="Email">
-      <input ng-model="user.password" type="password" placeholder="Password">
+    <form ng-if="currentForm == 'register'" name="home.forms.register" ng-submit="home.register()">
+      <input ng-model="home.email" type="text" placeholder="Email">
+      <input ng-model="home.password" type="password" placeholder="Password">
       <button>Register</button>
     </form>
 
     <!-- Login form -->
-    <form ng-if="currentForm == 'login'" name="user.forms.login" ng-submit="user.login()">
-      <input ng-model="user.email" type="text" placeholder="Email">
-      <input ng-model="user.password" type="password" placeholder="Password">
+    <form ng-if="currentForm == 'login'" name="home.forms.login" ng-submit="home.login()">
+      <input ng-model="home.email" type="text" placeholder="Email">
+      <input ng-model="home.password" type="password" placeholder="Password">
       <button>Sign in</button>
     </form>
   </div>

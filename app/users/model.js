@@ -121,7 +121,7 @@ var Auth = function (roles) {
       User.findOne({email: credentials.name}, function (err, user) {
         if (err) return Helpers.authError(res);
         if (!user) return Helpers.authError(res);
-        if (!user.activated) return res.send({errors: ['You have not yet activated your account']});
+        // if (!user.activated) return res.send({errors: ['You have not yet activated your account']});
         if (Helpers.checkPassword(user.password, credentials.pass, user.salt)
           && roles.indexOf(user.role) >= 0) {
           req.user = user;

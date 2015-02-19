@@ -36,6 +36,7 @@
     "mongoose": "3.8.x",
     "multer": "0.1.x",
     "nodemailer": "1.3.x",
-    "validate": "2.1.x"
+    "validate": "2.1.x",
+    "winston": "0.9.x"
   }
 }

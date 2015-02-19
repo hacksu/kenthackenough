@@ -2,8 +2,18 @@
 
   <requirelogin user="application.me" error="true">
 
+    <!-- Errors, if there are any -->
+    <div ng-if="application.errors">
+      <div data-alert class="alert-box alert">
+        <span ng-repeat="error in application.errors">{{error}}</span>
+        <a href="#" class="close">&times;</a>
+      </div>
+    </div>
+
+    <!-- The application form -->
     <form ng-submit="application.submit()">
 
+      <!-- Name -->
       <div class="row">
         <label class="small-6 columns">
           First Name
@@ -15,6 +25,7 @@
         </label>
       </div>
 
+      <!-- Phone -->
       <div class="row">
         <label class="small-12 columns">
           Phone Number
@@ -22,6 +33,7 @@
         </label>
       </div>
 
+      <!-- School -->
       <div class="row">
         <label class="small-12 columns">
           School
@@ -29,6 +41,7 @@
         </label>
       </div>
 
+      <!-- Shirt size -->
       <div class="row">
         <label class="small-12 columns">
           Shirt Size
@@ -41,6 +54,7 @@
         </label>
       </div>
 
+      <!-- Dietary restrictions -->
       <div class="row">
         <label class="small-12 columns">
           <div class="row">
@@ -51,11 +65,11 @@
           <div class="row">
             <div class="small-6 columns">
               <label class="small-6 columns">
-                <input type="checkbox" ng-model="application.dietary.vegetarian" value="true">
+                <input type="checkbox" ng-model="application.dietary.Vegetarian" value="true">
                 Vegetarian
               </label>
               <label class="small-6 columns">
-                <input type="checkbox" ng-model="application.dietary.vegan" value="true">
+                <input type="checkbox" ng-model="application.dietary.Vegan" value="true">
                 Vegan
               </label>
             </div>
@@ -63,11 +77,11 @@
           <div class="row">
             <div class="small-6 columns">
               <label class="small-6 columns">
-                <input type="checkbox" ng-model="application.dietary.kosher" value="true">
+                <input type="checkbox" ng-model="application.dietary.Kosher" value="true">
                 Kosher
               </label>
               <label class="small-6 columns">
-                <input type="checkbox" ng-model="application.dietary.gluten" value="true">
+                <input type="checkbox" ng-model="application.dietary.Gluten" value="true">
                 Gluten Free
               </label>
             </div>
@@ -75,7 +89,7 @@
           <div class="row">
             <div class="small-6 columns">
               <label class="small-6 columns">
-                <input type="checkbox" ng-model="application.dietary.other" value="true">
+                <input type="checkbox" ng-model="application.dietary.Other" value="true">
                 Other
               </label>
             </div>
@@ -83,6 +97,7 @@
         </label>
       </div>
 
+      <!-- Age and Gender -->
       <div class="row">
         <label class="small-6 columns">
           How old are you?
@@ -99,6 +114,7 @@
         </label>
       </div>
 
+      <!-- Year in school -->
       <div class="row">
         <label class="small-6 columns">
           What is your year in school?
@@ -111,6 +127,7 @@
           </select>
         </label>
 
+        <!-- First hackathon? -->
         <label class="small-6 columns">
           Is this your first hackathon?
           <select ng-model="application.first">
@@ -120,6 +137,7 @@
         </label>
       </div>
 
+      <!-- Major -->
       <div class="row">
         <label class="small-12 columns">
           What is your major?
@@ -127,6 +145,7 @@
         </label>
       </div>
 
+      <!-- Travel reimbursement -->
       <div class="row">
         <label class="small-12 columns">
           Will you require travel reimbursement?
@@ -137,6 +156,7 @@
         </label>
       </div>
 
+      <!-- Demographic release -->
       <div class="row">
         <label class="small-12 columns">
           <input type="checkbox" ng-model="application.demographic" value="true">
@@ -145,6 +165,7 @@
         </label>
       </div>
 
+      <!-- Code of conduct -->
       <div class="row">
         <label class="small-12 columns">
           <input type="checkbox" ng-model="application.conduct" value="true">
@@ -153,6 +174,7 @@
         </label>
       </div>
 
+      <!-- Event waiver -->
       <div class="row">
         <label class="small-12 columns">
           <input type="checkbox" ng-model="application.waiver" value="true">
@@ -161,6 +183,7 @@
         </label>
       </div>
 
+      <!-- Submit button -->
       <div class="row">
         <div class="small-12 columns">
           <button>Submit</button>

@@ -43,7 +43,7 @@ router.post('/application/update', User.Auth(), function (req, res) {
   var oldStatus = req.user.application.status;
   var oldTime = req.user.application.time;
   req.user.application = req.body;
-  if (req.body.dietary) req.body.dietary = req.body.dietary.split('|');
+  if (req.body.dietary) req.user.application.dietary = req.body.dietary.split('|');
   req.user.application.submitted = true;
   req.user.application.status = oldStatus;
   req.user.application.time = oldTime;

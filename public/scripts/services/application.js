@@ -4,7 +4,7 @@
 */
 angular
   .module('khe')
-  .factory('Application', ['$http', 'User', function ($http) {
+  .factory('Application', ['$http', 'User', function ($http, User) {
 
     var Application = function () {
 

@@ -1,34 +1,174 @@
-<div ng-controller="ApplicationCtrl as application">
+<div ng-controller="ApplicationCtrl as application" class="small-12 columns">
 
-  <div ng-if="application.me">
+  <requirelogin user="application.me" error="true">
 
     <form ng-submit="application.submit()">
-      <label>
-        Name
-        <input type="text" ng-model="application.name" placeholder="John Doe">
-      </label>
 
-      <input type="text" ng-model="application.school">
-      <input type="phone" ng-model="application.phone">
-      <select ng-model="application.shirt">
-        <option value="S">Small</option>
-        <option value="M">Medium</option>
-        <option value="L">Large</option>
-        <option value="XL">X-Large</option>
-      </select>
+      <div class="row">
+        <label class="small-6 columns">
+          First Name
+          <input type="text" ng-model="application.name.first" placeholder="John">
+        </label>
+        <label class="small-6 columns">
+          Last Name
+          <input type="text" ng-model="application.name.last" placeholder="Doe">
+        </label>
+      </div>
 
-      <input type="text">
+      <div class="row">
+        <label class="small-12 columns">
+          Phone Number
+          <input type="text" ng-model="application.phone" placeholder="555-555-5555">
+        </label>
+      </div>
 
-      <input type="" ng-model="">
-      <input type="" ng-model="">
-      <input type="" ng-model="">
-      <input type="" ng-model="">
-      <input type="" ng-model="">
-      <input type="" ng-model="">
-      <input type="" ng-model="">
-      <input type="" ng-model="">
+      <div class="row">
+        <label class="small-12 columns">
+          School
+          <input type="text" ng-model="application.school" placeholder="State University">
+        </label>
+      </div>
+
+      <div class="row">
+        <label class="small-12 columns">
+          Shirt Size
+          <select ng-model="application.shirt">
+            <option value="S">Small</option>
+            <option value="M" selected>Medium</option>
+            <option value="L">Large</option>
+            <option value="XL">X-Large</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="row">
+        <label class="small-12 columns">
+          <div class="row">
+            <div class="small-12 columns">
+              Please select any dietary restrictions you have:
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-6 columns">
+              <label class="small-6 columns">
+                <input type="checkbox" ng-model="application.dietary.vegetarian" value="true">
+                Vegetarian
+              </label>
+              <label class="small-6 columns">
+                <input type="checkbox" ng-model="application.dietary.vegan" value="true">
+                Vegan
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-6 columns">
+              <label class="small-6 columns">
+                <input type="checkbox" ng-model="application.dietary.kosher" value="true">
+                Kosher
+              </label>
+              <label class="small-6 columns">
+                <input type="checkbox" ng-model="application.dietary.gluten" value="true">
+                Gluten Free
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-6 columns">
+              <label class="small-6 columns">
+                <input type="checkbox" ng-model="application.dietary.other" value="true">
+                Other
+              </label>
+            </div>
+          </div>
+        </label>
+      </div>
+
+      <div class="row">
+        <label class="small-6 columns">
+          How old are you?
+          <input type="text" ng-model="application.age">
+        </label>
+
+        <label class="small-6 columns">
+          Gender:
+          <select ng-model="application.gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="row">
+        <label class="small-6 columns">
+          What is your year in school?
+          <select ng-model="application.year">
+            <option value="Senior">Senior</option>
+            <option value="Junior">Junior</option>
+            <option value="Sophomore">Sophomore</option>
+            <option value="Freshman">Freshman</option>
+            <option value="High School">High School</option>
+          </select>
+        </label>
+
+        <label class="small-6 columns">
+          Is this your first hackathon?
+          <select ng-model="application.first">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="row">
+        <label class="small-12 columns">
+          What is your major?
+          <input type="text" ng-model="application.major">
+        </label>
+      </div>
+
+      <div class="row">
+        <label class="small-12 columns">
+          Will you require travel reimbursement?
+          <select ng-model="application.travel">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="row">
+        <label class="small-12 columns">
+          <input type="checkbox" ng-model="application.demographic" value="true">
+          I agree to allow my demographic information to be used anonymously to improve hackathons.
+          <br>
+        </label>
+      </div>
+
+      <div class="row">
+        <label class="small-12 columns">
+          <input type="checkbox" ng-model="application.conduct" value="true">
+          I agree to the MLH Code of Conduct
+          <br>
+        </label>
+      </div>
+
+      <div class="row">
+        <label class="small-12 columns">
+          <input type="checkbox" ng-model="application.waiver" value="true">
+          I agree to this event waiver.
+          <br>
+        </label>
+      </div>
+
+      <div class="row">
+        <div class="small-12 columns">
+          <button>Submit</button>
+        </div>
+      </div>
+
     </form>
 
-  </div>
+  </requirelogin>
 
 </div>

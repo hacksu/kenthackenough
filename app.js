@@ -18,6 +18,8 @@ var error = require('./app/error');
 
 // Start up server
 var app = express();
+var router = express.Router();
+
 app.use(cors());
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -35,11 +37,14 @@ var server = app.listen(port);
 var mongo = process.env.MONGO_URI || 'mongodb://localhost:27017/khe';
 mongoose.connect(mongo);
 
-module.exports.router =
+module.exports.router = router;
 module.exports.app = app;
 module.exports.mongoose = mongoose;
 GLOBAL.getAppInstance = function () {
   return app;
+};
+GLOBAL.getRouter = function () {
+  return router;
 };
 
 // Include modules
@@ -49,3 +54,5 @@ GLOBAL.getAppInstance = function () {
 ].forEach(function (module) {
   require('./app/' + module + '/controller');
 });
+
+app.use('/api', router);

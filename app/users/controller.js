@@ -1,11 +1,11 @@
-var app = getAppInstance();
+var router = getRouter();
 var User = require('./model');
 
 /**
 * Create a new user
 * POST: email, password
 */
-app.post('/users/register', function (req, res) {
+router.post('/users/register', function (req, res) {
   var errors = User.validate(req.body);
   if (errors.length) return res.multiError(errors);
   var salt = User.Helpers.salt();
@@ -31,7 +31,7 @@ app.post('/users/register', function (req, res) {
 * Check login credentials
 * POST: email, password
 */
-app.post('/users/login', function (req, res) {
+router.post('/users/login', function (req, res) {
   User.findOne({email: req.body.email}, function (err, user) {
     if (err || !user) return res.singleError('Username or password incorrect');
     if (User.Helpers.checkPassword(user.password, req.body.password, user.salt)) {
@@ -50,7 +50,7 @@ app.post('/users/login', function (req, res) {
 * Acivate a user
 * URL param: userId
 */
-app.get('/users/activate/:userId', function (req, res) {
+router.get('/users/activate/:userId', function (req, res) {
   User.findById(req.params.userId, function (err, user) {
     if (err) return res.internalError();
     if (user.activated) {
@@ -70,7 +70,7 @@ app.get('/users/activate/:userId', function (req, res) {
 * Get a list of all users
 * AUTH: admin, staff
 */
-app.get('/users', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+router.get('/users', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
   User
     .find({})
     .sort({'application.submitted': 1})
@@ -86,7 +86,7 @@ app.get('/users', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
 * AUTH: admin, staff
 * POST: userId
 */
-app.post('/users/unsubscribe', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+router.post('/users/unsubscribe', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
   User.findById(req.body.userId, function (err, user) {
     if (err) return res.internalError();
     user.subscribe = false;
@@ -102,7 +102,7 @@ app.post('/users/unsubscribe', User.Auth([User.ADMIN, User.STAFF]), function (re
 * AUTH: admin
 * POST: userId
 */
-app.post('/users/delete', User.Auth([User.ADMIN]), function (req, res) {
+router.post('/users/delete', User.Auth([User.ADMIN]), function (req, res) {
   User.findByIdAndRemove(req.body.userId, function (err) {
     if (err) return res.internalError();
     return res.send({});

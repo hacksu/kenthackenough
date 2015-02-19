@@ -27,7 +27,7 @@ describe('API', function () {
 
     it('should register a new user', function (done) {
       request(app)
-        .post('/users/register')
+        .post('/api/users/register')
         .send({
           email: 'user@test.com',
           password: 'pass'
@@ -44,7 +44,7 @@ describe('API', function () {
 
     it('should activate the new user', function (done) {
       request(app)
-        .get('/users/activate/' + id)
+        .get('/api/users/activate/' + id)
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;
@@ -55,7 +55,7 @@ describe('API', function () {
 
     it('should successfully check login credentials', function (done) {
       request(app)
-        .post('/users/login')
+        .post('/api/users/login')
         .send({
           email: 'user@test.com',
           password: 'pass'
@@ -63,14 +63,16 @@ describe('API', function () {
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;
-          JSON.stringify(res.body).should.equal("{}");
+          res.body.should.have.property('email');
+          res.body.should.have.property('password');
+          res.body.should.have.property('role');
           done();
         });
     });
 
     it('should tell me that the username or password is incorrect', function (done) {
       request(app)
-        .post('/users/login')
+        .post('/api/users/login')
         .send({
           email: 'user@test.com',
           password: 'wrong'
@@ -85,7 +87,7 @@ describe('API', function () {
 
     it('should submit an application for the test user', function (done) {
       request(app)
-        .post('/application/submit')
+        .post('/api/application/submit')
         .auth('user@test.com', 'pass')
         .send({
           name: 'First Last',
@@ -126,7 +128,7 @@ describe('API', function () {
 
     it('should update the created application', function (done) {
       request(app)
-        .post('/application/update')
+        .post('/api/application/update')
         .auth('user@test.com', 'pass')
         .send({
           name: 'Real Name',
@@ -165,7 +167,7 @@ describe('API', function () {
 
     it('should view the user\'s application', function (done) {
       request(app)
-        .get('/application')
+        .get('/api/application')
         .auth('user@test.com', 'pass')
         .expect(200)
         .end(function (err, res) {
@@ -189,7 +191,7 @@ describe('API', function () {
 
     it('should approve the users\'s application', function (done) {
       request(app)
-        .post('/application/status')
+        .post('/api/application/status')
         .auth('admin@test.com', 'pass')
         .send({
           userId: id,
@@ -205,7 +207,7 @@ describe('API', function () {
 
     it('should quickly register a new user', function (done) {
       request(app)
-        .post('/application/quick')
+        .post('/api/application/quick')
         .auth('admin@test.com', 'pass')
         .send({
           name: 'Last Person',
@@ -224,7 +226,7 @@ describe('API', function () {
 
     it('should get a list of all users', function (done) {
       request(app)
-        .get('/users')
+        .get('/api/users')
         .auth('admin@test.com', 'pass')
         .expect(200)
         .end(function (err, res) {
@@ -236,7 +238,7 @@ describe('API', function () {
 
     it('should unsubscribe a user', function (done) {
       request(app)
-        .post('/users/unsubscribe')
+        .post('/api/users/unsubscribe')
         .auth('admin@test.com', 'pass')
         .send({
           userId: id
@@ -251,7 +253,7 @@ describe('API', function () {
 
     it('should delete a user', function (done) {
       request(app)
-        .post('/users/delete')
+        .post('/api/users/delete')
         .auth('admin@test.com', 'pass')
         .send({
           userId: id

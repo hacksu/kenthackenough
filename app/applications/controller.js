@@ -1,4 +1,4 @@
-var app = getAppInstance();
+var router = getRouter();
 var User = require('../users/model');
 var Application = require('./model');
 var chance = require('chance')();
@@ -13,7 +13,7 @@ var schema = require('validate');
 *   year (string), age (number), gender (string), major (string),
 *   conduct (bool), travel (bool), waiver (bool)
 */
-app.post('/application/submit', User.Auth(), function (req, res) {
+router.post('/application/submit', User.Auth(), function (req, res) {
   if (req.user.application.submitted) return res.singleError('You have already submitted your application');
   var errors = Application.validate(req.body);
   if (errors.length) return res.multiError(errors);
@@ -36,7 +36,7 @@ app.post('/application/submit', User.Auth(), function (req, res) {
 *   year (string), age (number), gender (string), major (string),
 *   conduct (bool), travel (bool), waiver (bool)
 */
-app.post('/application/update', User.Auth(), function (req, res) {
+router.post('/application/update', User.Auth(), function (req, res) {
   if (!req.user.application.submitted) return res.singleError('You haven\'t submitted an application yet');
   var errors = Application.validate(req.body);
   if (errors.length) return res.multiError(errors);
@@ -59,7 +59,7 @@ app.post('/application/update', User.Auth(), function (req, res) {
 * POST:
 *   going (bool)
 */
-app.post('/application/rsvp', User.Auth(), function (req, res) {
+router.post('/application/rsvp', User.Auth(), function (req, res) {
   if (req.user.application.status == Application.APPROVED) {
     req.user.application.going = req.body.going;
     req.user.save(function (err, user) {
@@ -75,7 +75,7 @@ app.post('/application/rsvp', User.Auth(), function (req, res) {
 * Return the attendee status
 * AUTH: any user
 */
-app.get('/application', User.Auth(), function (req, res) {
+router.get('/application', User.Auth(), function (req, res) {
   if (req.user.application.submitted) {
     return res.send(req.user.application);
   } else {
@@ -88,7 +88,7 @@ app.get('/application', User.Auth(), function (req, res) {
 * AUTH: staff, admin
 * POST: userId, status (approved, denied, waitlisted, pending)
 */
-app.post('/application/status', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+router.post('/application/status', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
   User.findById(req.body.userId, function (err, user) {
     if (err) return res.internalError();
     user.application.status = req.body.status;
@@ -105,7 +105,7 @@ app.post('/application/status', User.Auth([User.ADMIN, User.STAFF]), function (r
 * AUTH: staff, admin
 * POST: userId
 */
-app.post('/application/remove', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+router.post('/application/remove', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
   User.findById(req.body.userId, function (err, user) {
     if (err) return res.internalError();
     return res.send(user.application);
@@ -118,7 +118,7 @@ app.post('/application/remove', User.Auth([User.ADMIN, User.STAFF]), function (r
 * AUTH: staff, admin
 * POST: name, email, phone
 */
-app.post('/application/quick', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+router.post('/application/quick', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
   var test = schema({
     name: {
       required: true,

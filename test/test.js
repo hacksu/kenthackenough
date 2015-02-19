@@ -1,7 +1,7 @@
 var app = require('../app').app;
 var should = require('should');
 var request = require('supertest');
-var User = require('../app/users/model');
+var User = require('../app/modules/users/model');
 
 describe('API', function () {
 

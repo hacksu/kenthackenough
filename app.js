@@ -14,7 +14,7 @@ var cors = require('cors');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var multer = require('multer');
-var error = require('./app/error');
+var error = require('./app/helpers/error');
 
 // Start up server
 var app = express();
@@ -52,7 +52,7 @@ GLOBAL.getRouter = function () {
   'users',
   'applications'
 ].forEach(function (module) {
-  require('./app/' + module + '/controller');
+  require('./app/modules/' + module + '/controller');
 });
 
 app.use('/api', router);

@@ -34,18 +34,34 @@ angular
       };
 
       /**
+      * Adds authorization headers to a request object
+      * @param req A request object
+      * @return The request object with auth headers attached
+      */
+      this.authorize = function (req) {
+        var me = this.getMe();
+        var encoded = base64Encode(me.email + ':' + me.password);
+        var ext = {
+          headers: {
+            'Authorization': 'Basic ' + encoded
+          }
+        };
+        angular.extend(req, ext);
+        return req;
+      }
+
+      /**
       * Register a user
-      * @param email The email to register with
-      * @param password The password to register with
+      * @param user {email: String, password: String}
       * @return An $http promise
       */
-      this.register = function (email, password) {
+      this.register = function (user) {
         var req = {
           method: 'POST',
           url: '/api/users/register',
           data: {
-            email: email,
-            password: password
+            email: user.email,
+            password: user.password
           }
         };
         return $http(req);
@@ -66,17 +82,16 @@ angular
 
       /**
       * Login a user
-      * @param email The email to attempt with
-      * @param password The password to attempt with
+      * @param user {email: String, password: String}
       * @return An $http promise
       */
-      this.login = function (email, password) {
+      this.login = function (user) {
         var req = {
           method: 'POST',
           url: '/api/users/login',
           data: {
-            email: email,
-            password: password
+            email: user.email,
+            password: user.password
           }
         };
         return $http(req);

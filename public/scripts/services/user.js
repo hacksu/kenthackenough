@@ -42,7 +42,7 @@ angular
       this.register = function (email, password) {
         var req = {
           method: 'POST',
-          url: '/users/register',
+          url: '/api/users/register',
           data: {
             email: email,
             password: password
@@ -59,7 +59,7 @@ angular
       this.activate = function (userId) {
         var req = {
           method: 'GET',
-          url: '/users/activate/' + userId
+          url: '/api/users/activate/' + userId
         };
         return $http(req);
       };
@@ -73,7 +73,7 @@ angular
       this.login = function (email, password) {
         var req = {
           method: 'POST',
-          url: '/users/login',
+          url: '/api/users/login',
           data: {
             email: email,
             password: password

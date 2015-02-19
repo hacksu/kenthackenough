@@ -63,7 +63,29 @@ RESPONSE:
 }
 ```
 
-####
+#### Get a list of all users
+```javascript
+GET /api/users
+HTTP Basic Auth (staff, admin)
+```
+
+#### Unsubscribe a user (remove them from mailing list)
+```javascript
+POST /api/users/unsubscribe
+HTTP Basic Auth (staff, admin)
+{
+  userId: String
+}
+```
+
+#### Completely delete a user (just in case!)
+```javascript
+POST /api/users/delete
+HTTP Basic Auth (admin)
+{
+  userId: String
+}
+```
 
 ### Application
 
@@ -124,12 +146,18 @@ HTTP Basic Auth (attendee, staff, admin)
 {
   going: Boolean
 }
+
+RESPONSE:
+{}
 ```
 
 #### Get an application
 ```javascript
 GET /api/application
 HTTP Basic Auth (attendee, staff, admin)
+
+RESPONSE:
+// the application object
 ```
 
 #### Set an application status
@@ -140,6 +168,9 @@ HTTP Basic Auth (staff, admin)
   userId: String,
   status: 'approved'|'denied'|'waitlisted'|'pending'
 }
+
+RESPONSE:
+// the updated application object
 ```
 
 #### Softly remove a user's application
@@ -159,29 +190,5 @@ HTTP Basic Auth (staff, admin)
   name: String,
   email: String,
   phone: String
-}
-```
-
-#### Get a list of all users
-```javascript
-GET /api/users
-HTTP Basic Auth (staff, admin)
-```
-
-#### Unsubscribe a user (remove them from mailing list)
-```javascript
-POST /api/users/unsubscribe
-HTTP Basic Auth (staff, admin)
-{
-  userId: String
-}
-```
-
-#### Completely delete a user (just in case!)
-```javascript
-POST /api/users/delete
-HTTP Basic Auth (admin)
-{
-  userId: String
 }
 ```

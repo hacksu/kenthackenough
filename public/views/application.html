@@ -5,7 +5,7 @@
     <!-- Errors, if there are any -->
     <div ng-if="application.errors">
       <div data-alert class="alert-box alert">
-        <span ng-repeat="error in application.errors">{{error}}</span>
+        <span ng-repeat="error in application.errors">{{error}}<br></span>
         <a href="#" class="close">&times;</a>
       </div>
     </div>
@@ -15,11 +15,11 @@
 
       <!-- Name -->
       <div class="row">
-        <label class="small-6 columns">
+        <label class="small-12 large-6 columns">
           First Name
           <input type="text" ng-model="application.name.first" placeholder="John">
         </label>
-        <label class="small-6 columns">
+        <label class="small-12 large-6 columns">
           Last Name
           <input type="text" ng-model="application.name.last" placeholder="Doe">
         </label>
@@ -56,55 +56,26 @@
 
       <!-- Dietary restrictions -->
       <div class="row">
-        <label class="small-12 columns">
-          <div class="row">
-            <div class="small-12 columns">
-              Please select any dietary restrictions you have:
-            </div>
-          </div>
-          <div class="row">
-            <div class="small-6 columns">
-              <label class="small-6 columns">
-                <input type="checkbox" ng-model="application.dietary.Vegetarian" value="true">
-                Vegetarian
-              </label>
-              <label class="small-6 columns">
-                <input type="checkbox" ng-model="application.dietary.Vegan" value="true">
-                Vegan
-              </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="small-6 columns">
-              <label class="small-6 columns">
-                <input type="checkbox" ng-model="application.dietary.Kosher" value="true">
-                Kosher
-              </label>
-              <label class="small-6 columns">
-                <input type="checkbox" ng-model="application.dietary.Gluten" value="true">
-                Gluten Free
-              </label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="small-6 columns">
-              <label class="small-6 columns">
-                <input type="checkbox" ng-model="application.dietary.Other" value="true">
-                Other
-              </label>
-            </div>
-          </div>
+        <label class="small-12 columns">Select any dietary restrictions you have:</label>
+        <label ng-repeat="restriction in application.diet.possible" class="small-12 columns">
+          <input
+            type="checkbox"
+            name="selectedRestrictions[]"
+            value="{{restriction}}"
+            ng-checked="application.diet.selected.indexOf(restriction) > -1"
+            ng-click="application.diet.toggleSelection(restriction)"
+          > {{restriction}}
         </label>
       </div>
 
       <!-- Age and Gender -->
       <div class="row">
-        <label class="small-6 columns">
+        <label class="small-12 large-6 columns">
           How old are you?
           <input type="text" ng-model="application.age">
         </label>
 
-        <label class="small-6 columns">
+        <label class="small-12 large-6 columns">
           Gender:
           <select ng-model="application.gender">
             <option value="male">Male</option>
@@ -116,7 +87,7 @@
 
       <!-- Year in school -->
       <div class="row">
-        <label class="small-6 columns">
+        <label class="small-12 large-6 columns">
           What is your year in school?
           <select ng-model="application.year">
             <option value="Senior">Senior</option>
@@ -128,7 +99,7 @@
         </label>
 
         <!-- First hackathon? -->
-        <label class="small-6 columns">
+        <label class="small-12 large-6 columns">
           Is this your first hackathon?
           <select ng-model="application.first">
             <option value="true">Yes</option>

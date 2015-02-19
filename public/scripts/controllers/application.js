@@ -15,7 +15,35 @@ angular
     // Get the logged in user if it exists
     self.me = user.getMe();
 
-    // Populate the form if it exists
+    /**
+    * An object with an array of possible dietary restrictions,
+    * an array of selected restrictions, and a function to toggle a
+    * selection.
+    */
+    self.diet = {
+      possible: [
+        'Vegetarian',
+        'Vegan',
+        'Kosher',
+        'Gluten Free',
+        'Other'
+      ],
+      selected: [],
+      toggleSelection: function (restriction) {
+        var idx = this.selected.indexOf(restriction);
+        if (idx > -1) {
+          this.selected.splice(idx, 1);
+        } else {
+          this.selected.push(restriction);
+        }
+        console.log(this.selected);
+      }
+    };
+
+    /**
+    * Pre-populate the form if the user has already submitted
+    * an application.
+    */
     application.get().
     success(function (data) {
       if (!data.errors) {
@@ -26,12 +54,9 @@ angular
         self.name.last = self.name[1];
         self.first = String(self.first);
         self.travel = String(self.travel);
-        var newDietary = {};
-        for (var i = 0; i < self.dietary.length; ++i) {
-          newDietary[self.dietary[i]] = true;
-        }
-        self.dietary = newDietary;
-        console.log(self);
+        console.log(self.dietary);
+        self.diet.selected = self.dietary;
+        console.log(self.diet.selected);
       }
     }).
     error(function () {
@@ -42,12 +67,13 @@ angular
     * Submit or update the user's application
     */
     self.submit = function () {
+      console.log(self.diet);
       // make a string of dietary restrictions
       var restrictions = null;
-      if (self.dietary) {
+      if (self.diet.selected.length) {
         var restrictions = '';
-        for (diet in self.dietary) {
-          restrictions += diet + '|'
+        for (var i = 0; i < self.diet.selected.length; ++i) {
+          restrictions += self.diet.selected[i] + '|'
         }
         var restrictions = restrictions.substr(0, restrictions.length - 1);
       }

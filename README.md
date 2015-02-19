@@ -23,7 +23,7 @@ The world's best hackathon website.
 ### User
 #### Register a new user
 ```javascript
-POST /users/register
+POST /api/users/register
 {
   email: String,
   password: String
@@ -32,14 +32,16 @@ POST /users/register
 RESPONSE:
 {
   _id: String,
-  email: String
+  email: String,
+  password: String,
+  role: String
 }
 ```
 
 #### Activate a user
 **Note:** Currently deprecated (we're not requiring email verification)
 ```javascript
-GET /users/activate/<user_id>
+GET /api/users/activate/<user_id>
 
 RESPONSE:
 {}
@@ -47,14 +49,18 @@ RESPONSE:
 
 #### Login a user (check their credentials)
 ```javascript
-POST /users/login
+POST /api/users/login
 {
   email: String,
   password: String
 }
 
 RESPONSE:
-{}
+{
+  email: String,
+  password: String,
+  role: String
+}
 ```
 
 ####
@@ -63,7 +69,7 @@ RESPONSE:
 
 #### Submit an application
 ```javascript
-POST /application/submit
+POST /api/application/submit
 HTTP Basic Auth (attendee, staff, admin)
 {
   name: String,           // full name
@@ -88,7 +94,7 @@ RESPONSE:
 
 #### Update an application
 ```javascript
-POST /application/update
+POST /api/application/update
 HTTP Basic Auth (attendee, staff, admin)
 {
   name: String,           // full name
@@ -113,7 +119,7 @@ RESPONSE:
 
 #### RSVP to an application
 ```javascript
-POST /application/rsvp
+POST /api/application/rsvp
 HTTP Basic Auth (attendee, staff, admin)
 {
   going: Boolean
@@ -122,13 +128,13 @@ HTTP Basic Auth (attendee, staff, admin)
 
 #### Get an application
 ```javascript
-GET /application
+GET /api/application
 HTTP Basic Auth (attendee, staff, admin)
 ```
 
 #### Set an application status
 ```javascript
-POST /application/status
+POST /api/application/status
 HTTP Basic Auth (staff, admin)
 {
   userId: String,
@@ -138,7 +144,7 @@ HTTP Basic Auth (staff, admin)
 
 #### Softly remove a user's application
 ```javascript
-POST /application/remove
+POST /api/application/remove
 HTTP Basic Auth (staff, admin)
 {
   userId: String
@@ -147,7 +153,7 @@ HTTP Basic Auth (staff, admin)
 
 #### Quickly register a user
 ```javascript
-POST /application/quick
+POST /api/application/quick
 HTTP Basic Auth (staff, admin)
 {
   name: String,
@@ -158,13 +164,13 @@ HTTP Basic Auth (staff, admin)
 
 #### Get a list of all users
 ```javascript
-GET /users
+GET /api/users
 HTTP Basic Auth (staff, admin)
 ```
 
 #### Unsubscribe a user (remove them from mailing list)
 ```javascript
-POST /users/unsubscribe
+POST /api/users/unsubscribe
 HTTP Basic Auth (staff, admin)
 {
   userId: String
@@ -173,7 +179,7 @@ HTTP Basic Auth (staff, admin)
 
 #### Completely delete a user (just in case!)
 ```javascript
-POST /users/delete
+POST /api/users/delete
 HTTP Basic Auth (admin)
 {
   userId: String

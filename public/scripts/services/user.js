@@ -97,6 +97,50 @@ angular
         return $http(req);
       };
 
+      /**
+      * Return a list of all users (staff and admins only)
+      * @return An $http promise
+      */
+      this.list = function () {
+        var req = this.authorize({
+          method: 'GET',
+          url: '/api/users'
+        });
+        return $http(req);
+      };
+
+      /**
+      * Unsubscribe from mailing list
+      * @param userId The ID of the user to unsubscribe
+      * @return An $http promise
+      */
+      this.unsubscribe = function (userId) {
+        var req = this.authorize({
+          method: 'POST',
+          url: '/api/users/unsubscribe',
+          data: {
+            userId: userId
+          }
+        });
+        return $http(req);
+      };
+
+      /**
+      * Completely delete a user
+      * @param userId The ID of the user to delete
+      * @return An $http promise
+      */
+      this.delete = function (userId) {
+        var req = this.authorize({
+          method: 'POST',
+          url: '/api/users/delete',
+          data: {
+            userId: userId
+          }
+        });
+        return $http(req);
+      };
+
     };
 
     return User;

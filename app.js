@@ -16,6 +16,7 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 var winston = require('winston');
 var error = require('./app/helpers/error');
+var config = require('./config');
 
 // Start up server
 var app = express();
@@ -23,7 +24,7 @@ var router = express.Router();
 
 // Tell winston to use a log file
 winston.add(winston.transports.File, {
-  filename: 'app.log',
+  filename: config.log,
   handleExceptions: true
 });
 winston.exitOnError = false;
@@ -39,11 +40,11 @@ app.use(function (req, res, next) {
   winston.info(req.method + ' ' + req.url);
   next();
 });
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || config.port;
 var server = app.listen(port);
 
 // Connect to database
-var mongo = process.env.MONGO_URI || 'mongodb://localhost:27017/khe';
+var mongo = process.env.MONGO_URI || config.mongo.uri;
 mongoose.connect(mongo);
 
 // Export some useful objects

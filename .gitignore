@@ -3,6 +3,7 @@ uploads
 .vagrant
 public/bower_components
 app.log
+config.js
 
 # Logs
 logs

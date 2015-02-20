@@ -38,6 +38,7 @@ var jade = require('jade');
 var nodemailer = require('nodemailer');
 var winston = require('winston');
 var flow = require('flow');
+var config = require('../../config');
 
 module.exports = function (options) {
 
@@ -48,12 +49,14 @@ module.exports = function (options) {
 
       send: function () {
 
+        winston.info(process.env.GMAIL_USERNAME);
+
         // Create our transporter object
         var transporter = nodemailer.createTransport({
           service: 'Gmail',
           auth: {
-            user: process.env.GMAIL_USERNAME,
-            pass: process.env.GMAIL_PASSWORD
+            user: config.gmail.username,
+            pass: config.gmail.password
           }
         });
 
@@ -86,7 +89,7 @@ module.exports = function (options) {
               var recipient = self.options.recipients[i];
               // Configure the message
               var mailOptions = {
-                from: process.env.FROM_EMAIL,
+                from: config.gmail.from,
                 to: recipient.email,
                 subject: self.options.subject,
                 text: data.txt,

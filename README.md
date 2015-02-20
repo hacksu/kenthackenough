@@ -9,11 +9,9 @@ The world's best hackathon website.
 1. `npm install -g n`
 1. `n stable`
 
-### Mass Emails
-Email sending relies on a Gmail account. Configure settings like this:
-1. Set `process.env.GMAIL_USERNAME` to something like `user.name@gmail.com`
-1. Set `process.env.GMAIL_PASSWORD` to something like `password123`
-1. Set `process.env.FROM_EMAIL` to something like `First Last <first.last@khe.io>`
+### Configuration
+1. `cp config_example.js config.js`
+1. Enter values into config.js
 
 ### Development
 1. Clone this repository

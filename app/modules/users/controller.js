@@ -1,5 +1,6 @@
 var router = getRouter();
 var User = require('./model');
+var Message = require('../../helpers/mailer');
 
 /**
 * Create a new user
@@ -18,6 +19,7 @@ router.post('/users/register', function (req, res) {
   });
   user.save(function (err, user) {
     if (err) return res.singleError('That email is already in use');
+    sendRegistrationEmail(user.email);
     return res.send({
       _id: user._id,
       email: user.email,
@@ -108,3 +110,15 @@ router.post('/users/delete', User.Auth([User.ADMIN]), function (req, res) {
     return res.send({});
   });
 });
+
+/**
+* Helper methods to shorten routes
+*/
+function sendRegistrationEmail(email) {
+  var message = new Message({
+    template: 'registration',
+    subject: 'Kent Hack Enough Registration',
+    recipients: [{email: email}]
+  });
+  message.send();
+}

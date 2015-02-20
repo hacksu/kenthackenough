@@ -55,6 +55,7 @@ angular
         self.first = String(self.first);
         self.travel = String(self.travel);
         self.diet.selected = self.dietary;
+        self.phone = formatPhoneNumber(self.phone);
       }
     }).
     error(function () {
@@ -79,7 +80,7 @@ angular
       var app = {
         name: self.name.first + ' ' + self.name.last,
         school: self.school,
-        phone: self.phone,
+        phone: self.phone.replace(/\D/g,''),
         shirt: self.shirt,
         demographic: self.demographic,
         first: self.first,
@@ -124,3 +125,9 @@ angular
     };
 
   }]);
+
+function formatPhoneNumber(s) {
+  var s2 = (""+s).replace(/\D/g, '');
+  var m = s2.match(/^(\d{3})(\d{3})(\d{4})$/);
+  return (!m) ? null : "(" + m[1] + ") " + m[2] + "-" + m[3];
+}

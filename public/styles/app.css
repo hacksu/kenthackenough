@@ -25,3 +25,11 @@
 .align-left {
   text-align: left;
 }
+
+input.ng-valid, select.ng-valid {
+  background-color: #e6fdeb;
+}
+
+input.ng-touched.ng-invalid, select.ng-touched.ng-invalid {
+  background-color: #faede7;
+}

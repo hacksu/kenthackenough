@@ -2,6 +2,12 @@
 
   <requirelogin user="application.me" error="true">
 
+    <div class="row">
+      <div class="small-12 columns">
+        <p><a href="/#/">Home</a></p>
+      </div>
+    </div>
+
     <!-- Errors, if there are any -->
     <div ng-if="application.errors">
       <div data-alert class="alert-box alert">
@@ -11,17 +17,17 @@
     </div>
 
     <!-- The application form -->
-    <form ng-submit="application.submit()">
+    <form ng-submit="application.submit()" novalidate>
 
       <!-- Name -->
       <div class="row">
         <label class="small-12 large-6 columns">
           First Name
-          <input type="text" ng-model="application.name.first" placeholder="John">
+          <input type="text" ng-model="application.name.first" placeholder="John" required>
         </label>
         <label class="small-12 large-6 columns">
           Last Name
-          <input type="text" ng-model="application.name.last" placeholder="Doe">
+          <input type="text" ng-model="application.name.last" placeholder="Doe" required>
         </label>
       </div>
 
@@ -29,7 +35,7 @@
       <div class="row">
         <label class="small-12 columns">
           Phone Number
-          <input type="text" ng-model="application.phone" placeholder="555-555-5555">
+          <input type="text" ng-model="application.phone" placeholder="555-555-5555" required>
         </label>
       </div>
 
@@ -37,7 +43,7 @@
       <div class="row">
         <label class="small-12 columns">
           School
-          <input type="text" ng-model="application.school" placeholder="State University">
+          <input type="text" ng-model="application.school" placeholder="State University" required>
         </label>
       </div>
 
@@ -45,7 +51,7 @@
       <div class="row">
         <label class="small-12 columns">
           Shirt Size
-          <select ng-model="application.shirt">
+          <select ng-model="application.shirt" required>
             <option value="S">Small</option>
             <option value="M" selected>Medium</option>
             <option value="L">Large</option>
@@ -72,12 +78,12 @@
       <div class="row">
         <label class="small-12 large-6 columns">
           How old are you?
-          <input type="text" ng-model="application.age">
+          <input type="text" ng-model="application.age" required>
         </label>
 
         <label class="small-12 large-6 columns">
           Gender:
-          <select ng-model="application.gender">
+          <select ng-model="application.gender" required>
             <option value="male">Male</option>
             <option value="female">Female</option>
             <option value="other">Other</option>
@@ -89,7 +95,7 @@
       <div class="row">
         <label class="small-12 large-6 columns">
           What is your year in school?
-          <select ng-model="application.year">
+          <select ng-model="application.year" required>
             <option value="Senior">Senior</option>
             <option value="Junior">Junior</option>
             <option value="Sophomore">Sophomore</option>
@@ -101,7 +107,7 @@
         <!-- First hackathon? -->
         <label class="small-12 large-6 columns">
           Is this your first hackathon?
-          <select ng-model="application.first">
+          <select ng-model="application.first" required>
             <option value="true">Yes</option>
             <option value="false">No</option>
           </select>
@@ -112,7 +118,7 @@
       <div class="row">
         <label class="small-12 columns">
           What is your major?
-          <input type="text" ng-model="application.major">
+          <input type="text" ng-model="application.major" required>
         </label>
       </div>
 
@@ -120,7 +126,7 @@
       <div class="row">
         <label class="small-12 columns">
           Will you require travel reimbursement?
-          <select ng-model="application.travel">
+          <select ng-model="application.travel" required>
             <option value="true">Yes</option>
             <option value="false">No</option>
           </select>
@@ -130,7 +136,7 @@
       <!-- Demographic release -->
       <div class="row">
         <label class="small-12 columns">
-          <input type="checkbox" ng-model="application.demographic" value="true">
+          <input type="checkbox" ng-model="application.demographic" value="true" required>
           I agree to allow my demographic information to be used anonymously to improve hackathons.
           <br>
         </label>
@@ -139,7 +145,7 @@
       <!-- Code of conduct -->
       <div class="row">
         <label class="small-12 columns">
-          <input type="checkbox" ng-model="application.conduct" value="true">
+          <input type="checkbox" ng-model="application.conduct" value="true" required>
           I agree to the MLH Code of Conduct
           <br>
         </label>
@@ -148,7 +154,7 @@
       <!-- Event waiver -->
       <div class="row">
         <label class="small-12 columns">
-          <input type="checkbox" ng-model="application.waiver" value="true">
+          <input type="checkbox" ng-model="application.waiver" value="true" required>
           I agree to this event waiver.
           <br>
         </label>

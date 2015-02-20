@@ -21,14 +21,14 @@
     <a ng-click="currentForm = 'login'">Sign in</a>
 
     <!-- Register form -->
-    <form ng-if="currentForm == 'register'" name="home.forms.register" ng-submit="home.register()" novalidate>
+    <form ng-if="currentForm == 'register'" name="home.forms.register" ng-submit="home.register()" novalidate class="validation">
       <input ng-model="home.email" type="email" placeholder="Email" required>
       <input ng-model="home.password" type="password" placeholder="Password" required>
       <button>Register</button>
     </form>
 
     <!-- Login form -->
-    <form ng-if="currentForm == 'login'" name="home.forms.login" ng-submit="home.login()" novalidate>
+    <form ng-if="currentForm == 'login'" name="home.forms.login" ng-submit="home.login()" novalidate class="validation">
       <input ng-model="home.email" type="email" placeholder="Email" required>
       <input ng-model="home.password" type="password" placeholder="Password" required>
       <button>Sign in</button>

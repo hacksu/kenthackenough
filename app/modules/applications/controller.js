@@ -22,6 +22,7 @@ router.post('/application/submit', User.Auth(), function (req, res) {
   if (req.body.dietary) req.user.application.dietary = req.body.dietary.split('|');
   req.user.application.submitted = true;
   req.user.application.status = Application.PENDING;
+  req.user.application.time = Date.now();
   req.user.save(function (err, u) {
     if (err) return res.internalError();
     sendApplicationEmail(u);

@@ -15,7 +15,8 @@ router.post('/users/register', function (req, res) {
     password: User.Helpers.hash(req.body.password, salt),
     role: User.ATTENDEE,
     salt: salt,
-    activated: false
+    activated: false,
+    time: Date.now()
   });
   user.save(function (err, user) {
     if (err) return res.singleError('That email is already in use');

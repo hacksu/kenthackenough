@@ -1,0 +1,111 @@
+<div ng-controller="StaffAttendeesCtrl as att">
+  <requirestaff user="att.user" error="true">
+    <staffheader></staffheader>
+    <staffsidebar>
+      <li><a ng-click="att.all()">All</a></li>
+      <li><a ng-click="att.applied()">Applied</a></li>
+      <li><a ng-click="att.going()">Going</a></li>
+      <li><a ng-click="att.approved()">Approved</a></li>
+      <li><a ng-click="att.waitlisted()">Waitlisted</a></li>
+      <li><a ng-click="att.pending()">Pending</a></li>
+      <li><a ng-click="att.denied()">Denied</a></li>
+      <li class="divider"></li>
+      <li><a href="/#/staff/attendees/checkin">Check In</a></li>
+    </staffsidebar>
+
+    <br>
+    <div class="small-9 columns">
+
+      <input type="text" ng-model="query" placeholder="Search by name, email, school, phone, or any other user attribute">
+      <table width="100%" ng-if="att.current.length">
+        <tbody>
+          <!-- If the application has been submitted -->
+          <tr ng-repeat="user in att.current | filter:query | orderBy:'application.time':true" ng-if="user.application.submitted">
+            <!-- Short version -->
+              <!-- Name and school -->
+              <td ng-if="!att.expanded(user)">
+                <strong ng-click="att.toggle(user)" class="username">{{user.application.name}}</strong><br>
+                {{user.application.school}}
+              </td>
+              <!-- Status -->
+              <td ng-if="!att.expanded(user)">{{user.application.status[0].toUpperCase() + user.application.status.slice(1)}}</td>
+            <!-- Expanded version -->
+              <!-- Name and school -->
+              <td ng-if="att.expanded(user)">
+                <div class="row">
+                  <div class="small-12 columns">
+                    <strong ng-click="att.toggle(user)" class="username">{{user.application.name}}</strong>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="small-6 columns">
+                    School: {{user.application.school}}
+                  </div>
+                  <div class="small-6 columns">
+                    Year: {{user.application.year}}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="small-6 columns">
+                    Phone: {{user.application.phone}}
+                  </div>
+                  <div class="small-6 columns">
+                    Age: {{user.application.age}}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="small-6 columns">
+                    Shirt Size: {{user.application.shirt}}
+                  </div>
+                  <div class="small-6 columns">
+                    Gender: {{user.application.gender}}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="small-6 columns">
+                    First hackathon?: {{user.application.first}}
+                  </div>
+                  <div class="small-6 columns">
+                    Major: {{user.application.major}}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="small-6 columns">
+                    Dietary Restrictions: {{user.application.dietary}}
+                  </div>
+                  <div class="small-6 columns">
+                    Travel Reimbursement: {{user.application.travel}}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="small-6 columns">
+                    Status: {{user.application.status}}
+                  </div>
+                  <div class="small-6 columns">
+                    Checked-in: {{user.application.checked}}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="small-6 columns">
+                    Going?: {{user.application.going}}
+                  </div>
+                  <div class="small-6 columns">
+                    Role: {{user.role}}
+                  </div>
+                </div>
+              </td>
+              <td></td>
+          </tr>
+
+          <!-- If the application has not been submitted yet -->
+          <tr ng-repeat="user in att.current | filter:query | orderBy:'time':true" ng-if="!user.application.submitted">
+            <td>{{user.email}}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+  </requirestaff>
+</div>

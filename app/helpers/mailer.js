@@ -49,8 +49,6 @@ module.exports = function (options) {
 
       send: function () {
 
-        winston.info(process.env.GMAIL_USERNAME);
-
         // Create our transporter object
         var transporter = nodemailer.createTransport({
           service: 'Gmail',

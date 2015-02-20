@@ -114,6 +114,7 @@ router.post('/users/delete', User.Auth([User.ADMIN]), function (req, res) {
 /**
 * Helper methods to shorten routes
 */
+
 function sendRegistrationEmail(email) {
   var message = new Message({
     template: 'registration',

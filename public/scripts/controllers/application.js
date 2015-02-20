@@ -54,9 +54,7 @@ angular
         self.name.last = self.name[1];
         self.first = String(self.first);
         self.travel = String(self.travel);
-        console.log(self.dietary);
         self.diet.selected = self.dietary;
-        console.log(self.diet.selected);
       }
     }).
     error(function () {
@@ -67,7 +65,6 @@ angular
     * Submit or update the user's application
     */
     self.submit = function () {
-      console.log(self.diet);
       // make a string of dietary restrictions
       var restrictions = null;
       if (self.diet.selected.length) {
@@ -111,10 +108,12 @@ angular
           self.errors = ['An internal error occurred'];
         });
       } else {
+        console.log('submitting...');
         application.submit(app).
         success(function (data) {
           self.errors = data.errors;
           if (!data.errors) {
+            console.log('why arent we going anywhere');
             $location.path('/');
           }
         }).

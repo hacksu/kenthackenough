@@ -3,6 +3,7 @@ var User = require('../users/model');
 var Application = require('./model');
 var chance = require('chance')();
 var schema = require('validate');
+var Message = require('../../helpers/mailer');
 
 /**
 * Submit application
@@ -23,6 +24,7 @@ router.post('/application/submit', User.Auth(), function (req, res) {
   req.user.application.status = Application.PENDING;
   req.user.save(function (err, u) {
     if (err) return res.internalError();
+    sendApplicationEmail(u);
     return res.send(u.application);
   });
 });
@@ -154,3 +156,25 @@ router.post('/application/quick', User.Auth([User.ADMIN, User.STAFF]), function 
     return res.send(user);
   });
 });
+
+/**
+* Helper methods to clean up routes
+*/
+
+function sendApplicationEmail(user) {
+  console.log(user.email);
+  var message = new Message({
+    template: 'application',
+    subject: 'Kent Hack Enough Application',
+    recipients: [{
+      email: user.email,
+      locals: {
+        name: {
+          first: user.application.name.split(' ')[0],
+          last: user.application.name.split(' ')[1]
+        }
+      }
+    }]
+  });
+  message.send();
+}

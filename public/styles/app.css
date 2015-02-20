@@ -26,10 +26,18 @@
   text-align: left;
 }
 
-input.ng-valid, select.ng-valid {
+.validation input.ng-valid, .validation select.ng-valid {
   background-color: #e6fdeb;
 }
 
-input.ng-touched.ng-invalid, select.ng-touched.ng-invalid {
+.validation input.ng-touched.ng-invalid, .validation select.ng-touched.ng-invalid {
   background-color: #faede7;
+}
+
+.sidebar {
+  background-color: #FAFAFA;
+}
+
+.username {
+  cursor: pointer;
 }

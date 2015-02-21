@@ -57,15 +57,16 @@ angular
       });
     };
 
-    // Set the status of the user to checked in
-    self.check = function (user) {
+    // Toggle the checked in status of the user
+    self.toggleChecked = function (user) {
+      console.log(user.application.checked);
       application.updateById(user._id, {
-        checked: true
+        checked: user.application.checked
       }).
       success(function (data) {
         self.errors = data.errors;
         if (!data.errors) {
-          // @todo do something!!!!!!!!!!
+          updateCount();
         }
       }).
       error(function () {

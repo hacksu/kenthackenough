@@ -36,7 +36,6 @@ angular
         } else {
           this.selected.push(restriction);
         }
-        console.log(this.selected);
       }
     };
 

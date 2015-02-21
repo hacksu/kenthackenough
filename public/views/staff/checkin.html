@@ -55,6 +55,13 @@
           <div class="small-9 columns">
             {{user.application.name}}
           </div>
+
+          <div class="small-3 columns">
+            <div class="switch align-right">
+              <input id="{{user._id}}-checked" type="checkbox" ng-model="user.application.checked" ng-click="checkin.toggleChecked(user)">
+              <label for="{{user._id}}-checked"></label>
+            </div>
+          </div>
         </div>
 
       </div>

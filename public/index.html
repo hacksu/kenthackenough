@@ -10,22 +10,20 @@
   <script src="bower_components/angular/angular.min.js"></script>
   <script src="bower_components/angular-route/angular-route.min.js"></script>
   <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+  <script src="bower_components/moment/min/moment.min.js"></script>
 
   <!-- App -->
   <script src="scripts/app.js"></script>
 
-  <!-- Library -->
-  <script src="scripts/library/helpers.js"></script>
-
   <!-- Controllers -->
-  <script src="scripts/controllers/application.js"></script>
-  <script src="scripts/controllers/home.js"></script>
   <script src="scripts/controllers/staff/attendees.js"></script>
   <script src="scripts/controllers/staff/emails.js"></script>
   <script src="scripts/controllers/staff/home.js"></script>
   <script src="scripts/controllers/staff/live.js"></script>
   <script src="scripts/controllers/staff/tickets.js"></script>
   <script src="scripts/controllers/staff/tools.js"></script>
+  <script src="scripts/controllers/application.js"></script>
+  <script src="scripts/controllers/home.js"></script>
 
   <!-- Directives -->
   <script src="scripts/directives/requireadmin.js"></script>
@@ -34,11 +32,15 @@
   <script src="scripts/directives/staffheader.js"></script>
   <script src="scripts/directives/staffsidebar.js"></script>
 
-  <!-- Services -->
-  <script src="scripts/services/user.js"></script>
-  <script src="scripts/services/application.js"></script>
-
   <!-- Filters -->
+  <script src="scripts/filters/base64Encode.js"></script>
+  <script src="scripts/filters/capitalizeFirstLetter.js"></script>
+  <script src="scripts/filters/formatPhone.js"></script>
+  <script src="scripts/filters/relativeDate.js"></script>
+
+  <!-- Services -->
+  <script src="scripts/services/application.js"></script>
+  <script src="scripts/services/user.js"></script>
 
   <!-- Styles -->
   <link rel="stylesheet" href="bower_components/foundation/css/foundation.css">

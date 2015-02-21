@@ -6,7 +6,7 @@ angular
         templateUrl: '/views/application.html'
       });
   }])
-  .controller('ApplicationCtrl', ['$location', 'User', 'Application', function ($location, User, Application) {
+  .controller('ApplicationCtrl', ['$location', '$filter', 'User', 'Application', function ($location, $filter, User, Application) {
 
     var self = this;
     var user = new User();
@@ -55,7 +55,7 @@ angular
         self.first = String(self.first);
         self.travel = String(self.travel);
         self.diet.selected = self.dietary;
-        self.phone = formatPhoneNumber(self.phone);
+        self.phone = $filter('formatPhone')(self.phone);
       }
     }).
     error(function () {

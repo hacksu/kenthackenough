@@ -5,7 +5,7 @@
 */
 angular
   .module('khe')
-  .factory('User', ['$http', '$cookieStore', function ($http, $cookies) {
+  .factory('User', ['$http', '$cookieStore', '$filter', function ($http, $cookies, $filter) {
 
     var User = function () {
 
@@ -40,7 +40,7 @@ angular
       */
       this.authorize = function (req) {
         var me = this.getMe();
-        var encoded = base64Encode(me.email + ':' + me.password);
+        var encoded = $filter('base64Encode')(me.email + ':' + me.password);
         var ext = {
           headers: {
             'Authorization': 'Basic ' + encoded

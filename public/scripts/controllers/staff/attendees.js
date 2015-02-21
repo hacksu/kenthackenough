@@ -93,7 +93,6 @@ angular
       for (var i = 0; i < self.users.length; i++) {
         var user = self.users[i];
         if (user.application.submitted) {
-          user.application.phone = Helpers.formatPhoneNumber(user.application.phone);
           switch (user.application.shirt) {
             case 'S':
               user.application.shirt = 'Small';
@@ -108,20 +107,25 @@ angular
               user.application.shirt = 'X-Large';
               break;
           }
-          user.application.gender = user.application.gender[0].toUpperCase() + user.application.gender.slice(1);
           user.application.first = (user.application.first ? 'Yes' : 'No');
-          if (user.application.dietary) {
+          if (user.application.dietary.length) {
             var diet = user.application.dietary[0];
             for (var j = 1; j < user.application.dietary.length; j++) {
               diet = diet + ', ' + user.application.dietary[j];
             }
             user.application.dietary = diet;
+          } else {
+            user.application.dietary = 'None';
           }
           user.application.travel = (user.application.travel ? 'Yes' : 'No');
-          user.application.status = user.application.status[0].toUpperCase() + user.application.status.slice(1);
           user.application.checked = (user.application.checked ? 'Yes': 'No');
-          user.application.going = (user.application.going ? 'Yes': 'No');
-          user.role = user.role[0].toUpperCase() + user.role.slice(1);
+          if (user.application.going === undefined) {
+            user.application.going = 'None';
+          } else if (user.application.going === false) {
+            user.applicaiton.going = 'Not Going';
+          } else {
+            user.application.going = 'Going';
+          }
         }
       };
     }

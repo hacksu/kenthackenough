@@ -52,7 +52,7 @@ mongoose.connect(mongo);
 module.exports.router = router;
 module.exports.app = app;
 module.exports.mongoose = mongoose;
-GLOBAL.getAppInstance = function () {
+GLOBAL.getApp = function () {
   return app;
 };
 GLOBAL.getRouter = function () {
@@ -62,7 +62,8 @@ GLOBAL.getRouter = function () {
 // Include modules
 [
   'users',
-  'applications'
+  'applications',
+  'urls'
 ].forEach(function (module) {
   require('./app/modules/' + module + '/controller');
 });

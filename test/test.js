@@ -282,6 +282,54 @@ describe('API', function () {
 
   });
 
+  describe('URL Shortener', function () {
+
+    var linkId;
+
+    it('should create a shortened url', function (done) {
+      request(app)
+        .post('/api/url/shorten')
+        .auth('admin@test.com', 'pass')
+        .send({
+          full: 'http://www.google.com',
+          short: 'google'
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.full.should.equal('http://www.google.com');
+          res.body.short.should.equal('google');
+          linkId = res.body._id;
+          done();
+        });
+    });
+
+    it('should redirect to the full url', function (done) {
+      request(app)
+        .get('/google')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          done();
+        });
+    });
+
+    it('should delete the created url', function (done) {
+      request(app)
+        .post('/api/url/remove')
+        .auth('admin@test.com', 'pass')
+        .send({
+          id: linkId
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          done();
+        });
+    });
+
+  });
+
   // Remove all test users
   after(function (done) {
     User.remove({email: 'admin@test.com'}, function (err) {

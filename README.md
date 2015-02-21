@@ -25,6 +25,14 @@ The world's best hackathon website.
 ### Production
 todo
 
+## Overview
+All errors are in the form of:
+```javascript
+{
+  errors: [String]
+}
+```
+
 ## API
 
 ### User
@@ -206,5 +214,32 @@ HTTP Basic Auth (staff, admin)
   name: String,
   email: String,
   phone: String
+}
+```
+
+
+### URL Shortener
+
+#### Shorten a URL
+```javascript
+POST /api/url/shorten
+HTTP Basic Auth (staff, admin)
+{
+  full: String,
+  short: String
+}
+```
+
+#### Resolve a URL
+```javascript
+GET /:url
+```
+
+#### Remove a URL
+```javascript
+POST /api/url/remove
+HTTP Basic Auth (staff, admin)
+{
+  id: String
 }
 ```

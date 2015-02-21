@@ -45,7 +45,7 @@ angular
     // Display users that have RSVPd yes
     self.going = function () {
       self.current = self.users.filter(function (user) {
-        return user.application.going;
+        return user.application.going == 'Yes';
       });
     };
 

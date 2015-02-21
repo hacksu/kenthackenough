@@ -222,7 +222,7 @@ HTTP Basic Auth (staff, admin)
 
 #### Shorten a URL
 ```javascript
-POST /api/url/shorten
+POST /api/urls/shorten
 HTTP Basic Auth (staff, admin)
 {
   full: String,
@@ -237,7 +237,7 @@ GET /:url
 
 #### Remove a URL
 ```javascript
-POST /api/url/remove
+POST /api/urls/remove
 HTTP Basic Auth (staff, admin)
 {
   id: String

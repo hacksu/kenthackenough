@@ -288,7 +288,7 @@ describe('API', function () {
 
     it('should create a shortened url', function (done) {
       request(app)
-        .post('/api/url/shorten')
+        .post('/api/urls/shorten')
         .auth('admin@test.com', 'pass')
         .send({
           full: 'http://www.google.com',
@@ -316,7 +316,7 @@ describe('API', function () {
 
     it('should delete the created url', function (done) {
       request(app)
-        .post('/api/url/remove')
+        .post('/api/urls/remove')
         .auth('admin@test.com', 'pass')
         .send({
           id: linkId

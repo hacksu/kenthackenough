@@ -99,7 +99,7 @@ angular
 
     // Save the status of a user
     self.saveStatus = function (user) {
-      applicationModel.update(user._id, {
+      applicationModel.updateById(user._id, {
         status: user.application.status
       }).
       success(function (data) {
@@ -126,7 +126,7 @@ angular
     // Save the checked in status of a user
     self.saveChecked = function (user) {
       var checked = (user.application.checked == 'Yes' ? true : false);
-      applicationModel.update(user._id, {
+      applicationModel.updateById(user._id, {
         checked: checked
       }).
       success(function (data) {

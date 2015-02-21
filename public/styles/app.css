@@ -46,6 +46,10 @@
   background-color: #faede7;
 }
 
+fieldset legend {
+  background: none;
+}
+
 .sidebar {
   background-color: #FAFAFA;
   border: 1px solid #F4F4F4;

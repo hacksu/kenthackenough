@@ -111,6 +111,7 @@ angular
       * @return An $http promise
       */
       this.quick = function (quickApp) {
+        console.log(quickApp);
         var req = user.authorize({
           method: 'POST',
           url: '/api/application/quick',
@@ -126,7 +127,7 @@ angular
       *              checked: true|false} (both properties optional)
       * @return An $http promise
       */
-      this.update = function (userId, data) {
+      this.updateById = function (userId, data) {
         var req = user.authorize({
           method: 'POST',
           url: '/api/application/update/' + userId,

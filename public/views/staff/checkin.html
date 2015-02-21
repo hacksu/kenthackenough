@@ -1,0 +1,75 @@
+<div ng-controller="StaffCheckInCtrl as checkin">
+
+  <requirestaff user="checkin.me" error="true">
+
+    <staffheader></staffheader>
+
+    <staffsidebar>
+      <li>
+        <span class="large"><strong>Checked In:</strong> {{checkin.count}}</span>
+      </li>
+      <li>
+        <!-- Quick Registration Form -->
+        <form class="validation" ng-submit="checkin.register()">
+          <fieldset>
+            <legend>Quick Register</legend>
+
+            <label>
+              Name
+              <input type="text" ng-model="checkin.quickApp.name" placeholder="John Doe" required>
+            </label>
+            <label>
+              Email
+              <input type="text" ng-model="checkin.quickApp.email" placeholder="user@example.com" required>
+            </label>
+            <label>
+              Phone
+              <input type="text" ng-model="checkin.quickApp.phone" placeholder="555-555-5555" required>
+            </label>
+            <button class="button small">Submit</button>
+          </fieldset>
+        </form>
+      </li>
+    </staffsidebar>
+
+    <br>
+    <div class="small-12 large-9 columns">
+
+      <!-- Errors, if there are any -->
+      <div ng-if="checkin.errors">
+        <div data-alert class="alert-box alert">
+          <span ng-repeat="error in checkin.errors">{{error}}<br></span>
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+
+      <!-- Search box -->
+      <div class="row">
+        <input type="text" ng-model="query" placeholder="Search by name, email, school, phone, or any other user attribute">
+      </div>
+
+      <!-- Each user with submitted application -->
+      <div class="row expandable-list-item" ng-repeat="user in checkin.users | filter:query | orderBy:'application.name':false" ng-if="user.application.submitted">
+
+        <div class="row header">
+          <div class="small-9 columns">
+            {{user.application.name}}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Each user that doesn't have a submitted application -->
+      <div class="row expandable-list-item" ng-repeat="user in checkin.users | filter:query | orderBy:'email':false" ng-if="!user.application.submitted">
+        <div class="row header">
+          <div class="small-9 columns">
+            {{user.email}}
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </requirestaff>
+
+</div>

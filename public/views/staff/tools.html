@@ -1,0 +1,54 @@
+<div ng-controller="StaffToolsCtrl as tools">
+  <requirestaff user="tools.user" error="true">
+    <staffheader></staffheader>
+    <staffsidebar>
+      <li><a>URL Shortener</a></li>
+    </staffsidebar>
+  </requirestaff>
+
+  <br>
+  <div class="small-12 large-9 columns">
+
+    <!-- Errors, if there are any -->
+    <div ng-if="tools.errors">
+      <div data-alert class="alert-box alert">
+        <span ng-repeat="error in tools.errors">{{error}}<br></span>
+        <a href="#" class="close">&times;</a>
+      </div>
+    </div>
+
+    <div class="row">
+      <form>
+        <div class="row collapse">
+          <div class="small-3 large-2 columns">
+            <span class="prefix">khe.io/</span>
+          </div>
+          <div class="small-9 large-10 columns">
+            <input type="text" ng-model="tools.new.short" placeholder="short" required>
+          </div>
+        </div>
+        <div class="row collapse">
+          <div class="small-10 columns">
+            <input type="text" ng-model="tools.new.full" placeholder="Full URL" required>
+          </div>
+          <div class="small-2 columns">
+            <button ng-click="tools.save()" class="button postfix">Save</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="row expandable-list-item" ng-repeat="url in tools.urls">
+      <div class="row header">
+        <div class="small-11 columns">
+          <span class="large bold">/{{url.short}}</span><br>
+          <a href="{{url.full}}">{{url.full}}</a>
+        </div>
+        <div class="small-1 columns">
+          <a ng-click="tools.remove(url)" class="black"><i class="fa fa-trash"></i></a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

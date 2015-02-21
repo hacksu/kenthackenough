@@ -10,6 +10,10 @@
   color: #4d4e51;
 }
 
+.black {
+  color: black;
+}
+
 .float-right {
   float: right;
 }
@@ -56,5 +60,4 @@
 
 .expandable-list-item .header {
   font-size: 1.2em;
-  cursor: pointer;
 }

@@ -16,6 +16,14 @@
     <br>
     <div class="small-12 large-9 columns">
 
+      <!-- Errors, if there are any -->
+      <div ng-if="att.errors">
+        <div data-alert class="alert-box alert">
+          <span ng-repeat="error in att.errors">{{error}}<br></span>
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+
       <!-- Search box -->
       <div class="row">
         <input type="text" ng-model="query" placeholder="Search by name, email, school, phone, or any other user attribute">

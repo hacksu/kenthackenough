@@ -125,7 +125,32 @@
                 </span>
               </div>
               <div class="small-12 columns">
-                <strong>Role:</strong> {{user.role|capitalizeFirstLetter}}
+                <strong>Role:</strong>
+                <span ng-if="att.user.role == 'staff'">
+                  {{user.role|capitalizeFirstLetter}}
+                </span>
+                <requireadmin user="att.user">
+                  <span ng-if="!user.editingRole" class="underline cursor-pointer" ng-click="att.editRole(user)">
+                    {{user.role|capitalizeFirstLetter}}
+                  </span>
+                  <span ng-if="user.editingRole">
+                    <div class="row collapse">
+                      <div class="small-8 columns">
+                        <select ng-model="user.role">
+                          <option value="attendee">Attendee</option>
+                          <option value="staff">Staff</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                      </div>
+                      <div class="small-2 columns">
+                        <a class="button postfix" ng-click="att.saveRole(user)">Save</a>
+                      </div>
+                      <div class="small-2 columns">
+                        <a class="button alert postfix" ng-click="att.cancelEditRole(user)">Cancel</a>
+                      </div>
+                    </div>
+                  </span>
+                </requireadmin>
               </div>
             </div>
           </div>

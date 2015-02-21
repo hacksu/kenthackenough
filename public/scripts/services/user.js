@@ -110,6 +110,23 @@ angular
       };
 
       /**
+      * Set a user's role
+      * @param userId A user's ID
+      * @param role 'attendee'|'staff'|'admin'
+      * @return An $http promise
+      */
+      this.role = function (userId, role) {
+        var req = this.authorize({
+          method: 'POST',
+          url: '/api/users/role/' + userId,
+          data: {
+            role: role
+          }
+        });
+        return $http(req);
+      };
+
+      /**
       * Unsubscribe from mailing list
       * @param userId The ID of the user to unsubscribe
       * @return An $http promise

@@ -9,15 +9,15 @@ angular
 
     var self = this;
     var applicationModel = new Application();
-    var user = new User();
-    self.user = user.getMe();
+    var userModel = new User();
+    self.user = userModel.getMe();
 
     self.users = [];
     self.current = [];
     self.updatable = [];
 
     // Get all users
-    user.list().
+    userModel.list().
     success(function (data) {
       self.errors = data.errors;
       if (!self.errors) {
@@ -142,6 +142,30 @@ angular
     self.cancelEditChecked = function (user) {
       user.application.checked = user.application.oldChecked;
       user.editingChecked = false;
+    };
+
+    // Edit the role of a user
+    self.editRole = function (user) {
+      user.oldRole = user.role;
+      user.editingRole = true;
+    };
+
+    // Save the role of a user
+    self.saveRole = function (user) {
+      userModel.role(user._id, user.role).
+      success(function (data) {
+        self.errors = data.errors;
+        user.editingRole = false;
+      }).
+      error(function (data) {
+        self.errors = ['An internal error occurred'];
+      });
+    };
+
+    // Cancel editing the role
+    self.cancelEditRole = function (user) {
+      user.role = user.oldRole;
+      user.editingRole = false;
     };
 
     // Make the data human-readable

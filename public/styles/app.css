@@ -14,6 +14,15 @@
   color: black;
 }
 
+a.black {
+  text-decoration: underline;
+  color: black;
+}
+
+a.black:hover {
+  color: #757575;
+}
+
 .float-right {
   float: right;
 }

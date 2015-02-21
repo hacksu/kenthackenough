@@ -88,9 +88,9 @@
             <div class="row">
               <div class="small-12 large-6 columns">
                 <strong>Status:</strong>
-                <span ng-if="!user.editingStatus" class="underline cursor-pointer" ng-click="att.editStatus(user)">
+                <a ng-if="!user.editingStatus" class="black cursor-pointer" ng-click="att.editStatus(user)">
                   {{user.application.status|capitalizeFirstLetter}}
-                </span>
+                </a>
                 <span ng-if="user.editingStatus">
                   <div class="row collapse">
                     <div class="small-8 columns">
@@ -112,9 +112,9 @@
               </div>
               <div class="small-12 large-6 columns">
                 <strong>Checked In:</strong>
-                <span ng-if="!user.editingChecked" class="underline cursor-pointer" ng-click="att.editChecked(user)">
+                <a ng-if="!user.editingChecked" class="black cursor-pointer" ng-click="att.editChecked(user)">
                   {{user.application.checked}}
-                </span>
+                </a>
                 <span ng-if="user.editingChecked">
                   <div class="row collapse">
                     <div class="small-8 columns">
@@ -138,9 +138,9 @@
                   {{user.role|capitalizeFirstLetter}}
                 </span>
                 <requireadmin user="att.user">
-                  <span ng-if="!user.editingRole" class="underline cursor-pointer" ng-click="att.editRole(user)">
+                  <a ng-if="!user.editingRole" class="black cursor-pointer" ng-click="att.editRole(user)">
                     {{user.role|capitalizeFirstLetter}}
-                  </span>
+                  </a>
                   <span ng-if="user.editingRole">
                     <div class="row collapse">
                       <div class="small-8 columns">

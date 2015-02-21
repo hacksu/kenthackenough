@@ -209,12 +209,14 @@ describe('API', function () {
         .post('/api/application/update/' + id)
         .auth('admin@test.com', 'pass')
         .send({
-          status: 'approved'
+          status: 'approved',
+          checked: true
         })
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;
           res.body.status.should.equal('approved');
+          res.body.checked.should.equal(true);
           done();
         });
     });

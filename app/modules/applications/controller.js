@@ -96,7 +96,7 @@ router.post('/application/update/:id', User.Auth([User.ADMIN, User.STAFF]), func
   User.findById(req.params.id, function (err, user) {
     if (err) return res.singleError('User not found');
     if (req.body.status) user.application.status = req.body.status;
-    if (req.body.checked) user.application.checked = req.body.checked;
+    if (req.body.checked !== undefined) user.application.checked = req.body.checked;
     user.save(function (err, user) {
       if (err) return res.internalError();
       return res.send(user.application);

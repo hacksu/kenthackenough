@@ -151,7 +151,16 @@ router.post('/application/quick', User.Auth([User.ADMIN, User.STAFF]), function 
     activated: true,
     application: {
       name: req.body.name,
-      phone: req.body.phone
+      phone: req.body.phone,
+      submitted: true,
+      status: Application.APPROVED,
+      going: true,
+      checked: true,
+      time: Date.now(),
+      demographic: true,
+      conduct: true,
+      travel: false,
+      waiver: true
     }
   });
   user.save(function (err, user) {

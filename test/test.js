@@ -85,6 +85,21 @@ describe('API', function () {
         });
     });
 
+    it('should update the user\'s role', function (done) {
+      request(app)
+        .post('/api/users/role/' + id)
+        .auth('admin@test.com', 'pass')
+        .send({
+          role: 'staff'
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.role.should.equal('staff');
+          done();
+        });
+    });
+
     it('should submit an application for the test user', function (done) {
       request(app)
         .post('/api/application/submit')
@@ -189,12 +204,11 @@ describe('API', function () {
         });
     });
 
-    it('should approve the users\'s application', function (done) {
+    it('should update an application by user ID', function (done) {
       request(app)
-        .post('/api/application/status')
+        .post('/api/application/update/' + id)
         .auth('admin@test.com', 'pass')
         .send({
-          userId: id,
           status: 'approved'
         })
         .expect(200)

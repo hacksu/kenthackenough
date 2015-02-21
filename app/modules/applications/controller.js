@@ -87,14 +87,16 @@ router.get('/application', User.Auth(), function (req, res) {
 });
 
 /**
-* Set the status of an application
+* Update an application by ID
 * AUTH: staff, admin
-* POST: userId, status (approved, denied, waitlisted, pending)
+* URL params: id A user's ID
+* POST: the parts of the application to update (status, checked)
 */
-router.post('/application/status', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
-  User.findById(req.body.userId, function (err, user) {
-    if (err) return res.internalError();
-    user.application.status = req.body.status;
+router.post('/application/update/:id', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+  User.findById(req.params.id, function (err, user) {
+    if (err) return res.singleError('User not found');
+    if (req.body.status) user.application.status = req.body.status;
+    if (req.body.checked) user.application.checked = req.body.checked;
     user.save(function (err, user) {
       if (err) return res.internalError();
       return res.send(user.application);
@@ -163,7 +165,6 @@ router.post('/application/quick', User.Auth([User.ADMIN, User.STAFF]), function 
 */
 
 function sendApplicationEmail(user) {
-  console.log(user.email);
   var message = new Message({
     template: 'application',
     subject: 'Kent Hack Enough Application',

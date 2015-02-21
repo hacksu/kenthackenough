@@ -85,6 +85,26 @@ router.get('/users', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
 });
 
 /**
+* Update a user's role by id
+* AUTH: admin
+* URL param: id A user's ID
+* POST: role The new role to set
+*/
+router.post('/users/role/:id', User.Auth([User.ADMIN]), function (req, res) {
+  User.findById(req.params.id, function (err, user) {
+    if (err) return res.singleError('User not found');
+    user.role = req.body.role;
+    user.save(function (err, user) {
+      if (err) return res.internalError();
+      return res.send({
+        email: user.email,
+        role: user.role
+      });
+    });
+  });
+});
+
+/**
 * Unsubscribe a user from the mailing list
 * AUTH: admin, staff
 * POST: userId

@@ -76,6 +76,15 @@ GET /api/users
 HTTP Basic Auth (staff, admin)
 ```
 
+#### Set a user's role
+```javascript
+POST /api/users/role/:id
+HTTP Basic Auth (admin)
+{
+  role: 'attendee'|'staff'|'admin'
+}
+```
+
 #### Unsubscribe a user (remove them from mailing list)
 ```javascript
 POST /api/users/unsubscribe
@@ -167,13 +176,13 @@ RESPONSE:
 // the application object
 ```
 
-#### Set an application status
+#### Update an application by user ID
 ```javascript
-POST /api/application/status
+POST /api/application/update/:id
 HTTP Basic Auth (staff, admin)
 {
-  userId: String,
-  status: 'approved'|'denied'|'waitlisted'|'pending'
+  status: 'approved'|'denied'|'waitlisted'|'pending', // optional
+  checked: true|false // optional
 }
 
 RESPONSE:

@@ -24,7 +24,7 @@ router.post('/urls/shorten', User.Auth([User.ADMIN, User.STAFF]), function (req,
 */
 app.get('/:url', function (req, res) {
   Url.findOne({short: req.params.url}, function (err, url) {
-    if (err) return res.singleError('The given URL does not exist');
+    if (err) return res.send(404);
     return res.redirect(url.full);
   });
 });

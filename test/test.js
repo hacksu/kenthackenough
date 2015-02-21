@@ -307,7 +307,7 @@ describe('API', function () {
     it('should redirect to the full url', function (done) {
       request(app)
         .get('/google')
-        .expect(200)
+        .expect(302)
         .end(function (err, res) {
           if (err) throw err;
           done();

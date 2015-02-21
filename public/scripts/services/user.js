@@ -15,7 +15,11 @@ angular
       *           {email: String, password: String, role: String}
       */
       this.setMe = function (me) {
-        $cookies.put('me', me);
+        if (Modernizr.localstorage) {
+          localStorage.setItem('me', angular.toJson(me));
+        } else {
+          $cookies.put('me', me);
+        }
       };
 
       /**
@@ -23,14 +27,22 @@ angular
       * @return {email: String, password: String, role: String}
       */
       this.getMe = function () {
-        return $cookies.get('me');
+        if (Modernizr.localstorage) {
+          return angular.fromJson(localStorage.getItem('me'));
+        } else {
+          return $cookies.get('me');
+        }
       };
 
       /**
       * Delete the stored user
       */
       this.removeMe = function () {
-        $cookies.remove('me');
+        if (Modernizr.localstorage) {
+          localStorage.removeItem('me');
+        } else {
+          $cookies.remove('me');
+        }
       };
 
       /**

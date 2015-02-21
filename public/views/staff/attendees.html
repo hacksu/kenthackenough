@@ -14,96 +14,90 @@
     </staffsidebar>
 
     <br>
-    <div class="small-9 columns">
+    <div class="small-12 large-9 columns">
 
-      <input type="text" ng-model="query" placeholder="Search by name, email, school, phone, or any other user attribute">
-      <table width="100%" ng-if="att.current.length">
-        <tbody>
-          <!-- If the application has been submitted -->
-          <tr ng-repeat="user in att.current | filter:query | orderBy:'application.time':true" ng-if="user.application.submitted">
-            <!-- Short version -->
-              <!-- Name and school -->
-              <td ng-if="!att.expanded(user)">
-                <strong ng-click="att.toggle(user)" class="username">{{user.application.name}}</strong><br>
-                {{user.application.school}}
-              </td>
-              <!-- Status -->
-              <td ng-if="!att.expanded(user)">{{user.application.status[0].toUpperCase() + user.application.status.slice(1)}}</td>
-            <!-- Expanded version -->
-              <!-- Name and school -->
-              <td ng-if="att.expanded(user)">
-                <div class="row">
-                  <div class="small-12 columns">
-                    <strong ng-click="att.toggle(user)" class="username">{{user.application.name}}</strong>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="small-6 columns">
-                    School: {{user.application.school}}
-                  </div>
-                  <div class="small-6 columns">
-                    Year: {{user.application.year}}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="small-6 columns">
-                    Phone: {{user.application.phone}}
-                  </div>
-                  <div class="small-6 columns">
-                    Age: {{user.application.age}}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="small-6 columns">
-                    Shirt Size: {{user.application.shirt}}
-                  </div>
-                  <div class="small-6 columns">
-                    Gender: {{user.application.gender}}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="small-6 columns">
-                    First hackathon?: {{user.application.first}}
-                  </div>
-                  <div class="small-6 columns">
-                    Major: {{user.application.major}}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="small-6 columns">
-                    Dietary Restrictions: {{user.application.dietary}}
-                  </div>
-                  <div class="small-6 columns">
-                    Travel Reimbursement: {{user.application.travel}}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="small-6 columns">
-                    Status: {{user.application.status}}
-                  </div>
-                  <div class="small-6 columns">
-                    Checked-in: {{user.application.checked}}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="small-6 columns">
-                    Going?: {{user.application.going}}
-                  </div>
-                  <div class="small-6 columns">
-                    Role: {{user.role}}
-                  </div>
-                </div>
-              </td>
-              <td></td>
-          </tr>
+      <!-- Search box -->
+      <div class="row">
+        <input type="text" ng-model="query" placeholder="Search by name, email, school, phone, or any other user attribute">
+      </div>
 
-          <!-- If the application has not been submitted yet -->
-          <tr ng-repeat="user in att.current | filter:query | orderBy:'time':true" ng-if="!user.application.submitted">
-            <td>{{user.email}}</td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- Each user with submitted application -->
+      <div class="row expandable-list-item" ng-repeat="user in att.current | filter:query | orderBy:'application.time':true" ng-if="user.application.submitted">
+        <!-- Content always shown -->
+        <div class="row header" ng-click="att.toggle(user)">
+          <div class="small-9 columns">
+            <strong>{{user.application.name}}</strong>
+          </div>
+          <div class="small-3 columns align-right">
+            {{user.application.status}}
+          </div>
+        </div>
+        <!-- Content shown on expansion -->
+        <div class="row content" ng-if="att.expanded(user)">
+          <div class="small-12 columns">
+            <hr>
+            <!-- Static information (the user's application) -->
+            <div class="row">
+              <div class="small-12 large-6 columns">
+                <strong>School:</strong> {{user.application.school}}
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>Year:</strong> {{user.application.year}}
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>Phone:</strong> {{user.application.phone}}
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>Age:</strong> {{user.application.age}}
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>Shirt Size:</strong> {{user.application.shirt}}
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>Gender:</strong> {{user.application.gender}}
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>First Hackathon?:</strong> {{user.application.first}}
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>Major:</strong> {{user.application.major}}
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>Dietary Restrictions:</strong> {{user.application.dietary}}
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>Travel Reimbursement Required?:</strong> {{user.application.travel}}
+              </div>
+            </div>
+            <hr>
+            <!-- Editable information -->
+            <div class="row">
+              <div class="small-12 large-6 columns">
+                <strong>Status:</strong> {{user.application.status}}
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>Checked In?:</strong> {{user.application.checked}}
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>Going?:</strong> {{user.application.going}}
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>Role:</strong> {{user.role}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Each user that doesn't have a submitted application -->
+      <div class="row expandable-list-item" ng-repeat="user in att.current | filter:query | orderBy:'application.time':true" ng-if="!user.application.submitted">
+        <!-- Content always shown -->
+        <div class="row header">
+          <div class="small-9 columns">
+            {{user.email}}
+          </div>
+        </div>
+      </div>
 
     </div>
 

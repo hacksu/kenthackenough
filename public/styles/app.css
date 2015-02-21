@@ -3,7 +3,7 @@
 }
 
 .large {
-  font-size: 20px;
+  font-size: 1.2em;
 }
 
 .grey {
@@ -36,8 +36,17 @@
 
 .sidebar {
   background-color: #FAFAFA;
+  border: 1px solid #F4F4F4;
 }
 
-.username {
+.expandable-list-item {
+  margin-top: 1em;
+  padding: 1em;
+  background-color: #FAFAFA;
+  border: 1px solid #F4F4F4;
+}
+
+.expandable-list-item .header {
+  font-size: 1.2em;
   cursor: pointer;
 }

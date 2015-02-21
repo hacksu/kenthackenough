@@ -26,6 +26,14 @@
   text-align: left;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
 .validation input.ng-valid, .validation select.ng-valid {
   background-color: #e6fdeb;
 }

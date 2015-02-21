@@ -119,6 +119,22 @@ angular
         return $http(req);
       };
 
+      /**
+      * Update a user's application by user ID
+      * @param userId The user to update
+      * @param data {status: 'approved'|'denied'|'waitlisted'|'pending',
+      *              checked: true|false} (both properties optional)
+      * @return An $http promise
+      */
+      this.update = function (userId, data) {
+        var req = user.authorize({
+          method: 'POST',
+          url: '/api/application/update/' + userId,
+          data: data
+        });
+        return $http(req);
+      };
+
     };
 
     return Application;

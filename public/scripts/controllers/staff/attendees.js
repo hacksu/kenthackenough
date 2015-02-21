@@ -5,14 +5,16 @@ angular
       templateUrl: '/views/staff/attendees.html'
     });
   }])
-  .controller('StaffAttendeesCtrl', ['User', function (User) {
+  .controller('StaffAttendeesCtrl', ['User', 'Application', function (User, Application) {
 
     var self = this;
+    var applicationModel = new Application();
     var user = new User();
     self.user = user.getMe();
 
     self.users = [];
     self.current = [];
+    self.updatable = [];
 
     // Get all users
     user.list().
@@ -21,7 +23,7 @@ angular
       if (!self.errors) {
         self.users = data.users;
         readable();
-        self.current = self.users;
+        self.updatable = self.current = self.users;
       }
     }).
     error(function () {
@@ -89,6 +91,61 @@ angular
       return self.expandedId == user._id;
     };
 
+    // Edit the status of a user
+    self.editStatus = function (user) {
+      user.application.oldStatus = user.application.status;
+      user.editingStatus = true;
+    };
+
+    // Save the status of a user
+    self.saveStatus = function (user) {
+      applicationModel.update(user._id, {
+        status: user.application.status
+      }).
+      success(function (data) {
+        self.errors = data.errors;
+        user.editingStatus = false;
+      }).
+      error(function (data) {
+        self.errors = ['An internal error occurred'];
+      });
+    };
+
+    // Cancel editing the status
+    self.cancelEditStatus = function (user) {
+      user.application.status = user.application.oldStatus;
+      user.editingStatus = false;
+    };
+
+    // Edit checked in status of a user
+    self.editChecked = function (user) {
+      user.application.oldChecked = user.application.checked;
+      user.editingChecked = true;
+    };
+
+    // Save the checked in status of a user
+    self.saveChecked = function (user) {
+      var checked = (user.application.checked == 'Yes' ? true : false);
+      applicationModel.update(user._id, {
+        checked: checked
+      }).
+      success(function (data) {
+        self.errors = data.errors;
+        user.editingChecked = false;
+      }).
+      error(function (data) {
+        self.errors = ['An internal error occurred'];
+      });
+    };
+
+    // Cancel editing the checked in status of a user
+    self.cancelEditChecked = function (user) {
+      user.application.checked = user.application.oldChecked;
+      user.editingChecked = false;
+    };
+
+    // Make the data human-readable
+    // Possibly move this into filters? It's pretty inefficient currently
     function readable() {
       for (var i = 0; i < self.users.length; i++) {
         var user = self.users[i];

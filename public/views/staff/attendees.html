@@ -24,7 +24,7 @@
       <!-- Each user with submitted application -->
       <div class="row expandable-list-item" ng-repeat="user in att.current | filter:query | orderBy:'application.time':true" ng-if="user.application.submitted">
         <!-- Content always shown -->
-        <div class="row header" ng-click="att.toggle(user)">
+        <div class="row header cursor-pointer" ng-click="att.toggle(user)">
           <div class="small-9 columns">
             <strong>{{user.application.name}}</strong>
           </div>
@@ -79,10 +79,50 @@
             <!-- Editable information -->
             <div class="row">
               <div class="small-12 large-6 columns">
-                <strong>Status:</strong> {{user.application.status|capitalizeFirstLetter}}
+                <strong>Status:</strong>
+                <span ng-if="!user.editingStatus" class="underline cursor-pointer" ng-click="att.editStatus(user)">
+                  {{user.application.status|capitalizeFirstLetter}}
+                </span>
+                <span ng-if="user.editingStatus">
+                  <div class="row collapse">
+                    <div class="small-8 columns">
+                      <select ng-model="user.application.status">
+                        <option value="pending">Pending</option>
+                        <option value="waitlisted">Waitlisted</option>
+                        <option value="denied">Denied</option>
+                        <option value="approved">Approved</option>
+                      </select>
+                    </div>
+                    <div class="small-2 columns">
+                      <a class="button postfix" ng-click="att.saveStatus(user)">Save</a>
+                    </div>
+                    <div class="small-2 columns">
+                      <a class="button alert postfix" ng-click="att.cancelEditStatus(user)">Cancel</a>
+                    </div>
+                  </div>
+                </span>
               </div>
               <div class="small-12 large-6 columns">
-                <strong>Checked In:</strong> {{user.application.checked}}
+                <strong>Checked In:</strong>
+                <span ng-if="!user.editingChecked" class="underline cursor-pointer" ng-click="att.editChecked(user)">
+                  {{user.application.checked}}
+                </span>
+                <span ng-if="user.editingChecked">
+                  <div class="row collapse">
+                    <div class="small-8 columns">
+                      <select ng-model="user.application.checked">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      </select>
+                    </div>
+                    <div class="small-2 columns">
+                      <a class="button postfix" ng-click="att.saveChecked(user)">Save</a>
+                    </div>
+                    <div class="small-2 columns">
+                      <a class="button alert postfix" ng-click="att.cancelEditChecked(user)">Cancel</a>
+                    </div>
+                  </div>
+                </span>
               </div>
               <div class="small-12 columns">
                 <strong>Role:</strong> {{user.role|capitalizeFirstLetter}}

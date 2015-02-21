@@ -1,5 +1,4 @@
-<div ng-if="user.role == 'staff' || user.role == 'admin'">
-  <div ng-transclude></div>
+<div ng-if="user.role == 'staff' || user.role == 'admin'" ng-transclude>
 </div>
 
 <div ng-if="(user.role == 'attendee') && error">

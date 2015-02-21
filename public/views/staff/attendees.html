@@ -50,6 +50,9 @@
                 <strong>School:</strong> {{user.application.school}}
               </div>
               <div class="small-12 large-6 columns">
+                <strong>Email:</strong> <a class="black" href="mailto:{{user.email}}">{{user.email}}</a>
+              </div>
+              <div class="small-12 large-6 columns">
                 <strong>Year:</strong> {{user.application.year}}
               </div>
               <div class="small-12 large-6 columns">
@@ -59,28 +62,25 @@
                 <strong>Age:</strong> {{user.application.age}}
               </div>
               <div class="small-12 large-6 columns">
-                <strong>Shirt Size:</strong> {{user.application.shirt}}
-              </div>
-              <div class="small-12 large-6 columns">
-                <strong>Gender:</strong> {{user.application.gender|capitalizeFirstLetter}}
+                <strong>Travel Required:</strong> {{user.application.travel}}
               </div>
               <div class="small-12 large-6 columns">
                 <strong>First Hackathon:</strong> {{user.application.first}}
               </div>
               <div class="small-12 large-6 columns">
-                <strong>Major:</strong> {{user.application.major}}
-              </div>
-              <div class="small-12 large-6 columns">
                 <strong>Dietary Restrictions:</strong> {{user.application.dietary}}
               </div>
               <div class="small-12 large-6 columns">
-                <strong>Travel Reimbursement Required:</strong> {{user.application.travel}}
+                <strong>Major:</strong> {{user.application.major}}
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>Shirt:</strong> {{user.application.shirt}}
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>Gender:</strong> {{user.application.gender|capitalizeFirstLetter}}
               </div>
               <div class="small-12 large-6 columns">
                 <strong>RSVP:</strong> {{user.application.going}}
-              </div>
-              <div class="small-12 large-6 columns">
-                <strong>Applied:</strong> {{user.application.time|relativeDate}}
               </div>
             </div>
             <hr>
@@ -132,7 +132,7 @@
                   </div>
                 </span>
               </div>
-              <div class="small-12 columns">
+              <div class="small-12 large-6 columns">
                 <strong>Role:</strong>
                 <span ng-if="att.user.role == 'staff'">
                   {{user.role|capitalizeFirstLetter}}
@@ -159,6 +159,9 @@
                     </div>
                   </span>
                 </requireadmin>
+              </div>
+              <div class="small-12 large-6 columns">
+                <strong>Applied:</strong> {{user.application.time|relativeDate}}
               </div>
             </div>
           </div>

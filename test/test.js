@@ -314,6 +314,18 @@ describe('API', function () {
         });
     });
 
+    it('should list the created urls', function (done) {
+      request(app)
+        .get('/api/urls')
+        .auth('admin@test.com', 'pass')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.urls.length.should.be.above(0);
+          done();
+        });
+    });
+
     it('should delete the created url', function (done) {
       request(app)
         .post('/api/urls/remove')

@@ -243,3 +243,17 @@ HTTP Basic Auth (staff, admin)
   id: String
 }
 ```
+
+#### Get a list of URLs
+```javascript
+GET /api/urls
+HTTP Basic Auth (staff, admin)
+RESPONSE:
+{
+  urls: [{
+    _id: String,
+    full: String,
+    short: String
+  }]
+}
+```

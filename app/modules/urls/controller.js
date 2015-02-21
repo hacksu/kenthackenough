@@ -40,3 +40,14 @@ router.post('/urls/remove', User.Auth([User.ADMIN, User.STAFF]), function (req, 
     return res.send({});
   });
 });
+
+/**
+* Get a list of URLs currently available
+* AUTH: staff, admin
+*/
+router.get('/urls', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+  Url.find({}, function (err, urls) {
+    if (err) return res.internalError();
+    return res.send({urls: urls});
+  });
+});

@@ -376,7 +376,7 @@ describe('API', function () {
           if (err) throw err;
           res.body.emails.length.should.be.above(0);
           for (var i = 0; i < res.body.emails.length; i++) {
-            if (res.body.emails[i].nickname == 'Test Group') {
+            if (res.body.emails[i].recipients.nickname == 'Test Group') {
               res.body.emails[i].subject.should.equal('Testing');
               res.body.emails[i].body.should.equal('# Header');
               break;

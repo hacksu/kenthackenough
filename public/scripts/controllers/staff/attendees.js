@@ -77,6 +77,13 @@ angular
       });
     };
 
+    // Display users that have requested travel
+    self.travel = function () {
+      self.current = self.users.filter(function (user) {
+        return user.application.travel == 'Yes';
+      });
+    };
+
     // Display only checked in users
     self.checked = function () {
       self.current = self.users.filter(function (user) {

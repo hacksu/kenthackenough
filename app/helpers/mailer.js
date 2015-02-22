@@ -4,9 +4,7 @@
 *
 * Usage:
 * Prerequisites:
-*   - process.env.GMAIL_USERNAME    // => user.name@gmail.com
-*   - process.env.GMAIL_PASSWORD    // => password123
-*   - process.env.FROM_EMAIL        // => First Last <first.last@example.com>
+*   - config.js must be configured
 *
 * To create a template:
 *   - Create a new folder inside of app/emails with the name of your template
@@ -38,7 +36,7 @@ var jade = require('jade');
 var nodemailer = require('nodemailer');
 var winston = require('winston');
 var flow = require('flow');
-var config = require('../../config');
+var config = rootRequire('config');
 
 module.exports = function (options) {
 

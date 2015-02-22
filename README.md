@@ -189,12 +189,11 @@ RESPONSE:
 POST /api/application/update/:id
 HTTP Basic Auth (staff, admin)
 {
-  status: 'approved'|'denied'|'waitlisted'|'pending', // optional
-  checked: true|false // optional
+  key: 'value' // any parts of the application you'd like to update
 }
 
 RESPONSE:
-// the updated application object
+{}
 ```
 
 #### Softly remove a user's application

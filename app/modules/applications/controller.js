@@ -90,17 +90,15 @@ router.get('/application', User.Auth(), function (req, res) {
 * Update an application by ID
 * AUTH: staff, admin
 * URL params: id A user's ID
-* POST: the parts of the application to update (status, checked)
+* POST: the parts of the application to update (any part)
 */
 router.post('/application/update/:id', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
-  User.findById(req.params.id, function (err, user) {
-    if (err) return res.singleError('User not found');
-    if (req.body.status) user.application.status = req.body.status;
-    if (req.body.checked !== undefined) user.application.checked = req.body.checked;
-    user.save(function (err, user) {
-      if (err) return res.internalError();
-      return res.send(user.application);
-    });
+  var update = {
+    application: req.body
+  };
+  User.update({_id: req.params.id}, { $set: update }, function (err) {
+    if (err) return res.internalError();
+    return res.send({});
   });
 });
 
@@ -160,7 +158,8 @@ router.post('/application/quick', User.Auth([User.ADMIN, User.STAFF]), function 
       demographic: true,
       conduct: true,
       travel: false,
-      waiver: true
+      waiver: true,
+      door: true
     }
   });
   user.save(function (err, user) {

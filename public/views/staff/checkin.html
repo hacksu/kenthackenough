@@ -48,6 +48,14 @@
         <input type="text" ng-model="query" placeholder="Search by name, email, school, phone, or any other user attribute">
       </div>
 
+      <!-- Loading circle -->
+      <div class="row" ng-if="!checkin.users.length">
+        <div class="small-12 columns align-center">
+          <br><br>
+          <i class="fa fa-refresh fa-spin fa-5x"></i>
+        </div>
+      </div>
+
       <!-- Each user with submitted application -->
       <div class="row expandable-list-item" ng-repeat="user in checkin.users | filter:query | orderBy:'application.name':false" ng-if="user.application.submitted">
 

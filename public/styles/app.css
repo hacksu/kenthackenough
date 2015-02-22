@@ -39,6 +39,10 @@ a.black:hover {
   text-align: left;
 }
 
+.align-center {
+  text-align: center;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }

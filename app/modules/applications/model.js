@@ -11,7 +11,7 @@ var ApplicationSchema = {
   status: {type: String, enum: [_APPROVED, _DENIED, _WAITLISTED, _PENDING]},
   going: Boolean,         // rsvp status
   checked: Boolean,       // check-in status
-  time: { type : Date, default: Date.now },
+  time: { type : Date, default: Date.now() },
   door: Boolean,          // was this person registered during check-in?
 
   // Actual application form

@@ -1,4 +1,5 @@
 var router = getRouter();
+var io = getIo();
 var User = require('../users/model');
 var Application = require('./model');
 var chance = require('chance')();
@@ -93,12 +94,31 @@ router.get('/application', User.Auth(), function (req, res) {
 * POST: the parts of the application to update (any part)
 */
 router.post('/application/update/:id', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
-  var update = {
-    application: req.body
-  };
-  User.update({_id: req.params.id}, { $set: update }, function (err) {
+  var update = {};
+  if (req.body.submitted !== undefined) update["application.submitted"] = req.body.submitted;
+  if (req.body.status) update["application.status"] = req.body.status;
+  if (req.body.going !== undefined) update["application.going"] = req.body.going;
+  if (req.body.checked !== undefined) update["application.checked"] = req.body.checked;
+  if (req.body.time) update["application.time"] = req.body.time;
+  if (req.body.door !== undefined) update["application.door"] = req.body.door;
+  if (req.body.name) update["application.name"] = req.body.name;
+  if (req.body.school) update["application.school"] = req.body.school;
+  if (req.body.phone) update["application.phone"] = req.body.phone;
+  if (req.body.shirt) update["application.shirt"] = req.body.shirt;
+  if (req.body.demographic !== undefined) update["application.demographic"] = req.body.demographic;
+  if (req.body.first !== undefined) update["application.first"] = req.body.first;
+  if (req.body.dietary) update["application.dietary"] = req.body.dietary;
+  if (req.body.year) update["application.year"] = req.body.year;
+  if (req.body.age) update["application.age"] = req.body.age;
+  if (req.body.gender) update["application.gender"] = req.body.gender;
+  if (req.body.major) update["application.major"] = req.body.major;
+  if (req.body.conduct !== undefined) update["application.conduct"] = req.body.conduct;
+  if (req.body.travel !== undefined) update["application.travel"] = req.body.travel;
+  if (req.body.waiver !== undefined) update["application.waiver"] = req.body.waiver;
+  User.findOneAndUpdate({_id: req.params.id}, {$set: update}, function (err, user) {
     if (err) return res.internalError();
-    return res.send({});
+    io.emit('/application/update', user);
+    return res.send(user);
   });
 });
 
@@ -164,6 +184,7 @@ router.post('/application/quick', User.Auth([User.ADMIN, User.STAFF]), function 
   });
   user.save(function (err, user) {
     if (err) return res.internalError();
+    io.emit('/application/quick', user);
     return res.send(user);
   });
 });

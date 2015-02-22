@@ -10,6 +10,8 @@ To get a db connection, require('mongoose')
 
 */
 var express = require('express');
+var http = require('http');
+var socketio = require('socket.io');
 var cors = require('cors');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
@@ -43,6 +45,7 @@ app.use(function (req, res, next) {
 });
 var port = process.env.PORT || config.port;
 var server = app.listen(port);
+var io = socketio(server);
 
 // Connect to database
 var mongo = process.env.MONGO_URI || config.mongo.uri;
@@ -52,11 +55,15 @@ mongoose.connect(mongo);
 module.exports.router = router;
 module.exports.app = app;
 module.exports.mongoose = mongoose;
+module.exports.io = io;
 GLOBAL.getApp = function () {
   return app;
 };
 GLOBAL.getRouter = function () {
   return router;
+};
+GLOBAL.getIo = function () {
+  return io;
 };
 
 // Include modules

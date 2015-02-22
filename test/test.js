@@ -215,7 +215,8 @@ describe('API', function () {
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;
-          JSON.stringify(res.body).should.equal("{}");
+          res.body.application.status.should.equal('approved');
+          res.body.application.checked.should.equal(true);
           done();
         });
     });

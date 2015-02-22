@@ -2,6 +2,7 @@ var app = require('../app').app;
 var should = require('should');
 var request = require('supertest');
 var User = require('../app/modules/users/model');
+var Email = require('../app/modules/emails/model');
 
 describe('API', function () {
 
@@ -344,13 +345,59 @@ describe('API', function () {
 
   });
 
+  describe('Emails', function () {
+
+    it('should send an email to a test user', function (done) {
+      request(app)
+        .post('/api/emails/send')
+        .auth('admin@test.com', 'pass')
+        .send({
+          nickname: 'Test Group',
+          subject: 'Testing',
+          body: '# Header',
+          recipients: {
+            emails: ['person@test.com']
+          }
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          JSON.stringify(res.body).should.equal('{}');
+          done();
+        });
+    });
+
+    it('should list all sent emails', function (done) {
+      request(app)
+        .get('/api/emails')
+        .auth('admin@test.com', 'pass')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.emails.length.should.be.above(0);
+          for (var i = 0; i < res.body.emails.length; i++) {
+            if (res.body.emails[i].nickname == 'Test Group') {
+              res.body.emails[i].subject.should.equal('Testing');
+              res.body.emails[i].body.should.equal('# Header');
+              break;
+            }
+          }
+          done();
+        });
+    });
+
+  });
+
   // Remove all test users
   after(function (done) {
     User.remove({email: 'admin@test.com'}, function (err) {
       if (err) throw err;
       User.remove({email: 'person@test.com'}, function (err) {
         if (err) throw err;
-        done();
+        Email.remove({nickname: 'Test Group'}, function (err) {
+          if (err) throw err;
+          done();
+        });
       });
     });
   });

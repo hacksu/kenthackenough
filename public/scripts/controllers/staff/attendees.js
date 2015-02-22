@@ -188,6 +188,7 @@ angular
               user.application.shirt = 'X-Large';
               break;
           }
+          if (!user.application.gender) user.application.gender = '-';
           user.application.first = (user.application.first ? 'Yes' : 'No');
           if (user.application.dietary.length) {
             var diet = user.application.dietary[0];

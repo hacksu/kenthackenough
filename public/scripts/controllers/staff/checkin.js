@@ -74,4 +74,47 @@ angular
       });
     };
 
+    // Save the currently edited user
+    self.saveQuickEdit = function (user) {
+      application.updateById(user._id, {
+        name: user.application.name,
+        phone: user.application.phone,
+        submitted: true,
+        status: 'approved',
+        going: true,
+        checked: true,
+        time: Date.now(),
+        demographic: true,
+        conduct: true,
+        travel: false,
+        waiver: true,
+        door: true
+      }).
+      success(function (data) {
+        self.errors = data.errors;
+        if (!data.errors) {
+          user.application.submitted = true;
+          user.application.checked = true;
+          updateCount();
+        }
+      }).
+      error(function () {
+        self.errors = ['An internal error has occurred'];
+      });
+    };
+
+    // Expand a user
+    self.toggle = function (user) {
+      if (self.expandedId == user._id) {
+        self.expandedId = '';
+      } else {
+        self.expandedId = user._id;
+      }
+    };
+
+    // Check if a user is expanded
+    self.expanded = function (user) {
+      return self.expandedId == user._id;
+    };
+
   }]);

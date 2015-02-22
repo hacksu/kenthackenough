@@ -68,10 +68,43 @@
 
       <!-- Each user that doesn't have a submitted application -->
       <div class="row expandable-list-item" ng-repeat="user in checkin.users | filter:query | orderBy:'email':false" ng-if="!user.application.submitted">
-        <div class="row header">
+        <div class="row header cursor-pointer" ng-click="checkin.toggle(user)">
           <div class="small-9 columns">
             {{user.email}}
           </div>
+        </div>
+        <div class="row content" ng-if="checkin.expanded(user)">
+          <div class="small-12 columns">
+            <hr>
+            <form ng-submit="checkin.saveQuickEdit(user)">
+              <!-- Name -->
+              <div class="large-5 columns">
+                <div class="row collapse prefix-radius">
+                  <div class="small-3 columns">
+                    <span class="prefix">Name</span>
+                  </div>
+                  <div class="small-9 columns">
+                    <input type="text" placeholder="John Doe" ng-model="user.application.name">
+                  </div>
+                </div>
+              </div>
+              <!-- Phone -->
+              <div class="large-5 columns">
+                <div class="row collapse prefix-radius">
+                  <div class="small-3 columns">
+                    <span class="prefix">Phone</span>
+                  </div>
+                  <div class="small-9 columns">
+                    <input type="text" placeholder="555-555-5555" ng-model="user.application.phone">
+                  </div>
+                </div>
+              </div>
+              <!-- Submit button -->
+              <div class="large-2 columns">
+                <button class="button postfix">Check In</button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
 

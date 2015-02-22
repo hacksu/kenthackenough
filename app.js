@@ -5,10 +5,16 @@ Kent Hack Enough
 Let's try to organize organizing.
 @author Paul Dilyard
 
-To get the app instance, just call getAppInstance() from anywhere
+To get the app instance, just call getApp() from anywhere
+To get the router, call getRouter() from anywhere
 To get a db connection, require('mongoose')
+To get the socket.io connection, call getIo()
 
 */
+GLOBAL.rootRequire = function(name) {
+    return require(__dirname + '/' + name);
+};
+
 var express = require('express');
 var http = require('http');
 var socketio = require('socket.io');
@@ -26,11 +32,11 @@ var router = express.Router();
 
 // Tell winston to use a log file
 winston.add(winston.transports.File, {
-  filename: config.log,
-  handleExceptions: true
+  filename: config.log
+  // handleExceptions: true
 });
 winston.remove(winston.transports.Console);
-winston.exitOnError = false;
+// winston.exitOnError = false;
 
 // Configure app
 app.use(cors());
@@ -54,7 +60,6 @@ mongoose.connect(mongo);
 // Export some useful objects
 module.exports.router = router;
 module.exports.app = app;
-module.exports.mongoose = mongoose;
 module.exports.io = io;
 GLOBAL.getApp = function () {
   return app;
@@ -68,9 +73,10 @@ GLOBAL.getIo = function () {
 
 // Include modules
 [
-  'users',
   'applications',
-  'urls'
+  'emails',
+  'urls',
+  'users'
 ].forEach(function (module) {
   require('./app/modules/' + module + '/controller');
 });

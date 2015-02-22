@@ -10,21 +10,21 @@
       </li>
       <li>
         <!-- Quick Registration Form -->
-        <form class="validation" ng-submit="checkin.register()">
+        <form name="checkin.quickRegisterForm" ng-submit="checkin.register()" novalidate>
           <fieldset>
             <legend>Quick Register</legend>
 
             <label>
               Name
-              <input type="text" ng-model="checkin.quickApp.name" placeholder="John Doe" required>
+              <input type="text" ng-model="checkin.quickApp.name" placeholder="John Doe">
             </label>
             <label>
               Email
-              <input type="text" ng-model="checkin.quickApp.email" placeholder="user@example.com" required>
+              <input type="text" ng-model="checkin.quickApp.email" placeholder="user@example.com">
             </label>
             <label>
               Phone
-              <input type="text" ng-model="checkin.quickApp.phone" placeholder="555-555-5555" required>
+              <input type="text" ng-model="checkin.quickApp.phone" placeholder="555-555-5555">
             </label>
             <button class="button small">Submit</button>
           </fieldset>
@@ -51,7 +51,7 @@
       <!-- Each user with submitted application -->
       <div class="row expandable-list-item" ng-repeat="user in checkin.users | filter:query | orderBy:'application.name':false" ng-if="user.application.submitted">
 
-        <div class="row header">
+        <div class="row header cursor-pointer" ng-click="checkin.toggle(user)">
           <div class="small-9 columns">
             {{user.application.name}}
           </div>
@@ -60,6 +60,22 @@
             <div class="switch align-right">
               <input id="{{user._id}}-checked" type="checkbox" ng-model="user.application.checked" ng-click="checkin.toggleChecked(user)">
               <label for="{{user._id}}-checked"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row content" ng-if="checkin.expanded(user)">
+          <div class="small-12 columns">
+            <hr>
+            <div class="row">
+              <div class="small-12 columns">
+                <strong>Email:</strong> {{user.email}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-12 columns">
+                <strong>Phone:</strong> {{user.application.phone}}
+              </div>
             </div>
           </div>
         </div>

@@ -111,7 +111,6 @@ angular
       * @return An $http promise
       */
       this.quick = function (quickApp) {
-        console.log(quickApp);
         var req = user.authorize({
           method: 'POST',
           url: '/api/application/quick',

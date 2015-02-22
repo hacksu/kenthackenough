@@ -5,7 +5,7 @@ angular
       templateUrl: '/views/staff/checkin.html'
     });
   }])
-  .controller('StaffCheckInCtrl', ['User', 'Application', function (User, Application) {
+  .controller('StaffCheckInCtrl', ['User', 'Application', 'Socket', function (User, Application, Socket) {
 
     var self = this;
     var user = new User();
@@ -38,17 +38,34 @@ angular
     }
     get();
 
+    // Keep an update list of users
+    Socket.on('/application/quick', function (user) {
+      self.users.push(user);
+      updateCount();
+    });
+
+    // Keep track of changes to individual users
+    Socket.on('/application/update', function (user) {
+      for (var i = 0; i < self.users.length; i++) {
+        if (self.users[i]._id == user._id) {
+          self.users[i] = user;
+          updateCount();
+          break;
+        }
+      }
+    });
+
     // Hold the quick application object
     // (name, email, phone)
     self.quickApp = {};
 
     // Submit the quick registration form
     self.register = function () {
+      self.quickApp.phone = self.quickApp.phone.replace(/\D/g,'');
       application.quick(self.quickApp).
       success(function (data) {
         self.errors = data.errors;
         if (!data.errors) {
-          self.users.push(data);
           self.quickApp = {};
         }
       }).
@@ -59,15 +76,11 @@ angular
 
     // Toggle the checked in status of the user
     self.toggleChecked = function (user) {
-      console.log(user.application.checked);
       application.updateById(user._id, {
         checked: user.application.checked
       }).
       success(function (data) {
         self.errors = data.errors;
-        if (!data.errors) {
-          updateCount();
-        }
       }).
       error(function () {
         self.errors = ['An internal error occurred'];
@@ -92,11 +105,6 @@ angular
       }).
       success(function (data) {
         self.errors = data.errors;
-        if (!data.errors) {
-          user.application.submitted = true;
-          user.application.checked = true;
-          updateCount();
-        }
       }).
       error(function () {
         self.errors = ['An internal error has occurred'];

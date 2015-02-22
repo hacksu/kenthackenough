@@ -77,6 +77,13 @@ angular
       });
     };
 
+    // Display only checked in users
+    self.checked = function () {
+      self.current = self.users.filter(function (user) {
+        return user.application.checked == 'Yes';
+      });
+    };
+
     // Expand a user
     self.toggle = function (user) {
       if (self.expandedId == user._id) {

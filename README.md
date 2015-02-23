@@ -231,7 +231,7 @@ HTTP Basic Auth (staff, admin)
 
 #### Resolve a URL
 ```javascript
-GET /:url
+GET /go/:url
 ```
 
 #### Remove a URL

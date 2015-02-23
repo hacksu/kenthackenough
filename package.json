@@ -29,6 +29,7 @@
     "bcrypt": "0.8.x",
     "body-parser": "1.11.x",
     "chance": "0.7.x",
+    "compression": "1.4.x",
     "cors": "2.5.x",
     "email-templates": "1.2.x",
     "express": "4.11.x",

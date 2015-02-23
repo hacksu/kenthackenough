@@ -23,6 +23,7 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var winston = require('winston');
+var compress = require('compression');
 var error = require('./app/helpers/error');
 var config = require('./config');
 
@@ -33,13 +34,14 @@ var router = express.Router();
 // Tell winston to use a log file
 winston.add(winston.transports.File, {
   filename: config.log,
-  handleExceptions: true
+  // handleExceptions: true
 });
 winston.remove(winston.transports.Console);
 // winston.exitOnError = false;
 
 // Configure app
 app.use(cors());
+app.use(compress());
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -49,6 +51,7 @@ app.use(function (req, res, next) {
   winston.info(req.method + ' ' + req.url);
   next();
 });
+app.set('json spaces', 2);
 var port = process.env.PORT || config.port;
 var server = app.listen(port);
 var io = socketio(server);
@@ -75,6 +78,7 @@ GLOBAL.getIo = function () {
 [
   'applications',
   'emails',
+  'messages',
   'urls',
   'users'
 ].forEach(function (module) {

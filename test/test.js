@@ -309,7 +309,7 @@ describe('API', function () {
 
     it('should redirect to the full url', function (done) {
       request(app)
-        .get('/google')
+        .get('/go/google')
         .expect(302)
         .end(function (err, res) {
           if (err) throw err;
@@ -403,6 +403,7 @@ describe('API', function () {
           res.body.should.have.property('created');
           res.body.should.have.property('_id');
           res.body.text.should.equal('Hello, world');
+          messageId = res.body._id;
           done();
         });
     });
@@ -438,6 +439,7 @@ describe('API', function () {
     it('should delete a message', function (done) {
       request(app)
         .delete('/api/messages/'+messageId)
+        .auth('admin@test.com', 'pass')
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;

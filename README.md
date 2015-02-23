@@ -257,6 +257,7 @@ RESPONSE:
 }
 ```
 
+
 ### Emails
 
 #### Send an email
@@ -297,4 +298,53 @@ RESPONSE:
     }
   }]
 }
+```
+
+
+### Live Feed
+
+#### Get a list of messages
+```javascript
+GET /messages
+
+RESPONSE:
+{
+  messages: [{
+    _id: String,
+    created: Date,
+    text: String    // markdown
+  }]
+}
+```
+
+#### Get a single message
+```javascript
+GET /messages/:id
+{
+  _id: String,
+  created: Date,
+  text: String    // markdown
+}
+```
+
+#### Create a new message
+```javascript
+POST /messages
+HTTP Basic Auth (staff, admin)
+{
+  text: String    // markdown
+}
+
+RESPONSE:
+{
+  _id: String,
+  created: Date,
+  text: String
+}
+```
+
+#### Delete a message
+```javascript
+DELETE /messages/:id
+HTTP Basic Auth (staff, admin)
 ```

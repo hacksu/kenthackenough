@@ -1,0 +1,93 @@
+<div ng-controller="StaffEmailCtrl as ctrl">
+
+  <requirestaff user="ctrl.me" error="true">
+
+    <staffheader></staffheader>
+
+    <staffsidebar>
+      <requireadmin user="ctrl.me">
+        <li><a href="/#/staff/emails/new">New</a></li>
+      </requireadmin>
+      <li><a href="/#/staff/emails">Sent</a></li>
+    </staffsidebar>
+
+    <br>
+    <div class="large-9 columns">
+
+      <!-- Success messages, if there are any -->
+      <div ng-if="ctrl.successes">
+        <div data-alert class="alert-box success">
+          <span ng-repeat="success in ctrl.successes">{{success}}<br></span>
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+
+      <!-- Errors, if there are any -->
+      <div ng-if="ctrl.errors">
+        <div data-alert class="alert-box alert">
+          <span ng-repeat="error in ctrl.errors">{{error}}<br></span>
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+
+      <!-- Loading circle -->
+      <div class="row" ng-if="!ctrl.emails.length && !ctrl.errors">
+        <div class="small-12 columns align-center">
+          <br><br>
+          <i class="fa fa-refresh fa-spin fa-5x"></i>
+        </div>
+      </div>
+
+      <!-- The list of emails -->
+      <div class="row expandable-list-item" ng-repeat="email in ctrl.emails | orderBy:'sent':true" ng-if="ctrl.emails.length">
+        <div class="row content">
+          <div class="large-12 columns">
+
+            <div class="row">
+              <div class="small-2 columns">
+                <strong>Sent:</strong>
+              </div>
+              <div class="small-10 columns">
+                {{email.sent|relativeDate}}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="small-2 columns">
+                <strong>Recipients:</strong>
+              </div>
+              <div class="small-10 columns">
+                <span ng-if="email.recipients.nickname">{{email.recipients.nickname|capitalizeFirstLetter}}</span>
+                <span ng-if="!email.recipients.nickname" ng-repeat="address in email.recipients.emails">
+                  {{address}}, &nbsp;
+                </span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="small-2 columns">
+                <strong>Subject:</strong>
+              </div>
+              <div class="small-10 columns">
+                {{email.subject}}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="small-2 columns">
+                <strong>Body:</strong>
+              </div>
+              <div class="small-10 columns">
+                <div ng-bind-html="email.body|markdown|unsafe" class="scrollbox"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </requirestaff>
+
+</div>

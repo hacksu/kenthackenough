@@ -1,0 +1,61 @@
+<div ng-controller="StaffEmailCtrl as ctrl">
+
+  <requireadmin user="ctrl.me" error="true">
+
+    <staffheader></staffheader>
+
+    <staffsidebar>
+      <li><a href="/#/staff/emails/new">New</a></li>
+      <li><a href="/#/staff/emails">Sent</a></li>
+    </staffsidebar>
+
+    <br>
+    <div class="large-9 columns">
+
+      <!-- Success messages, if there are any -->
+      <div ng-if="ctrl.successes">
+        <div data-alert class="alert-box success">
+          <span ng-repeat="success in ctrl.successes">{{success}}<br></span>
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+
+      <!-- Errors, if there are any -->
+      <div ng-if="ctrl.errors">
+        <div data-alert class="alert-box alert">
+          <span ng-repeat="error in ctrl.errors">{{error}}<br></span>
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="large-12 columns">
+          <!-- Compose email form -->
+          <h2>Compose</h2>
+          <form ng-submit="ctrl.send()">
+            <select ng-model="ctrl.new.group">
+              <option value="all">All</option>
+              <option value="staff">Staff</option>
+              <option value="applied">Applied</option>
+              <option value="going">Going</option>
+              <option value="approved">Approved</option>
+              <option value="waitlisted">Waitlisted</option>
+              <option value="pending">Pending</option>
+              <option value="denied">Denied</option>
+              <option value="travel">Travel</option>
+              <option value="checked">Checked In</option>
+              <option value="custom">Custom</option>
+            </select>
+            <input ng-if="ctrl.new.group == 'custom'" type="text" ng-model="ctrl.new.emails" placeholder="a@example.com, b@example.com">
+            <input type="text" ng-model="ctrl.new.subject" placeholder="Subject">
+            <textarea ng-model="ctrl.new.body" placeholder="Body (Markdown formatting)" rows="10"></textarea>
+            <button>Send</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+  </requireadmin>
+
+</div>

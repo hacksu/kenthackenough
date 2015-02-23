@@ -82,3 +82,12 @@ fieldset legend {
 .switch {
   height: 2rem;
 }
+
+.scrollbox {
+  background-color: white;
+  margin-top: .5rem;
+  padding: 1rem;
+  overflow: scroll;
+  height: 20em;
+  border: 1px solid #F4F4F4;
+}

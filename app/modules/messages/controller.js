@@ -30,8 +30,10 @@ router.post('/messages', User.Auth([User.ADMIN, User.STAFF]), function (req, res
   var errors = Message.validate(req.body);
   if (errors.length) return res.multiError(errors);
   var message = new Message(req.body);
+  message.created = Date.now();
   message.save(function (err, message) {
     if (err) return res.internalError();
+    io.emit('POST /messages', message);
     return res.json(message);
   });
 });
@@ -42,6 +44,7 @@ router.post('/messages', User.Auth([User.ADMIN, User.STAFF]), function (req, res
 router.delete('/messages/:id', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
   Message.remove({_id: req.params.id}, function (err) {
     if (err) return res.internalError();
+    io.emit('DELETE /messages/:id', req.params.id);
     return res.json({});
   });
 });

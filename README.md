@@ -348,3 +348,30 @@ RESPONSE:
 DELETE /api/messages/:id
 HTTP Basic Auth (staff, admin)
 ```
+
+#### Subscribe to new messages
+```javascript
+io.on('POST /messages', function (message) {
+  // A new message has been created
+  console.log(message);
+  //=> { _id: String, created: Date, text: String }
+});
+```
+
+#### Subscribe to new messages
+```javascript
+io.on('POST /messages', function (message) {
+  // A new message has been created
+  console.log(message);
+  //=> { _id: String, created: Date, text: String }
+});
+```
+
+#### Subscribe to message deletions
+```javascript
+io.on('DELETE /messages/:id', function (id) {
+  // A message has been deleted
+  console.log(id);
+  //=> ab282tiuguega9
+});
+```

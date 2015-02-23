@@ -388,6 +388,66 @@ describe('API', function () {
 
   });
 
+  describe('Live Feed', function () {
+
+    var messageId;
+
+    it('should create a new message', function (done) {
+      request(app)
+        .post('/api/messages')
+        .auth('admin@test.com', 'pass')
+        .send({text: 'Hello, world'})
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('created');
+          res.body.should.have.property('_id');
+          res.body.text.should.equal('Hello, world');
+          done();
+        });
+    });
+
+    it('should get a list of messages', function (done) {
+      request(app)
+        .get('/api/messages')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('messages');
+          res.body.messages.length.should.be.above(0);
+          res.body.messages[0].should.have.property('created');
+          res.body.messages[0].should.have.property('text');
+          res.body.messages[0].should.have.property('_id');
+          done();
+        });
+    });
+
+    it('should get a single message', function (done) {
+      request(app)
+        .get('/api/messages/'+messageId)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('created');
+          res.body._id.should.equal(messageId);
+          res.body.text.should.equal('Hello, world');
+          done();
+        });
+    });
+
+    it('should delete a message', function (done) {
+      request(app)
+        .delete('/api/messages/'+messageId)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          JSON.stringify(res.body).should.equal('{}');
+          done();
+        });
+    });
+
+  });
+
   // Remove all test users
   after(function (done) {
     User.remove({email: 'admin@test.com'}, function (err) {

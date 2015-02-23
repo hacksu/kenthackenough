@@ -4,6 +4,7 @@ uploads
 public/bower_components
 app.log
 config.js
+app/emails/general/content.md
 
 # Logs
 logs

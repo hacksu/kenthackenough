@@ -305,7 +305,7 @@ RESPONSE:
 
 #### Get a list of messages
 ```javascript
-GET /messages
+GET /api/messages
 
 RESPONSE:
 {
@@ -319,7 +319,7 @@ RESPONSE:
 
 #### Get a single message
 ```javascript
-GET /messages/:id
+GET /api/messages/:id
 {
   _id: String,
   created: Date,
@@ -329,7 +329,7 @@ GET /messages/:id
 
 #### Create a new message
 ```javascript
-POST /messages
+POST /api/messages
 HTTP Basic Auth (staff, admin)
 {
   text: String    // markdown
@@ -345,6 +345,6 @@ RESPONSE:
 
 #### Delete a message
 ```javascript
-DELETE /messages/:id
+DELETE /api/messages/:id
 HTTP Basic Auth (staff, admin)
 ```

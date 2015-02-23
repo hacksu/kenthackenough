@@ -7,10 +7,10 @@ var User = require('../users/model');
 * POST: (see docs)
 * AUTH: admin, staff
 */
-router.post('/emails/send', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
-  console.log(req.body);
+router.post('/emails/send', User.Auth([User.ADMIN]), function (req, res) {
   var errors = Email.validate(req.body);
   if (errors.length) return res.multiError(errors);
+  req.body.sent = Date.now();
   var email = new Email(req.body);
   email.save(function (err, email) {
     if (err) return res.internalError();

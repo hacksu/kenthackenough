@@ -16,7 +16,7 @@ var User = rootRequire('app/modules/users/model');
 var Email = mongoose.model('Email', {
   subject: String,
   body: String,       // stored as markdown
-  sent: Date,
+  sent: {type: Date, default: Date.now},
   recipients: {
     nickname: String,
     emails: [String],
@@ -67,15 +67,18 @@ var Message = function (Email) {
   // Read in the jade and text file
   var pathToHtml = path.resolve(templateDir, 'html.jade');
   var pathToTxt = path.resolve(templateDir, 'text.txt');
+  var pathToMd = path.resolve(templateDir, 'content.md');
   var html = fs.readFileSync(pathToHtml, 'utf-8');
   var txt = fs.readFileSync(pathToTxt, 'utf-8');
 
-  // Replace the <replace> tag with the markdown in both files
-  var finalHtml = html.replace('<replace>', self.email.body);
+  // Replace the <replace> tag with the markdown in the raw text file
   var finalTxt = txt.replace('<replace>', self.email.body);
 
+  // Write the markdown to the file that is included in our jade template
+  fs.writeFileSync(pathToMd, self.email.body);
+
   // Compile the jade into html
-  var fn = jade.compile(finalHtml, {filename: pathToHtml});
+  var fn = jade.compile(html, {filename: pathToHtml});
   var compiledHtml = fn();
 
   return {
@@ -109,7 +112,7 @@ var Message = function (Email) {
           // Send the email
           transporter.sendMail(mailOptions, function (err, info) {
             if (err) throw err;
-            winston.info('Email sent to: ' + emails[i] + '; Response: ' + info.response);
+            winston.info('Email sent: ' + info.response);
           });
         }
       });

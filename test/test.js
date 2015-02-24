@@ -450,6 +450,107 @@ describe('API', function () {
 
   });
 
+  describe('Tickets', function () {
+
+    var ticketId;
+
+    it('should create a new ticket', function (done) {
+      request(app)
+        .post('/api/tickets')
+        .send({
+          subject: 'Test Ticket',
+          body: 'This is a test',
+          replyTo: 'person@test.com',
+          open: true,
+          inProgress: false
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.subject.should.equal('Test Ticket');
+          res.body.body.should.equal('This is a test');
+          res.body.replyTo.should.equal('person@test.com');
+          res.body.open.should.equal(true);
+          res.body.inProgress.should.equal(false);
+          res.body.should.have.property('_id');
+          res.body.should.have.property('created');
+          ticketId = res.body._id;
+          done();
+        });
+    });
+
+    it('should get a list of tickets', function (done) {
+      request(app)
+        .get('/api/tickets')
+        .auth('admin@test.com', 'pass')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.tickets.length.should.be.above(0);
+          res.body.tickets[0].should.have.property('_id');
+          res.body.tickets[0].should.have.property('created');
+          res.body.tickets[0].should.have.property('subject');
+          res.body.tickets[0].should.have.property('body');
+          res.body.tickets[0].should.have.property('replyTo');
+          res.body.tickets[0].should.have.property('open');
+          res.body.tickets[0].should.have.property('inProgress');
+          done();
+        });
+    });
+
+    it('should get a single ticket by id', function (done) {
+      request(app)
+        .get('/api/tickets/'+ticketId)
+        .auth('admin@test.com', 'pass')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.subject.should.equal('Test Ticket');
+          res.body.body.should.equal('This is a test');
+          res.body.replyTo.should.equal('person@test.com');
+          res.body.open.should.equal(true);
+          res.body.inProgress.should.equal(false);
+          res.body.should.have.property('_id');
+          res.body.should.have.property('created');
+          done();
+        });
+    });
+
+    it('should update a ticket', function (done) {
+      request(app)
+        .patch('/api/tickets/'+ticketId)
+        .auth('admin@test.com', 'pass')
+        .send({
+          open: false,
+          inProgress: true
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.subject.should.equal('Test Ticket');
+          res.body.body.should.equal('This is a test');
+          res.body.replyTo.should.equal('person@test.com');
+          res.body.open.should.equal(false);
+          res.body.inProgress.should.equal(true);
+          res.body.should.have.property('_id');
+          res.body.should.have.property('created');
+          done();
+        });
+    });
+
+    it('should delete a ticket', function (done) {
+      request(app)
+        .delete('/api/tickets/'+ticketId)
+        .auth('admin@test.com', 'pass')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          done();
+        });
+    });
+
+  });
+
   // Remove all test users
   after(function (done) {
     User.remove({email: 'admin@test.com'}, function (err) {

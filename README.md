@@ -358,15 +358,6 @@ io.on('POST /messages', function (message) {
 });
 ```
 
-#### Subscribe to new messages
-```javascript
-io.on('POST /messages', function (message) {
-  // A new message has been created
-  console.log(message);
-  //=> { _id: String, created: Date, text: String }
-});
-```
-
 #### Subscribe to message deletions
 ```javascript
 io.on('DELETE /messages/:id', function (id) {

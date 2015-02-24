@@ -366,3 +366,39 @@ io.on('DELETE /messages/:id', function (id) {
   //=> ab282tiuguega9
 });
 ```
+
+
+### Tickets
+
+#### Get a list of tickets
+```javascript
+GET /api/tickets
+HTTP Basic Auth (admin, staff)
+```
+
+#### Get a ticket by ID
+```javascript
+GET /api/tickets/:id
+HTTP Basic Auth (admin, staff)
+```
+
+#### Create a new ticket
+```javascript
+POST /api/tickets
+{
+  subject: String,
+  body: String,
+  replyTo: String,
+  open: Boolean,
+  inProgress: Boolean
+}
+```
+
+#### Partially update a ticket
+```javascript
+PATCH /api/tickets/:id
+HTTP Basic Auth (staff, admin)
+{
+  open: false
+}
+```

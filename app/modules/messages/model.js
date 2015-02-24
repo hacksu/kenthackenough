@@ -10,7 +10,8 @@ var validate = function (message) {
   var test = schema({
     text: {
       type: 'string',
-      required: true
+      required: true,
+      message: 'Your message must have text'
     }
   }, {typecast: true});
   return test.validate(message);

@@ -32,11 +32,13 @@ var validate = function (email) {
   var test = schema({
     subject: {
       type: 'string',
-      required: true
+      required: true,
+      message: 'You must provide a subject'
     },
     body: {
       type: 'string',
-      required: true
+      required: true,
+      message: 'You must provide a body'
     }
   }, {typecast: true, strip: false});
 

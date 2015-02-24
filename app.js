@@ -79,6 +79,7 @@ GLOBAL.getIo = function () {
   'applications',
   'emails',
   'messages',
+  'tickets',
   'urls',
   'users'
 ].forEach(function (module) {

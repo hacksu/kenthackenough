@@ -402,3 +402,9 @@ HTTP Basic Auth (staff, admin)
   open: false
 }
 ```
+
+#### Delete a ticket
+```javascript
+DELETE /api/tickets/:id
+HTTP Basic Auth (staff, admin)
+```

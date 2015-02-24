@@ -6,6 +6,10 @@
   font-size: 1.2rem;
 }
 
+.small {
+  font-size: .8rem;
+}
+
 .grey {
   color: #4d4e51;
 }

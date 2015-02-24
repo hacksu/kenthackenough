@@ -389,8 +389,6 @@ POST /api/tickets
   subject: String,
   body: String,
   replyTo: String,
-  open: Boolean,
-  inProgress: Boolean
 }
 ```
 

@@ -460,9 +460,7 @@ describe('API', function () {
         .send({
           subject: 'Test Ticket',
           body: 'This is a test',
-          replyTo: 'person@test.com',
-          open: true,
-          inProgress: false
+          replyTo: 'person@test.com'
         })
         .expect(200)
         .end(function (err, res) {

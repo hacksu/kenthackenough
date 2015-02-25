@@ -5,6 +5,7 @@ var Ticket = mongoose.model('Ticket', {
   subject: String,
   body: String,
   replyTo: String,
+  worker: String, // the email of the staff member working on this
   open: {type: Boolean, default: true},
   inProgress: {type: Boolean, default: false},
   created: {type: Date, default: Date.now}

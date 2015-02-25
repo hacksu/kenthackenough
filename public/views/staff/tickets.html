@@ -3,23 +3,31 @@
 
     <staffheader></staffheader>
     <staffsidebar>
-      <li><a href=""></a></li>
-      <li><a href=""></a></li>
-      <li><a href=""></a></li>
-      <li><a href=""></a></li>
+      <li><a ng-click="ctrl.all()">All</a></li>
+      <li><a ng-click="ctrl.open()">Open</a></li>
+      <li><a ng-click="ctrl.progress()">In Progress</a></li>
+      <li><a ng-click="ctrl.closed()">Closed</a></li>
     </staffsidebar>
 
     <br>
     <div class="small-9 columns">
 
-      <div ng-repeat="ticket in ctrl.tickets | orderBy:'created':true" class="row expandable-list-item">
+      <!-- Errors, if there are any -->
+      <div ng-if="ctrl.errors">
+        <div data-alert class="alert-box alert">
+          <span ng-repeat="error in ctrl.errors">{{error}}<br></span>
+          <a href="#" class="close">&times;</a>
+        </div>
+      </div>
+
+      <div ng-repeat="ticket in ctrl.current | orderBy:'created':true" class="row expandable-list-item">
         <!-- Header -->
         <div class="row header cursor-pointer" ng-click="ctrl.toggle(ticket)">
           <div class="small-9 columns">
             <strong>{{ticket.subject}}</strong>
           </div>
           <div class="small-3  columns align-right">
-            <span ng-bind="ctrl.prettifyStatus(ticket)"></span>
+            <span>{{ticket.prettyStatus}}</span>
           </div>
         </div>
         <!-- Content -->
@@ -35,14 +43,46 @@
                 <a href="mailto:{{ticket.replyTo}}">{{ticket.replyTo}}</a>
               </div>
             </div>
-            <!-- Status -->
-            <div class="row">
+            <!-- Worker (if applicable) -->
+            <div class="row" ng-if="ticket.worker">
               <div class="small-2 columns">
-                <strong>Status:</strong>
+                <strong>Staff member:</strong>
               </div>
               <div class="small-10 columns">
-                <span ng-bind="ctrl.prettifyStatus(ticket)"></span>
+                <a href="mailto:{{ticket.worker}}">{{ticket.worker}}</a>
               </div>
+            </div>
+            <!-- Status -->
+            <div class="row">
+              <span ng-if="!ticket.editingStatus">
+                <div class="small-2 columns">
+                  <strong>Status:</strong>
+                </div>
+                <div class="small-10 columns">
+                  <a href="" class="black" ng-bind="ticket.prettyStatus" ng-click="ctrl.editStatus(ticket)"></a>
+                </div>
+              </span>
+              <span ng-if="ticket.editingStatus">
+                <form ng-submit="ctrl.updateTicket(ticket)">
+                  <div class="small-12 columns">
+                    <div class="row collapse">
+                      <div class="small-8 columns">
+                        <select ng-model="ticket.prettyStatus">
+                          <option value="Open">Open</option>
+                          <option value="In Progress">In Progress</option>
+                          <option value="Closed">Closed</option>
+                        </select>
+                      </div>
+                      <div class="small-2 columns">
+                        <button type="submit" class="button postfix">Save</a>
+                      </div>
+                      <div class="small-2 columns">
+                        <a href="" class="button postfix alert" ng-click="ctrl.cancelEditStatus(ticket)">Cancel</a>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </span>
             </div>
             <!-- Body -->
             <div class="row">

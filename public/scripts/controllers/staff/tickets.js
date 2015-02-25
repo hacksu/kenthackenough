@@ -13,6 +13,7 @@ angular
 
     self.me = user.getMe();
     self.tickets = [];
+    self.current = [];
 
     function get() {
       self.ticket.list().
@@ -20,6 +21,8 @@ angular
         self.errors = data.errors;
         if (!data.errors) {
           self.tickets = data.tickets;
+          self.prettifyStatus(self.tickets);
+          self.current = self.tickets;
         }
       }).
       error(function () {
@@ -27,6 +30,41 @@ angular
       });
     }
     get();
+
+    self.all = function () {
+      self.current = self.tickets;
+    };
+
+    self.open = function () {
+      self.current = self.tickets.filter(function (ticket) {
+        return ticket.prettyStatus == 'Open';
+      });
+    };
+
+    self.progress = function () {
+      self.current = self.tickets.filter(function (ticket) {
+        return ticket.prettyStatus == 'In Progress';
+      });
+    };
+
+    self.closed = function () {
+      self.current = self.tickets.filter(function (ticket) {
+        return ticket.prettyStatus == 'Closed';
+      });
+    };
+
+    self.prettifyStatus = function (tickets) {
+      for (var i = 0; i < tickets.length; i++) {
+        var ticket = tickets[i];
+        if (ticket.open && !ticket.inProgress) {
+          ticket.prettyStatus = 'Open';
+        } else if (ticket.open && ticket.inProgress) {
+          ticket.prettyStatus = 'In Progress';
+        } else {
+          ticket.prettyStatus = 'Closed';
+        }
+      }
+    };
 
     // Expand a ticket
     self.toggle = function (ticket) {
@@ -42,72 +80,45 @@ angular
       return self.expandedId == ticket._id;
     };
 
-    // Edit the open/closed status of a ticket
-    self.editOpen = function (ticket) {
+    self.editStatus = function (ticket) {
+      ticket.editingStatus = true;
       ticket.oldOpen = ticket.open;
-      ticket.editingOpen = true;
-    };
-
-    // Save the open/closed status
-    self.saveOpen = function (ticket) {
-      self.ticket.update(ticket._id, {
-        open: ticket.open
-      }).
-      success(function (data) {
-        self.errors = data.errors;
-        if (!data.errors) {
-          ticket.editingOpen = false;
-          ticket = data;
-        }
-      }).
-      error(function () {
-        self.errors = ['An internal error has occurred'];
-      });
-    };
-
-    // Cancel editing the open/closed status
-    self.cancelEditOpen = function (ticket) {
-      ticket.open = ticket.oldOpen;
-      ticket.editingOpen = false;
-    };
-
-    // Edit the in progress status
-    self.editInProgress = function (ticket) {
       ticket.oldInProgress = ticket.inProgress;
-      ticket.editingInProgress = true;
     };
 
-    // Save the in progress status
-    self.saveInProgress = function (ticket) {
+    self.cancelEditStatus = function (ticket) {
+      ticket.editingStatus = false;
+      ticket.open = ticket.oldOpen;
+      ticket.inProgress = ticket.oldInProgress;
+      self.prettifyStatus([ticket]);
+    };
+
+    self.updateTicket = function (ticket) {
+      var open, inProgress;
+      if (ticket.prettyStatus == 'Open') {
+        open = true;
+        inProgress = ticket.oldInProgress;
+      } else if (ticket.prettyStatus == 'In Progress') {
+        open = true;
+        inProgress = true;
+      } else {
+        open = false;
+        inProgress = false;
+      }
       self.ticket.update(ticket._id, {
-        inProgress: ticket.inProgress
+        open: open,
+        inProgress: inProgress,
+        worker: self.me.email
       }).
       success(function (data) {
         self.errors = data.errors;
         if (!data.errors) {
-          ticket = data;
-          ticket.editingInProgress = false;
+          ticket.editingStatus = false;
         }
       }).
       error(function () {
-        self.errors = ['An internal error has occurred'];
+        self.errors = ['An internal error occurred'];
       });
-    };
-
-    // Cancel editing the in progress status
-    self.cancelEditProgress = function (ticket) {
-      ticket.inProgress = ticket.oldInProgress;
-      ticket.editingInProgress = false;
-    };
-
-    self.prettifyStatus = function (ticket) {
-      if (ticket.open && !ticket.inProgress) {
-        return 'Open';
-      } else if (ticket.open && ticket.inProgress) {
-        return 'In Progress';
-      } else {
-        return 'Closed';
-      }
     };
 
   }]);

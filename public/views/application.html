@@ -96,11 +96,11 @@
         <label class="small-12 large-6 columns">
           What is your year in school?
           <select ng-model="application.year" required>
-            <option value="Senior">Senior</option>
-            <option value="Junior">Junior</option>
-            <option value="Sophomore">Sophomore</option>
-            <option value="Freshman">Freshman</option>
             <option value="High School">High School</option>
+            <option value="Freshman">Freshman</option>
+            <option value="Sophomore">Sophomore</option>
+            <option value="Junior">Junior</option>
+            <option value="Senior">Senior</option>
           </select>
         </label>
 
@@ -146,7 +146,7 @@
       <div class="row">
         <label class="small-12 columns">
           <input type="checkbox" ng-model="application.conduct" value="true" required>
-          I agree to the MLH Code of Conduct
+          I agree to the <a href="http://static.mlh.io/docs/mlh-code-of-conduct.pdf" target="_blank">MLH Code of Conduct</a>
           <br>
         </label>
       </div>

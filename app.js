@@ -26,6 +26,7 @@ var winston = require('winston');
 var compress = require('compression');
 var error = require('./app/helpers/error');
 var config = require('./config');
+var initConfig = require('./app/helpers/initconfig');
 
 // Start up server
 var app = express();
@@ -59,6 +60,9 @@ var io = socketio(server);
 // Connect to database
 var mongo = process.env.MONGO_URI || config.mongo.uri;
 mongoose.connect(mongo);
+
+// Initialize configuration
+initConfig();
 
 // Export some useful objects
 module.exports.router = router;

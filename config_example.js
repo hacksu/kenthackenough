@@ -1,9 +1,9 @@
 module.exports = {
 
-  // Port used for API and web interface
+  // API Port
   port: 3000,
 
- // Log file for the express aplication
+ // Log file (check for errors here)
   log: 'app.log',
 
   // Database to save users and other data to
@@ -11,7 +11,7 @@ module.exports = {
     uri: 'mongodb://localhost:27017/test'
   },
 
-  // Gmail account to be used to send messages from
+  // Gmail account to be used to send mass emails from
   gmail: {
     username: 'user@gmail.com',
     password: 'password123',
@@ -22,7 +22,7 @@ module.exports = {
   users: [{
     email: 'user@example.com',
     password: 'password123',
-    role: 'attendee|User.staff|User.admin'
+    role: 'attendee|staff|admin'
   }]
 
 };

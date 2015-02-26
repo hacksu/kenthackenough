@@ -26,6 +26,7 @@ var winston = require('winston');
 var compress = require('compression');
 var error = require('./app/helpers/error');
 var config = require('./config');
+var User = require('./app/modules/users/model');
 
 // Start up server
 var app = express();
@@ -85,6 +86,31 @@ GLOBAL.getIo = function () {
 ].forEach(function (module) {
   require('./app/modules/' + module + '/controller');
 });
+
+// Register users from the config if they aren't already registered.
+if (config.users) {
+  config.users.forEach(function (newUser) {
+    User.findOne({email: newUser.email}, function (err, user) {
+      if (user) return; // We don't need to do anything if the user already exists
+      if (err) {
+        console.log(err);
+        return;
+      }
+
+      var salt = User.Helpers.salt()
+      var user = new User({
+        email: newUser.email,
+        password: User.Helpers.hash(newUser.password, salt),
+        role: newUser.role,
+        salt: salt,
+        activated: false,
+        time: Date.now()
+      });
+
+      user.save();
+    })
+  });
+};
 
 // Add an /api prefix to all routes
 app.use('/api', router);

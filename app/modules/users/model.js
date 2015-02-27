@@ -29,12 +29,16 @@ var bcrypt = require('bcrypt');
 var auth = require('basic-auth');
 var schema = require('validate');
 var Application = require('../applications/model');
+var chance = require('chance').Chance();
+
 
 var User = mongoose.model('User', {
   email: {type: String, unique: true},
   role: {type: String, enum: ['attendee', 'staff', 'admin']},
   password: String,
   salt: String,
+  resetToken: String,                 // used authenticate a password reset
+  resetRequested : Date,              // time reset was requested
   subscribe: Boolean,                 // subscribe to the mailing list?
   activated: Boolean,                 // account activated?
   application: Application.Schema,    // user's application
@@ -49,6 +53,14 @@ var Helpers = {
   */
   salt: function () {
     return bcrypt.genSaltSync(10);
+  },
+
+  /**
+  * Generate a random string for use as a token
+  * @return A random string with 10 bytes
+  */
+  token: function() {
+    return chance.string({length: 10}); // todo use a stronger random function
   },
 
   /**

@@ -86,6 +86,38 @@ describe('API', function () {
         });
     });
 
+    // not the best way of testing this but without email we can't do better
+    it('should ask for a password reset', function (done) {
+      request(app)
+        .post('/api/users/password/reset/request')
+        .send({
+          email: 'user@test.com'
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          JSON.stringify(res.body).should.be.exactly("{}");
+          done();
+        });
+    });
+
+    // once again not the best test but without knowing the token we must make do
+    it('should fail to reset password with wrong token', function (done) {
+      request(app)
+        .post('/api/users/password/reset')
+        .send({
+          email: 'user@test.com',
+          token: 'adadsdsf',
+          password: 'hah hah this works'
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.errors[0].should.equal('The token or email is incorrect');
+          done();
+        });
+    });
+
     it('should update the user\'s role', function (done) {
       request(app)
         .post('/api/users/role/' + id)

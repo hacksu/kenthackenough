@@ -53,6 +53,17 @@ RESPONSE:
 }
 ```
 
+#### Reset the password for a user
+```javascript
+POST /api/users/register
+{
+  email: String,
+}
+
+RESPONSE:
+{}
+```
+
 #### Activate a user
 **Note:** Currently deprecated (we're not requiring email verification)
 ```javascript

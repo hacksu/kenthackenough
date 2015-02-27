@@ -1,6 +1,7 @@
 var router = getRouter();
 var User = require('./model');
 var Message = require('../../helpers/mailer');
+var config = require('../../../config');
 
 /**
 * Create a new user
@@ -28,6 +29,61 @@ router.post('/users/register', function (req, res) {
       role: user.role
     });
   });
+});
+
+/**
+* Reset an user's password
+* POST: email, password, token
+*/
+router.post('/users/password/reset', function (req, res) {
+  var errors = User.validate({email: req.body.email, password: req.body.password});
+  if (errors.length) return res.multiError(errors);
+  User.findOne({email: req.body.email}, function (err, user) {
+    if (err) return res.internalError();
+    if (!user) return res.singleError('The token or email is incorrect');
+    if (!user.resetToken || user.resetToken != req.body.token) {
+      return res.singleError('The token or email is incorrect');
+    }
+    if ((Date.now() - user.resetRequested) > config) {
+        return res.singleError('The specified token has expired');
+    }
+    user.resetToken = null;
+    user.resetRequested = null;
+
+    var salt = User.Helpers.salt();
+    user.password = User.Helpers.hash(req.body.password, salt);
+    user.salt = salt;
+
+    user.save(function (err, user) {
+      if (err) return res.internalError();
+      return res.send({});
+    });
+  });
+
+});
+
+/**
+* Reset a password reset email
+* POST: email
+*/
+router.post('/users/password/reset/request', function (req, res) {
+  if (!req.body.email) return res.singleError("Please specify an email");
+
+  User.findOne({email: req.body.email}, function (err, user) {
+    if (err) return res.internalError();
+    if (!user) return res.singleError("The specified user does not exist")
+    user.resetToken = User.Helpers.token();
+    user.resetRequested = Date.now();
+
+    user.save(function (err, user) {
+      if (err) return res.internalError();
+
+      sendResetEmail(user.email, user.resetToken)
+
+      return res.send({});
+    });
+  });
+
 });
 
 /**
@@ -141,6 +197,20 @@ function sendRegistrationEmail(email) {
     template: 'registration',
     subject: 'Kent Hack Enough Registration',
     recipients: [{email: email}]
+  });
+  message.send();
+}
+
+/**
+* Helper method to send rest email and thus shorten routes
+*/
+function sendResetEmail(email, token) {
+  var message = new Message({
+    template: 'passwordReset',
+    subject: 'Kent Hack Enough Password Reset',
+    recipients: [{email: email,
+                  locals: {token: token}
+                }]
   });
   message.send();
 }

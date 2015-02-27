@@ -3,8 +3,11 @@ module.exports = {
   // API Port
   port: 3000,
 
- // Log file (check for errors here)
+  // Log file (check for errors here)
   log: 'app.log',
+
+  // Period after a password update request in which the token is valid in ms
+  tokenValidity: 86400000, // 24 hours
 
   // Database to save users and other data to
   mongo: {

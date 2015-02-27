@@ -1,0 +1,7 @@
+Hello.
+
+Sorry you had to reset your password. The token can currently only be view from
+a email viewer with support for html.
+
+Regards,
+The Kent Hack Enough Team

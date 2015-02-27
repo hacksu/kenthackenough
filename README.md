@@ -8,15 +8,12 @@ The world's best hackathon website.
 1. `npm install -g npm`
 1. `npm install -g n`
 1. `n stable`
+1. Clone this repository
+1. npm install
 
 ### Configuration
 1. `cp config_example.js config.js`
 1. Enter values into config.js
-
-### Development
-1. Clone this repository
-1. `npm install`
-1. `node app`
 
 ## Testing
 1. `npm install -g mocha`

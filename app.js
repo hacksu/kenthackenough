@@ -52,6 +52,7 @@ app.use(function (req, res, next) {
   winston.info(req.method + ' ' + req.url);
   next();
 });
+app.use(router);
 app.set('json spaces', 2);
 var port = process.env.PORT || config.port;
 var server = app.listen(port);
@@ -89,6 +90,3 @@ GLOBAL.getIo = function () {
 ].forEach(function (module) {
   require('./app/modules/' + module + '/controller');
 });
-
-// Add an /api prefix to all routes
-app.use('/api', router);

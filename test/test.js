@@ -28,7 +28,7 @@ describe('API', function () {
 
     it('should register a new user', function (done) {
       request(app)
-        .post('/api/users/register')
+        .post('/users/register')
         .send({
           email: 'user@test.com',
           password: 'pass'
@@ -45,7 +45,7 @@ describe('API', function () {
 
     it('should activate the new user', function (done) {
       request(app)
-        .get('/api/users/activate/' + id)
+        .get('/users/activate/' + id)
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;
@@ -56,7 +56,7 @@ describe('API', function () {
 
     it('should successfully check login credentials', function (done) {
       request(app)
-        .post('/api/users/login')
+        .post('/users/login')
         .send({
           email: 'user@test.com',
           password: 'pass'
@@ -73,7 +73,7 @@ describe('API', function () {
 
     it('should tell me that the username or password is incorrect', function (done) {
       request(app)
-        .post('/api/users/login')
+        .post('/users/login')
         .send({
           email: 'user@test.com',
           password: 'wrong'
@@ -88,7 +88,7 @@ describe('API', function () {
 
     it('should update the user\'s role', function (done) {
       request(app)
-        .post('/api/users/role/' + id)
+        .post('/users/role/' + id)
         .auth('admin@test.com', 'pass')
         .send({
           role: 'staff'
@@ -103,7 +103,7 @@ describe('API', function () {
 
     it('should submit an application for the test user', function (done) {
       request(app)
-        .post('/api/application/submit')
+        .post('/application/submit')
         .auth('user@test.com', 'pass')
         .send({
           name: 'First Last',
@@ -144,7 +144,7 @@ describe('API', function () {
 
     it('should update the created application', function (done) {
       request(app)
-        .post('/api/application/update')
+        .post('/application/update')
         .auth('user@test.com', 'pass')
         .send({
           name: 'Real Name',
@@ -183,7 +183,7 @@ describe('API', function () {
 
     it('should view the user\'s application', function (done) {
       request(app)
-        .get('/api/application')
+        .get('/application')
         .auth('user@test.com', 'pass')
         .expect(200)
         .end(function (err, res) {
@@ -207,7 +207,7 @@ describe('API', function () {
 
     it('should update an application by user ID', function (done) {
       request(app)
-        .post('/api/application/update/' + id)
+        .post('/application/update/' + id)
         .auth('admin@test.com', 'pass')
         .send({
           status: 'approved',
@@ -224,7 +224,7 @@ describe('API', function () {
 
     it('should quickly register a new user', function (done) {
       request(app)
-        .post('/api/application/quick')
+        .post('/application/quick')
         .auth('admin@test.com', 'pass')
         .send({
           name: 'Last Person',
@@ -243,7 +243,7 @@ describe('API', function () {
 
     it('should get a list of all users', function (done) {
       request(app)
-        .get('/api/users')
+        .get('/users')
         .auth('admin@test.com', 'pass')
         .expect(200)
         .end(function (err, res) {
@@ -255,7 +255,7 @@ describe('API', function () {
 
     it('should unsubscribe a user', function (done) {
       request(app)
-        .post('/api/users/unsubscribe')
+        .post('/users/unsubscribe')
         .auth('admin@test.com', 'pass')
         .send({
           userId: id
@@ -270,7 +270,7 @@ describe('API', function () {
 
     it('should delete a user', function (done) {
       request(app)
-        .post('/api/users/delete')
+        .post('/users/delete')
         .auth('admin@test.com', 'pass')
         .send({
           userId: id
@@ -291,7 +291,7 @@ describe('API', function () {
 
     it('should create a shortened url', function (done) {
       request(app)
-        .post('/api/urls/shorten')
+        .post('/urls/shorten')
         .auth('admin@test.com', 'pass')
         .send({
           full: 'http://www.google.com',
@@ -319,7 +319,7 @@ describe('API', function () {
 
     it('should list the created urls', function (done) {
       request(app)
-        .get('/api/urls')
+        .get('/urls')
         .auth('admin@test.com', 'pass')
         .expect(200)
         .end(function (err, res) {
@@ -331,7 +331,7 @@ describe('API', function () {
 
     it('should delete the created url', function (done) {
       request(app)
-        .post('/api/urls/remove')
+        .post('/urls/remove')
         .auth('admin@test.com', 'pass')
         .send({
           id: linkId
@@ -349,7 +349,7 @@ describe('API', function () {
 
     it('should send an email to a test user', function (done) {
       request(app)
-        .post('/api/emails/send')
+        .post('/emails/send')
         .auth('admin@test.com', 'pass')
         .send({
           nickname: 'Test Group',
@@ -369,7 +369,7 @@ describe('API', function () {
 
     it('should list all sent emails', function (done) {
       request(app)
-        .get('/api/emails')
+        .get('/emails')
         .auth('admin@test.com', 'pass')
         .expect(200)
         .end(function (err, res) {
@@ -394,7 +394,7 @@ describe('API', function () {
 
     it('should create a new message', function (done) {
       request(app)
-        .post('/api/messages')
+        .post('/messages')
         .auth('admin@test.com', 'pass')
         .send({text: 'Hello, world'})
         .expect(200)
@@ -410,7 +410,7 @@ describe('API', function () {
 
     it('should get a list of messages', function (done) {
       request(app)
-        .get('/api/messages')
+        .get('/messages')
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;
@@ -425,7 +425,7 @@ describe('API', function () {
 
     it('should get a single message', function (done) {
       request(app)
-        .get('/api/messages/'+messageId)
+        .get('/messages/'+messageId)
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;
@@ -438,7 +438,7 @@ describe('API', function () {
 
     it('should delete a message', function (done) {
       request(app)
-        .delete('/api/messages/'+messageId)
+        .delete('/messages/'+messageId)
         .auth('admin@test.com', 'pass')
         .expect(200)
         .end(function (err, res) {
@@ -456,7 +456,7 @@ describe('API', function () {
 
     it('should create a new ticket', function (done) {
       request(app)
-        .post('/api/tickets')
+        .post('/tickets')
         .send({
           subject: 'Test Ticket',
           body: 'This is a test',
@@ -479,7 +479,7 @@ describe('API', function () {
 
     it('should get a list of tickets', function (done) {
       request(app)
-        .get('/api/tickets')
+        .get('/tickets')
         .auth('admin@test.com', 'pass')
         .expect(200)
         .end(function (err, res) {
@@ -498,7 +498,7 @@ describe('API', function () {
 
     it('should get a single ticket by id', function (done) {
       request(app)
-        .get('/api/tickets/'+ticketId)
+        .get('/tickets/'+ticketId)
         .auth('admin@test.com', 'pass')
         .expect(200)
         .end(function (err, res) {
@@ -516,7 +516,7 @@ describe('API', function () {
 
     it('should update a ticket', function (done) {
       request(app)
-        .patch('/api/tickets/'+ticketId)
+        .patch('/tickets/'+ticketId)
         .auth('admin@test.com', 'pass')
         .send({
           open: false,
@@ -538,7 +538,7 @@ describe('API', function () {
 
     it('should delete a ticket', function (done) {
       request(app)
-        .delete('/api/tickets/'+ticketId)
+        .delete('/tickets/'+ticketId)
         .auth('admin@test.com', 'pass')
         .expect(200)
         .end(function (err, res) {

@@ -6,7 +6,7 @@ var fs = require('fs');
 var jade = require('jade');
 var nodemailer = require('nodemailer');
 var winston = require('winston');
-var config = rootRequire('config');
+var config = rootRequire('config/config');
 var flow = require('flow');
 var User = rootRequire('app/modules/users/model');
 

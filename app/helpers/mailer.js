@@ -36,7 +36,7 @@ var jade = require('jade');
 var nodemailer = require('nodemailer');
 var winston = require('winston');
 var flow = require('flow');
-var config = rootRequire('config');
+var config = rootRequire('config/config');
 
 module.exports = function (options) {
 

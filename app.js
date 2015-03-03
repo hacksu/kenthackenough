@@ -25,7 +25,7 @@ var multer = require('multer');
 var winston = require('winston');
 var compress = require('compression');
 var error = require('./app/helpers/error');
-var config = require('./config');
+var config = require('./config/config');
 var initConfig = require('./app/helpers/initconfig');
 
 // Start up server

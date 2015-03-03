@@ -1,4 +1,4 @@
-var config = rootRequire('config');
+var config = rootRequire('config/config');
 var winston = require('winston');
 var User = rootRequire('app/modules/users/model');
 

@@ -25,7 +25,7 @@ User Model
 */
 
 var mongoose = require('mongoose');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt-nodejs');
 var auth = require('basic-auth');
 var schema = require('validate');
 var Application = require('../applications/model');

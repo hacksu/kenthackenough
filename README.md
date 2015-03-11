@@ -83,6 +83,14 @@ HTTP/1.1 200 OK
 }
 ```
 
+#### Remove a token
+```javascript
+DELETE /users/token
+Auth
+
+HTTP/1.1 200 OK
+```
+
 #### Get a list of all users
 ```javascript
 GET /users
@@ -110,6 +118,16 @@ HTTP/1.1 200 OK
   "email": String,
   "role": String,
   "created": Date
+}
+```
+
+#### Update the logged in user
+```javascript
+PUT /users
+Auth
+{
+  "email": String,
+  "password": String
 }
 ```
 

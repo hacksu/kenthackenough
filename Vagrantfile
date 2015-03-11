@@ -46,7 +46,7 @@ Vagrant.configure(2) do |config|
     # pm2
     npm install -g pm2
     cd /vagrant
-    pm2 start
+    pm2 start processes.json
     echo "---------------------------------------------"
     echo "| See application at http://localhost:3000/ |"
     echo "---------------------------------------------"

@@ -2,111 +2,142 @@
 The world's best hackathon website.
 
 ## Installation
-### Prerequisites
+
+### Development
+1. Clone repository
+1. Install [Vagrant](http://vagrantup.com)
+1. `vagrant up`
+
+To test:
+1. `vagrant ssh -c 'cd /vagrant && mocha'`
+
+### Production
 1. Install [MongoDB](http://docs.mongodb.org/manual/installation/)
+1. Install [redis](http://redis.io)
 1. Install [NodeJS](http://nodejs.org/)
 1. `npm install -g npm`
-1. `npm install -g n`
+2. `npm install -g n pm2`
 1. `n stable`
-1. Clone this repository
-1. npm install
+1. Clone repository
+1. `npm install`
+1. `pm2 start app.js`
 
 ### Configuration
 1. `cp config_example.js config.js`
 1. Enter values into config.js
 
-## Testing
-1. `npm install -g mocha`
-1. `npm test`
-
-### Production
-todo
-
 ## Overview
+
+### Error Handling
+Every time an error occurrs, the response header will match the appropriate HTTP error code. The body of the response will contain an array of errors.
+
 All errors are in the form of:
 ```javascript
+HTTP 500 Internal Server Error
 {
-  errors: [String]
+  "errors": [String]
 }
 ```
+
+### Authentication
+Many endpoints require user authentication. This API uses HTTP Basic Authentication headers to verify users. It uses two parts, a key and a token:
+```
+<encoded> = base64Encode(<key>:<token>)
+Authorization: Basic <coded>
+```
+Just send that header with each request that needs authorized, the rest is done for you.
+
+To obtain a key and token, please see `POST /users/token`.
 
 ## API
 
-### User
-#### Register a new user
+### Users
+
+#### Create a new user
 ```javascript
-POST /api/users/register
+POST /users
 {
-  email: String,
-  password: String
+  "email": String,
+  "password": String
 }
 
-RESPONSE:
+HTTP/1.1 200 OK
 {
-  _id: String,
-  email: String,
-  password: String,
-  role: String
+  "key": String,
+  "token": String
 }
 ```
 
-#### Activate a user
-**Note:** Currently deprecated (we're not requiring email verification)
+#### Get a key and token
 ```javascript
-GET /api/users/activate/<user_id>
-
-RESPONSE:
-{}
-```
-
-#### Login a user (check their credentials)
-```javascript
-POST /api/users/login
+POST /users/token
 {
-  email: String,
-  password: String
+  "email": String,
+  "password": String
 }
 
-RESPONSE:
+HTTP/1.1 200 OK
 {
-  email: String,
-  password: String,
-  role: String
+  "key": String,
+  "token": String
 }
 ```
 
 #### Get a list of all users
 ```javascript
-GET /api/users
-HTTP Basic Auth (staff, admin)
-```
+GET /users
+Auth -> admin, staff
 
-#### Set a user's role
-```javascript
-POST /api/users/role/:id
-HTTP Basic Auth (admin)
+HTTP/1.1 200 OK
 {
-  role: 'attendee'|'staff'|'admin'
+  "users": [{
+    "_id": String,
+    "email": String,
+    "role": String,
+    "created": Date
+  }]
 }
 ```
 
-#### Unsubscribe a user (remove them from mailing list)
+#### Get a user by ID
 ```javascript
-POST /api/users/unsubscribe
-HTTP Basic Auth (staff, admin)
+GET /users/:id
+Auth -> admin, staff
+
+HTTP/1.1 200 OK
 {
-  userId: String
+  "_id": String,
+  "email": String,
+  "role": String,
+  "created": Date
 }
 ```
 
-#### Completely delete a user (just in case!)
+#### Update a user by ID
 ```javascript
-POST /api/users/delete
-HTTP Basic Auth (admin)
+PUT /users/:id
+Auth -> admin
 {
-  userId: String
+  "role": 'attendee'|'staff'|'admin'
+}
+
+HTTP/1.1 200 OK
+{
+  "_id": String,
+  "email": String,
+  "role": String,
+  "created": String
 }
 ```
+
+#### Delete a user
+```javascript
+DELETE /users/:id
+Auth -> admin
+
+HTTP/1.1 200 OK
+```
+
 
 ### Application
 

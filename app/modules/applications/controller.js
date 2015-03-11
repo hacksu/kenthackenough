@@ -26,7 +26,7 @@ router.post('/application/submit', User.Auth(), function (req, res) {
   req.user.application.time = Date.now();
   req.user.save(function (err, u) {
     if (err) return res.internalError();
-    if (provess.env.NODE_ENV == 'production') {
+    if (process.env.NODE_ENV == 'production') {
       sendApplicationEmail(u);
     }
     return res.send(u.application);

@@ -24,7 +24,7 @@ Vagrant.configure(2) do |config|
     apt-get update
     apt-get install -y nginx node npm
     npm install -g npm
-    npm install -g n
+    npm install -g n mocha
     n stable
     # mongodb
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
@@ -42,7 +42,8 @@ Vagrant.configure(2) do |config|
     service nginx reload
     # pm2
     npm install -g pm2
-    pm2 start /vagrant/app.js --watch
+    cd /vagrant
+    pm2 start
     echo "---------------------------------------------"
     echo "| See application at http://localhost:3000/ |"
     echo "---------------------------------------------"

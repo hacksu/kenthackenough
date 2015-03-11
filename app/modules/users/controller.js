@@ -20,7 +20,9 @@ router.post('/users/register', function (req, res) {
   });
   user.save(function (err, user) {
     if (err) return res.singleError('That email is already in use');
-    sendRegistrationEmail(user.email);
+    if (process.env.NODE_ENV == 'production') {
+      sendRegistrationEmail(user.email);
+    }
     return res.send({
       _id: user._id,
       email: user.email,

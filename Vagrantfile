@@ -32,6 +32,9 @@ Vagrant.configure(2) do |config|
     apt-get update
     apt-get install -y mongodb-org
     service mongod start
+    # redis
+    apt-get install -y redis-server
+    service redis-server start
     # nginx config
     if [ -f /etc/nginx/sites-available/default ]; then
       rm /etc/nginx/sites-available/default

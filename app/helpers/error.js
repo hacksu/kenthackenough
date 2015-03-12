@@ -10,13 +10,19 @@
 
 module.exports = function (req, res, next) {
   res.internalError = function () {
-    return res.send({errors: ['An internal error has ocurred.']});
+    res
+      .status(500)
+      .send({errors: ['An internal error has ocurred.']});
   };
   res.singleError = function (message) {
-    return res.send({errors: [message]});
+    res
+      .status(500)
+      .send({errors: [message]});
   };
   res.multiError = function (messages) {
-    return res.send({errors: messages});
+    res
+      .status(500)
+      .send({errors: messages});
   };
   next();
 };

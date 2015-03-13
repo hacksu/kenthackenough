@@ -391,44 +391,59 @@ HTTP/1.1 200 OK
 
 ### URL Shortener
 
-#### Shorten a URL
+#### Create a new shortened URL
 ```javascript
-POST /api/urls/shorten
-HTTP Basic Auth (staff, admin)
+POST /urls
+Auth -> admin, staff
 {
-  full: String,
-  short: String
+  "full": String,   // the full length URL
+  "short": String   // the shortened key
+}
+
+HTTP/1.1 200 OK
+{
+  "_id": String,
+  "full": String,
+  "short": String
 }
 ```
 
-#### Resolve a URL
+#### Resolve a shortened URL
 ```javascript
-GET /go/:url
+GET /urls/go/:short
+
+HTTP/1.1 301 Moved Permanently
 ```
 
-#### Remove a URL
+#### Get a single URL
 ```javascript
-POST /api/urls/remove
-HTTP Basic Auth (staff, admin)
+GET /urls/:id
+Auth -> admin, staff
+
+HTTP/1.1 200 OK
 {
-  id: String
+  "_id": String,
+  "full": String,
+  "short": String
 }
 ```
 
 #### Get a list of URLs
 ```javascript
-GET /api/urls
-HTTP Basic Auth (staff, admin)
-RESPONSE:
+GET /urls
+Auth -> admin, staff
+
+HTTP/1.1 200 OK
 {
-  urls: [{
-    _id: String,
-    full: String,
-    short: String
+  "urls": [{
+    "_id": String,
+    "full": String,
+    "short": String
   }]
 }
 ```
 
+---
 
 ### Emails
 

@@ -51,6 +51,8 @@ To obtain a key and token, please see `POST /users/token`.
 
 ## API
 
+---
+
 ### Users
 
 #### Create a new user
@@ -65,6 +67,16 @@ HTTP/1.1 200 OK
 {
   "key": String,
   "token": String
+}
+```
+
+#### Quickly create a full applied user (for registering at the door)
+```javascript
+POST /users/quick
+{
+  "name": String,   // full name
+  "email": String,  // email address
+  "phone": String   // phone number
 }
 ```
 
@@ -156,112 +168,226 @@ Auth -> admin
 HTTP/1.1 200 OK
 ```
 
+---
 
 ### Application
 
-#### Submit an application
+#### Create an application
 ```javascript
-POST /api/application/submit
-HTTP Basic Auth (attendee, staff, admin)
+POST /users/application
+Auth
 {
-  name: String,           // full name
-  school: String,         // name of school
-  phone: String,          // phone number
-  shirt: String,          // t-shirt size
-  demographic: Boolean,   // allowed to use demographic info?
-  first: Boolean,         // is this your first hackathon?
-  dietary: String,        // food restrictions seperated by |
-  year: String,           // the year in school
-  age: Number,            // person's age
-  gender: String,         // gender
-  major: String,          // degree
-  conduct: Boolean,       // agree to MLH code of conduct?
-  travel: Boolean,        // need travel reimbursement?
-  waiver: Boolean         // agreed to waiver?
+  "name": String,           // full name
+  "school": String,         // name of school
+  "phone": String,          // phone number
+  "shirt": String,          // t-shirt size
+  "demographic": Boolean,   // allowed to use demographic info?
+  "first": Boolean,         // is this your first hackathon?
+  "dietary": String,        // food restrictions seperated by |
+  "year": String,           // the year in school
+  "age": Number,            // person's age
+  "gender": String,         // gender
+  "major": String,          // degree
+  "conduct": Boolean,       // agree to MLH code of conduct?
+  "travel": Boolean,        // need travel reimbursement?
+  "waiver": Boolean         // agreed to waiver?
 }
 
-RESPONSE:
+HTTP/1.1 200 OK
 // the created application object
 ```
 
-#### Update an application
+#### Get the logged in user with their application
 ```javascript
-POST /api/application/update
-HTTP Basic Auth (attendee, staff, admin)
+GET /users/me/application
+Auth
+
+HTTP/1.1 200 OK
 {
-  name: String,           // full name
-  school: String,         // name of school
-  phone: String,          // phone number
-  shirt: String,          // t-shirt size
-  demographic: Boolean,   // allowed to use demographic info?
-  first: Boolean,         // is this your first hackathon?
-  dietary: String,        // food restrictions seperated by |
-  year: String,           // the year in school
-  age: Number,            // person's age
-  gender: String,         // gender
-  major: String,          // degree
-  conduct: Boolean,       // agree to MLH code of conduct?
-  travel: Boolean,        // need travel reimbursement?
-  waiver: Boolean         // agreed to waiver?
-}
-
-RESPONSE:
-// the updated application object
-```
-
-#### RSVP to an application
-```javascript
-POST /api/application/rsvp
-HTTP Basic Auth (attendee, staff, admin)
-{
-  going: Boolean
-}
-
-RESPONSE:
-{}
-```
-
-#### Get an application
-```javascript
-GET /api/application
-HTTP Basic Auth (attendee, staff, admin)
-
-RESPONSE:
-// the application object
-```
-
-#### Update an application by user ID
-```javascript
-POST /api/application/update/:id
-HTTP Basic Auth (staff, admin)
-{
-  key: 'value' // any parts of the application you'd like to update
-}
-
-RESPONSE:
-{}
-```
-
-#### Softly remove a user's application
-```javascript
-POST /api/application/remove
-HTTP Basic Auth (staff, admin)
-{
-  userId: String
+  "_id": String,
+  "email": String,
+  "role": String,
+  "created": Date,
+  "application": {
+    "name": String,
+    "school": String,
+    "phone": String,
+    "shirt": String,
+    "demographic": Boolean,
+    "first": Boolean,
+    "dietary": String,
+    "year": String,
+    "age": Number,
+    "gender": String,
+    "major": String,
+    "conduct": Boolean,
+    "travel": Boolean,
+    "waiver": Boolean
+  }
 }
 ```
 
-#### Quickly register a user
+#### Get a user by ID with their application
 ```javascript
-POST /api/application/quick
-HTTP Basic Auth (staff, admin)
+GET /users/:id/application
+Auth -> admin, staff
+
+HTTP/1.1 200 OK
 {
-  name: String,
-  email: String,
-  phone: String
+  "_id": String,
+  "email": String,
+  "role": String,
+  "created": Date,
+  "application": {
+    "name": String,
+    "school": String,
+    "phone": String,
+    "shirt": String,
+    "demographic": Boolean,
+    "first": Boolean,
+    "dietary": String,
+    "year": String,
+    "age": Number,
+    "gender": String,
+    "major": String,
+    "conduct": Boolean,
+    "travel": Boolean,
+    "waiver": Boolean
+  }
 }
 ```
 
+#### Get a list of users with their applications
+```javascript
+GET /users/application
+Auth -> admin, staff
+
+HTTP/1.1 200 OK
+{
+  "users": [{
+    "_id": String,
+    "email": String,
+    "role": String,
+    "created": Date,
+    "application": {
+      "name": String,
+      "school": String,
+      "phone": String,
+      "shirt": String,
+      "demographic": Boolean,
+      "first": Boolean,
+      "dietary": String,
+      "year": String,
+      "age": Number,
+      "gender": String,
+      "major": String,
+      "conduct": Boolean,
+      "travel": Boolean,
+      "waiver": Boolean
+    }
+  }]
+}
+```
+
+#### Update the logged in user's application
+```javascript
+PUT /users/me/application
+Auth
+// All fields optional
+{
+  "name": String,
+  "school": String,
+  "phone": String,
+  "shirt": String,
+  "demographic": Boolean,
+  "first": Boolean,
+  "dietary": String,
+  "year": String,
+  "age": Number,
+  "gender": String,
+  "major": String,
+  "conduct": Boolean,
+  "travel": Boolean,
+  "waiver": Boolean
+}
+
+HTTP/1.1 200 OK
+{
+  "name": String,
+  "school": String,
+  "phone": String,
+  "shirt": String,
+  "demographic": Boolean,
+  "first": Boolean,
+  "dietary": String,
+  "year": String,
+  "age": Number,
+  "gender": String,
+  "major": String,
+  "conduct": Boolean,
+  "travel": Boolean,
+  "waiver": Boolean
+}
+```
+
+#### Update a user's application by ID
+```javascript
+PUT /users/:id/application
+Auth -> admin, staff
+// All fields optional
+{
+  "name": String,
+  "school": String,
+  "phone": String,
+  "shirt": String,
+  "demographic": Boolean,
+  "first": Boolean,
+  "dietary": String,
+  "year": String,
+  "age": Number,
+  "gender": String,
+  "major": String,
+  "conduct": Boolean,
+  "travel": Boolean,
+  "waiver": Boolean
+}
+
+HTTP/1.1 200 OK
+{
+  "name": String,
+  "school": String,
+  "phone": String,
+  "shirt": String,
+  "demographic": Boolean,
+  "first": Boolean,
+  "dietary": String,
+  "year": String,
+  "age": Number,
+  "gender": String,
+  "major": String,
+  "conduct": Boolean,
+  "travel": Boolean,
+  "waiver": Boolean
+}
+```
+
+#### Delete the logged in user's application
+```javascript
+DELETE /users/me/application
+Auth
+
+HTTP/1.1 200 OK
+```
+
+#### Delete a user's application by ID
+```javascript
+DELETE /users/:id/application
+Auth -> admin, staff
+
+HTTP/1.1 200 OK
+```
+
+---
 
 ### URL Shortener
 

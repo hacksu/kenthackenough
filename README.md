@@ -70,7 +70,7 @@ HTTP/1.1 200 OK
 }
 ```
 
-#### Quickly create a full applied user (for registering at the door)
+#### Quickly create a fully applied user (for registering at the door)
 ```javascript
 POST /users/quick
 {
@@ -133,9 +133,9 @@ HTTP/1.1 200 OK
 }
 ```
 
-#### Update the logged in user
+#### Partially update the logged in user
 ```javascript
-PUT /users
+PATCH /users
 Auth
 {
   "email": String,
@@ -143,9 +143,9 @@ Auth
 }
 ```
 
-#### Update a user by ID
+#### Partially update a user by ID
 ```javascript
-PUT /users/:id
+PATCH /users/:id
 Auth -> admin
 {
   "role": 'attendee'|'staff'|'admin'
@@ -289,11 +289,10 @@ HTTP/1.1 200 OK
 }
 ```
 
-#### Update the logged in user's application
+#### Update the logged in user's application (completely overwrites application)
 ```javascript
 PUT /users/me/application
 Auth
-// All fields optional
 {
   "name": String,
   "school": String,
@@ -330,9 +329,9 @@ HTTP/1.1 200 OK
 }
 ```
 
-#### Update a user's application by ID
+#### Partially update a user's application by ID
 ```javascript
-PUT /users/:id/application
+PATCH /users/:id/application
 Auth -> admin, staff
 // All fields optional
 {
@@ -544,6 +543,21 @@ HTTP/1.1 200 OK
 }
 ```
 
+#### Update a message
+```javascript
+PATCH /messages/:id
+{
+  "text": String
+}
+
+HTTP/1.1 200 OK
+{
+  "_id": String,
+  "created": Date,
+  "text": String
+}
+```
+
 #### Delete a message
 ```javascript
 DELETE /messages/:id
@@ -574,39 +588,65 @@ io.on('DELETE /messages/:id', function (id) {
 
 ### Tickets
 
+#### Create a new ticket
+```javascript
+POST /tickets
+{
+  "subject": String,
+  "body": String,
+  "replyTo": String
+}
+
+HTTP/1.1 200 OK
+{
+  "_id": String,
+  "subject": String,
+  "body": String,
+  "replyTo": String
+}
+```
+
 #### Get a list of tickets
 ```javascript
-GET /api/tickets
-HTTP Basic Auth (admin, staff)
+GET /tickets
+Auth -> admin, staff
+
+HTTP/1.1 200 OK
+{
+  "tickets": [{
+    "_id": String,
+    "subject": String,
+    "body": String,
+    "replyTo": String
+  }]
+}
 ```
 
 #### Get a ticket by ID
 ```javascript
-GET /api/tickets/:id
-HTTP Basic Auth (admin, staff)
-```
+GET /tickets/:id
+Auth -> admin, staff
 
-#### Create a new ticket
-```javascript
-POST /api/tickets
+HTTP/1.1 200 OK
 {
-  subject: String,
-  body: String,
-  replyTo: String,
+  "_id": String,
+  "subject": String,
+  "body": String,
+  "replyTo": String
 }
 ```
 
 #### Partially update a ticket
 ```javascript
-PATCH /api/tickets/:id
-HTTP Basic Auth (staff, admin)
+PATCH /tickets/:id
+Auth -> staff, admin
 {
-  open: false
+  "open": false
 }
 ```
 
 #### Delete a ticket
 ```javascript
-DELETE /api/tickets/:id
-HTTP Basic Auth (staff, admin)
+DELETE /tickets/:id
+Auth -> staff, admin
 ```

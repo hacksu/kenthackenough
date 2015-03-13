@@ -26,7 +26,7 @@ To test:
 1. `cp config_example.js config.js`
 1. Enter values into config.js
 
-## Overview
+## General
 
 ### Error Handling
 Every time an error occurrs, the response header will match the appropriate HTTP error code. The body of the response will contain an array of errors.
@@ -49,9 +49,26 @@ Just send that header with each request that needs authorized, the rest is done 
 
 To obtain a key and token, please see `POST /users/token`.
 
-## API
+### Live Updates
+All the routes marked with an asterisk before their title can be subscribed to with Socket.IO. Any url params will be scrubbed away on the broadcast channel (for example, if there is an ID as a url parameter, it will be removed so there is no need to use a wildcard in your subscription URI). Here's a couple of example subscriptions:
+```javascript
+// Listen for new messages
+io.on('POST /messages', function (message) {
+  // A new message has been created
+  console.log(message);
+  //=> { _id: String, created: Date, text: String }
+});
 
----
+// Listen for message deletions
+io.on('DELETE /messages', function (message) {
+  // A message has been deleted
+  console.log(message);
+  //=> { _id: String }
+});
+```
+As you can see, the responses you get in your subscriber are exactly the same responses that you get from the standard HTTP requests. Hopefully the API docs will be just as useful for sockets as they are for the standard API :)
+
+## API
 
 ### Users
 
@@ -70,13 +87,21 @@ HTTP/1.1 200 OK
 }
 ```
 
-#### Quickly create a fully applied user (for registering at the door)
+#### *Quickly create a fully applied user (for registering at the door)
 ```javascript
 POST /users/quick
 {
   "name": String,   // full name
   "email": String,  // email address
   "phone": String   // phone number
+}
+
+HTTP/1.1 200 OK
+{
+  "_id": String,
+  "name": String,
+  "email": String,
+  "phone": String
 }
 ```
 
@@ -133,7 +158,7 @@ HTTP/1.1 200 OK
 }
 ```
 
-#### Partially update the logged in user
+#### *Partially update the logged in user
 ```javascript
 PATCH /users
 Auth
@@ -141,9 +166,15 @@ Auth
   "email": String,
   "password": String
 }
+
+HTTP/1.1 200 OK
+{
+  "_id": String,
+  "email": String
+}
 ```
 
-#### Partially update a user by ID
+#### *Partially update a user by ID
 ```javascript
 PATCH /users/:id
 Auth -> admin
@@ -160,19 +191,22 @@ HTTP/1.1 200 OK
 }
 ```
 
-#### Delete a user
+#### *Delete a user
 ```javascript
 DELETE /users/:id
 Auth -> admin
 
 HTTP/1.1 200 OK
+{
+  "_id": String
+}
 ```
 
 ---
 
 ### Application
 
-#### Create an application
+#### *Create an application
 ```javascript
 POST /users/application
 Auth
@@ -194,7 +228,28 @@ Auth
 }
 
 HTTP/1.1 200 OK
-// the created application object
+{
+  "_id": String,
+  "email": String,
+  "role": String,
+  "created": Date,
+  "application": {
+    "name": String,
+    "school": String,
+    "phone": String,
+    "shirt": String,
+    "demographic": Boolean,
+    "first": Boolean,
+    "dietary": String,
+    "year": String,
+    "age": Number,
+    "gender": String,
+    "major": String,
+    "conduct": Boolean,
+    "travel": Boolean,
+    "waiver": Boolean
+  }
+}
 ```
 
 #### Get the logged in user with their application
@@ -289,7 +344,7 @@ HTTP/1.1 200 OK
 }
 ```
 
-#### Update the logged in user's application (completely overwrites application)
+#### *Update the logged in user's application (completely overwrites application)
 ```javascript
 PUT /users/me/application
 Auth
@@ -312,24 +367,30 @@ Auth
 
 HTTP/1.1 200 OK
 {
-  "name": String,
-  "school": String,
-  "phone": String,
-  "shirt": String,
-  "demographic": Boolean,
-  "first": Boolean,
-  "dietary": String,
-  "year": String,
-  "age": Number,
-  "gender": String,
-  "major": String,
-  "conduct": Boolean,
-  "travel": Boolean,
-  "waiver": Boolean
+  "_id": String,
+  "email": String,
+  "role": String,
+  "created": String,
+  "application": {
+    "name": String,
+    "school": String,
+    "phone": String,
+    "shirt": String,
+    "demographic": Boolean,
+    "first": Boolean,
+    "dietary": String,
+    "year": String,
+    "age": Number,
+    "gender": String,
+    "major": String,
+    "conduct": Boolean,
+    "travel": Boolean,
+    "waiver": Boolean
+  }
 }
 ```
 
-#### Partially update a user's application by ID
+#### *Partially update a user's application by ID
 ```javascript
 PATCH /users/:id/application
 Auth -> admin, staff
@@ -353,44 +414,56 @@ Auth -> admin, staff
 
 HTTP/1.1 200 OK
 {
-  "name": String,
-  "school": String,
-  "phone": String,
-  "shirt": String,
-  "demographic": Boolean,
-  "first": Boolean,
-  "dietary": String,
-  "year": String,
-  "age": Number,
-  "gender": String,
-  "major": String,
-  "conduct": Boolean,
-  "travel": Boolean,
-  "waiver": Boolean
+  "_id": String,
+  "email": String,
+  "role": String,
+  "created": String,
+  "application": {
+    "name": String,
+    "school": String,
+    "phone": String,
+    "shirt": String,
+    "demographic": Boolean,
+    "first": Boolean,
+    "dietary": String,
+    "year": String,
+    "age": Number,
+    "gender": String,
+    "major": String,
+    "conduct": Boolean,
+    "travel": Boolean,
+    "waiver": Boolean
+  }
 }
 ```
 
-#### Delete the logged in user's application
+#### *Delete the logged in user's application
 ```javascript
 DELETE /users/me/application
 Auth
 
 HTTP/1.1 200 OK
+{
+  "_id": String
+}
 ```
 
-#### Delete a user's application by ID
+#### *Delete a user's application by ID
 ```javascript
 DELETE /users/:id/application
 Auth -> admin, staff
 
 HTTP/1.1 200 OK
+{
+  "_id": String
+}
 ```
 
 ---
 
 ### URL Shortener
 
-#### Create a new shortened URL
+#### *Create a new shortened URL
 ```javascript
 POST /urls
 Auth -> admin, staff
@@ -442,11 +515,22 @@ HTTP/1.1 200 OK
 }
 ```
 
+#### *Delete a URL
+```javascript
+DELETE /urls/:id
+Auth -> admin, staff
+
+HTTP/1.1 200 OK
+{
+  "_id": String
+}
+```
+
 ---
 
 ### Emails
 
-#### Create a new email (and send it)
+#### *Create a new email (and send it)
 ```javascript
 POST /emails
 Auth -> admin
@@ -465,6 +549,7 @@ Auth -> admin
 
 HTTP/1.1 200 OK
 {
+  "_id": String
   "subject": String,
   "body": String, // markdown formatted
   "recipients": {
@@ -486,6 +571,7 @@ Auth -> admin, staff
 HTTP/1.1 200 OK
 {
   "emails": [{
+    "_id": String,
     "subject": String,
     "sent": Date,
     "body": String, // markdown formatted
@@ -497,11 +583,22 @@ HTTP/1.1 200 OK
 }
 ```
 
+#### *Delete a sent email
+```javascript
+DELETE /emails/:id
+Auth -> admin, staff
+
+HTTP/1.1 200 OK
+{
+  "_id": String
+}
+```
+
 ---
 
 ### Live Feed
 
-#### Create a new message
+#### *Create a new message
 ```javascript
 POST /messages
 Auth -> admin, staff
@@ -543,7 +640,7 @@ HTTP/1.1 200 OK
 }
 ```
 
-#### Update a message
+#### *Update a message
 ```javascript
 PATCH /messages/:id
 {
@@ -558,37 +655,22 @@ HTTP/1.1 200 OK
 }
 ```
 
-#### Delete a message
+#### *Delete a message
 ```javascript
 DELETE /messages/:id
 Auth -> admin, staff
 
 HTTP/1.1 200 OK
-```
-
-#### Subscribe to new messages
-```javascript
-io.on('POST /messages', function (message) {
-  // A new message has been created
-  console.log(message);
-  //=> { _id: String, created: Date, text: String }
-});
-```
-
-#### Subscribe to message deletions
-```javascript
-io.on('DELETE /messages/:id', function (id) {
-  // A message has been deleted
-  console.log(id);
-  //=> ab282tiuguega9
-});
+{
+  "_id": String
+}
 ```
 
 ---
 
 ### Tickets
 
-#### Create a new ticket
+#### *Create a new ticket
 ```javascript
 POST /tickets
 {
@@ -636,17 +718,23 @@ HTTP/1.1 200 OK
 }
 ```
 
-#### Partially update a ticket
+#### *Partially update a ticket
 ```javascript
 PATCH /tickets/:id
 Auth -> staff, admin
 {
+  "_id": String,
   "open": false
 }
 ```
 
-#### Delete a ticket
+#### *Delete a ticket
 ```javascript
 DELETE /tickets/:id
 Auth -> staff, admin
+
+HTTP/1.1 200 OK
+{
+  "_id": String
+}
 ```

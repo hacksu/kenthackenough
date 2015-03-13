@@ -502,50 +502,54 @@ HTTP/1.1 200 OK
 
 ### Live Feed
 
+#### Create a new message
+```javascript
+POST /messages
+Auth -> admin, staff
+{
+  "text": String    // markdown
+}
+
+HTTP/1.1 200 OK
+{
+  "_id": String,
+  "created": Date,
+  "text": String
+}
+```
+
 #### Get a list of messages
 ```javascript
-GET /api/messages
+GET /messages
 
-RESPONSE:
+HTTP/1.1 200 OK
 {
-  messages: [{
-    _id: String,
-    created: Date,
-    text: String    // markdown
+  "messages": [{
+    "_id": String,
+    "created": Date,
+    "text": String    // markdown
   }]
 }
 ```
 
 #### Get a single message
 ```javascript
-GET /api/messages/:id
-{
-  _id: String,
-  created: Date,
-  text: String    // markdown
-}
-```
+GET /messages/:id
 
-#### Create a new message
-```javascript
-POST /api/messages
-HTTP Basic Auth (staff, admin)
+HTTP/1.1 200 OK
 {
-  text: String    // markdown
-}
-
-RESPONSE:
-{
-  _id: String,
-  created: Date,
-  text: String
+  "_id": String,
+  "created": Date,
+  "text": String    // markdown
 }
 ```
 
 #### Delete a message
 ```javascript
-DELETE /api/messages/:id
-HTTP Basic Auth (staff, admin)
+DELETE /messages/:id
+Auth -> admin, staff
+
+HTTP/1.1 200 OK
 ```
 
 #### Subscribe to new messages
@@ -566,6 +570,7 @@ io.on('DELETE /messages/:id', function (id) {
 });
 ```
 
+---
 
 ### Tickets
 

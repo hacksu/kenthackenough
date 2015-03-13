@@ -447,46 +447,58 @@ HTTP/1.1 200 OK
 
 ### Emails
 
-#### Send an email
+#### Create a new email (and send it)
 ```javascript
-POST /api/emails/send
-HTTP Basic Auth (admin)
+POST /emails
+Auth -> admin
 {
-  subject: String,
-  body: String, // markdown formatted
-  recipients: {
-    nickname: String, // optional, a nickname for this group of people
-    emails: [String], // optional
-    where: { // optional
-      role: "attendee", // optional
+  "subject": String,
+  "body": String, // markdown formatted
+  "recipients": {
+    "nickname": String, // optional, a nickname for this group of people
+    "emails": [String], // optional
+    "where": { // optional
+      "role": "attendee", // optional
       "application.going": true // optional
     }
   }
 }
 
-RESPONSE:
-{}
+HTTP/1.1 200 OK
+{
+  "subject": String,
+  "body": String, // markdown formatted
+  "recipients": {
+    "nickname": String, // optional, a nickname for this group of people
+    "emails": [String], // optional
+    "where": { // optional
+      "role": "attendee", // optional
+      "application.going": true // optional
+    }
+  }
+}
 ```
 
 #### Get a list of sent emails
 ```javascript
-GET /api/emails
-HTTP Basic Auth (admin, staff)
+GET /emails
+Auth -> admin, staff
 
-RESPONSE:
+HTTP/1.1 200 OK
 {
-  emails: [{
-    subject: String,
-    sent: Date,
-    body: String, // markdown formatted
-    recipients: {
-      nickname: String, // if a nickname was provided
-      emails: [String] // if a nickname was not provided
+  "emails": [{
+    "subject": String,
+    "sent": Date,
+    "body": String, // markdown formatted
+    "recipients": {
+      "nickname": String, // if a nickname was provided
+      "emails": [String] // if a nickname was not provided
     }
   }]
 }
 ```
 
+---
 
 ### Live Feed
 

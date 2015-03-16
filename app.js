@@ -81,12 +81,12 @@ GLOBAL.getIo = function () {
 
 // Include modules
 [
-  'applications',
-  'emails',
-  'messages',
-  'tickets',
-  'urls',
-  'users'
+  // 'emails',
+  // 'messages',
+  // 'tickets',
+  // 'urls',
+  'users',
+  // 'users/applications'
 ].forEach(function (module) {
   require('./app/' + module + '/controller');
 });

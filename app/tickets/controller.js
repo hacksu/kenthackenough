@@ -6,7 +6,7 @@ var User = require('../users/model');
 * Get a list of tickets
 * AUTH: admin, staff
 */
-router.get('/tickets', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+router.get('/tickets', User.auth('admin', 'staff'), function (req, res) {
   Ticket.find({}, function (err, tickets) {
     if (err) return res.internalError();
     return res.json({tickets: tickets});
@@ -17,7 +17,7 @@ router.get('/tickets', User.Auth([User.ADMIN, User.STAFF]), function (req, res) 
 * Get a ticket by ID
 * AUTH: admin, staff
 */
-router.get('/tickets/:id', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+router.get('/tickets/:id', User.auth('admin', 'staff'), function (req, res) {
   Ticket.findById(req.params.id, function (err, ticket) {
     if (err) return res.singleError('A ticket was not found');
     return res.json(ticket);

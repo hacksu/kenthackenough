@@ -1,10 +1,10 @@
 var router = getRouter();
 var io = getIo();
-var User = require('../users/model');
+var User = require('../model');
 var Application = require('./model');
 var chance = require('chance')();
 var schema = require('validate');
-var Message = require('../../helpers/mailer');
+var Message = rootRequire('app/helpers/mailer');
 
 /**
 * Submit application
@@ -15,7 +15,7 @@ var Message = require('../../helpers/mailer');
 *   year (string), age (number), gender (string), major (string),
 *   conduct (bool), travel (bool), waiver (bool)
 */
-router.post('/application/submit', User.Auth(), function (req, res) {
+router.post('/application/submit', User.auth(), function (req, res) {
   if (req.user.application.submitted) return res.singleError('You have already submitted your application');
   var errors = Application.validate(req.body);
   if (errors.length) return res.multiError(errors);
@@ -42,7 +42,7 @@ router.post('/application/submit', User.Auth(), function (req, res) {
 *   year (string), age (number), gender (string), major (string),
 *   conduct (bool), travel (bool), waiver (bool)
 */
-router.post('/application/update', User.Auth(), function (req, res) {
+router.post('/application/update', User.auth(), function (req, res) {
   if (!req.user.application.submitted) return res.singleError('You haven\'t submitted an application yet');
   var errors = Application.validate(req.body);
   if (errors.length) return res.multiError(errors);
@@ -65,7 +65,7 @@ router.post('/application/update', User.Auth(), function (req, res) {
 * POST:
 *   going (bool)
 */
-router.post('/application/rsvp', User.Auth(), function (req, res) {
+router.post('/application/rsvp', User.auth(), function (req, res) {
   if (req.user.application.status == Application.APPROVED) {
     req.user.application.going = req.body.going;
     req.user.save(function (err, user) {
@@ -81,7 +81,7 @@ router.post('/application/rsvp', User.Auth(), function (req, res) {
 * Return the attendee status
 * AUTH: any user
 */
-router.get('/application', User.Auth(), function (req, res) {
+router.get('/application', User.auth(), function (req, res) {
   if (req.user.application.submitted) {
     return res.send(req.user.application);
   } else {
@@ -95,7 +95,7 @@ router.get('/application', User.Auth(), function (req, res) {
 * URL params: id A user's ID
 * POST: the parts of the application to update (any part)
 */
-router.post('/application/update/:id', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+router.post('/application/update/:id', User.auth('admin', 'staff'), function (req, res) {
   var update = {};
   if (req.body.submitted !== undefined) update["application.submitted"] = req.body.submitted;
   if (req.body.status) update["application.status"] = req.body.status;
@@ -130,7 +130,7 @@ router.post('/application/update/:id', User.Auth([User.ADMIN, User.STAFF]), func
 * AUTH: staff, admin
 * POST: userId
 */
-router.post('/application/remove', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+router.post('/application/remove', User.auth('admin', 'staff'), function (req, res) {
   return res.send('Method stub');
 });
 
@@ -140,7 +140,7 @@ router.post('/application/remove', User.Auth([User.ADMIN, User.STAFF]), function
 * AUTH: staff, admin
 * POST: name, email, phone
 */
-router.post('/application/quick', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+router.post('/application/quick', User.auth('admin', 'staff'), function (req, res) {
   var test = schema({
     name: {
       required: true,

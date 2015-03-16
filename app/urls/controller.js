@@ -8,7 +8,7 @@ var Url = require('./model');
 * AUTH: staff, admin
 * POST: full, short
 */
-router.post('/urls/shorten', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+router.post('/urls/shorten', User.auth('admin', 'staff'), function (req, res) {
   var errors = Url.validate(req.body);
   if (errors.length) return res.multiError(errors);
   var url = new Url(req.body);
@@ -34,7 +34,7 @@ app.get('/go/:url', function (req, res) {
 * AUTH: staff, admin
 * POST: id
 */
-router.post('/urls/remove', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+router.post('/urls/remove', User.auth('admin', 'staff'), function (req, res) {
   Url.remove({_id: req.body.id}, function (err) {
     if (err) return res.singleError('URL not found');
     return res.send({});
@@ -45,7 +45,7 @@ router.post('/urls/remove', User.Auth([User.ADMIN, User.STAFF]), function (req, 
 * Get a list of URLs currently available
 * AUTH: staff, admin
 */
-router.get('/urls', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+router.get('/urls', User.auth('admin', 'staff'), function (req, res) {
   Url.find({}, function (err, urls) {
     if (err) return res.internalError();
     return res.send({urls: urls});

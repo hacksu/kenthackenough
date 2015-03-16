@@ -8,7 +8,7 @@ var nodemailer = require('nodemailer');
 var winston = require('winston');
 var config = rootRequire('config/config');
 var flow = require('flow');
-var User = rootRequire('app/modules/users/model');
+var User = rootRequire('app/users/model');
 
 /**
 * A mass email's schema

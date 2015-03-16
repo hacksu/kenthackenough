@@ -1,6 +1,6 @@
 var config = rootRequire('config/config');
 var winston = require('winston');
-var User = rootRequire('app/modules/users/model');
+var User = rootRequire('app/users/model');
 
 module.exports = function () {
 

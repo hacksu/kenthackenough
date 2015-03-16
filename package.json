@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "The world's best hackathon website.",
   "scripts": {
-    "test": "mocha",
+    "test": "vagrant ssh -c 'cd /vagrant && mocha'",
     "start": "node app.js"
   },
   "repository": {

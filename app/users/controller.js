@@ -1,6 +1,7 @@
 var router = getRouter();
 var User = require('./model');
-var Message = require('../../helpers/mailer');
+var Application = require('./application/model');
+var Message = rootRequire('app/helpers/mailer');
 
 /**
 * Create a new user
@@ -36,6 +37,46 @@ router.post('/users', function (req, res) {
 });
 
 /**
+* Quickly create a fully applied user (for registering at the door)
+* POST /users/quick
+* Auth -> admin, staff
+*/
+router.post('/users/quick', User.auth('admin', 'staff'), function (req, res) {
+  var application = new Application({
+    name: req.body.name,
+    phone: req.body.phone
+  });
+  application.save(function (err, app) {
+    if (err) return res.internalError();
+
+    var salt = User.helpers.salt();
+    var pass = User.helpers.salt();
+    var user = new User({
+      email: req.body.email,
+      password: User.helpers.hash(pass, salt),
+      salt: salt,
+      created: Date.now(),
+      application: app._id
+    });
+    user.save(function (err, user) {
+      if (err) return res.singleError('That email is already in use');
+
+      if (process.env.NODE_ENV == 'production') {
+        sendRegistrationEmail(user.email);
+      }
+
+      return res.json({
+        _id: user._id,
+        name: app.name,
+        email: user.email,
+        phone: app.phone
+      });
+    });
+
+  });
+});
+
+/**
 * Get a key and token
 * POST /users/token
 */
@@ -54,7 +95,7 @@ router.post('/users/token', function (req, res) {
           });
         } else {
           var token = User.Helpers.token();
-
+          user.token = token;
           user.save(function (err, user) {
             User.Helpers.cache(user);
             return res.json({
@@ -70,7 +111,7 @@ router.post('/users/token', function (req, res) {
 });
 
 /**
-* Delete a token
+* Remove a token
 * DELETE /users/token
 * Auth
 */
@@ -121,11 +162,11 @@ router.get('/users/:id', User.auth('admin', 'staff'), function (req, res) {
 });
 
 /**
-* Update the logged in user
-* PUT /users
+* Partially update the logged in user
+* PATCH /users
 * Auth
 */
-router.put('/users', User.auth(), function (req, res) {
+router.patch('/users', User.auth(), function (req, res) {
   User
     .findById(req.user._id)
     .exec(function (err, user) {
@@ -147,11 +188,11 @@ router.put('/users', User.auth(), function (req, res) {
 });
 
 /**
-* Update a user by ID
-* PUT /users/:id
+* Partially update a user by ID
+* PATCH /users/:id
 * Auth -> admin
 */
-router.put('/users/:id', User.auth('admin'), function (req, res) {
+router.patch('/users/:id', User.auth('admin'), function (req, res) {
   User
     .findById(req.params.id)
     .update(req.body)

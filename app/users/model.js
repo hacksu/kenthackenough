@@ -36,7 +36,7 @@ var User = mongoose.model('User', {
   password: String,
   salt: String,
   token: String,
-  application: mongoose.Schema.Type.ObjectId,
+  application: mongoose.Schema.Types.ObjectId,
   created: { type : Date, default: Date.now() }
 });
 
@@ -124,7 +124,7 @@ var Helpers = {
       token: user.token,
       role: user.role
     }, function (err, status) {
-      callback();
+      callback && callback();
     });
   },
 
@@ -135,7 +135,7 @@ var Helpers = {
   */
   uncache: function (user, callback) {
     redis.del('user:id:'+user._id, function (err) {
-      callback();
+      callback && callback();
     });
   }
 
@@ -146,11 +146,10 @@ var Helpers = {
 * @param roles An array of roles that are allowed into the route
 */
 var auth = function (roles) {
-  if (!roles) roles = [ATTENDEE, STAFF, ADMIN];
+  if (!roles) roles = ['attendee', 'staff', 'admin'];
 
   return function (req, res, next) {
-
-    var header = req.headers['Authorization'] || false;
+    var header = req.headers['Authorization'] || req.headers['authorization'] || false;
     if (!header) return Helpers.authError(res);
 
     var encoded = header.split(/\s+/).pop() || '';
@@ -162,16 +161,16 @@ var auth = function (roles) {
     // Check for logged in user in redis
     var rkey = 'users:id:' + key;
     redis.hgetall(rkey, function (err, user) {
-
       if (err || !user) {
         // it's not in redis, but let's check mongo just to be sure (this
         // shouldn't happen if the user is logged in)
         User.findById(key, function (err, user) {
           if (err || !user) return Helpers.authError(res);
-          var access = Helpers.checkPassword(user.password, credentials.pass, user.salt);
-          if (access && roles.indexOf(user.role) >= 0) {
-            req.user._id = key;
-            req.user.token = token;
+          if (user.token == token && roles.indexOf(user.role) >= 0) {
+            req.user = {
+              _id: key,
+              token: token
+            };
             next();
           } else {
             Helpers.authError(res);
@@ -180,8 +179,10 @@ var auth = function (roles) {
       } else {
         // we have our use in redis
         if (user.token == token && roles.indexOf(user.role) >= 0) {
-          req.user._id = key;
-          req.user.token = token;
+          req.user = {
+            _id: key,
+            token: token
+          };
           next();
         } else {
           Helpers.authError(res);

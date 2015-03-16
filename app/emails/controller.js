@@ -7,7 +7,7 @@ var User = require('../users/model');
 * POST: (see docs)
 * AUTH: admin, staff
 */
-router.post('/emails/send', User.Auth([User.ADMIN]), function (req, res) {
+router.post('/emails/send', User.auth('admin'), function (req, res) {
   var errors = Email.validate(req.body);
   if (errors.length) return res.multiError(errors);
   req.body.sent = Date.now();
@@ -24,7 +24,7 @@ router.post('/emails/send', User.Auth([User.ADMIN]), function (req, res) {
 * Get a list of emails
 * AUTH: admin, staff
 */
-router.get('/emails', User.Auth([User.ADMIN, User.STAFF]), function (req, res) {
+router.get('/emails', User.auth('admin', 'staff'), function (req, res) {
   Email.find({}, function (err, emails) {
     if (err) return res.internalError();
     return res.send({emails: emails});

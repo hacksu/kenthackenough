@@ -11,8 +11,11 @@ The world's best hackathon website.
 1. Install [Vagrant](http://vagrantup.com)
 1. `vagrant up`
 
-To test:
-1. `vagrant ssh -c 'cd /vagrant && mocha'`
+**To test:**
+
+Run: `npm test`
+
+This is an alias for: `vagrant ssh -c 'cd /vagrant && mocha'`
 
 ### Production
 1. Install [MongoDB](http://docs.mongodb.org/manual/installation/)
@@ -93,6 +96,7 @@ HTTP/1.1 200 OK
 #### *Quickly create a fully applied user (for registering at the door)
 ```javascript
 POST /users/quick
+Auth -> admin, staff
 {
   "name": String,   // full name
   "email": String,  // email address

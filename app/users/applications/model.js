@@ -6,12 +6,12 @@ var _APPROVED = 'approved',
     _WAITLISTED = 'waitlisted',
     _PENDING = 'pending';
 
-var ApplicationSchema = {
+var Application = {
   submitted: Boolean,     // app submitted?
   status: {type: String, enum: [_APPROVED, _DENIED, _WAITLISTED, _PENDING]},
   going: Boolean,         // rsvp status
   checked: Boolean,       // check-in status
-  time: { type : Date, default: Date.now() },
+  created: { type : Date, default: Date.now() },
   door: Boolean,          // was this person registered during check-in?
 
   // Actual application form
@@ -116,9 +116,9 @@ var Helpers = {
 
 };
 
-module.exports = {
-  Schema: ApplicationSchema,
-  validate: Helpers.validate,
+module.exports = Application;
+module.exports.validate = Helpers.validate;
+module.exports.Status = {
   APPROVED: _APPROVED,
   DENIED: _DENIED,
   WAITLISTED: _WAITLISTED,

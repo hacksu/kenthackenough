@@ -151,7 +151,7 @@ router.put('/users', User.auth(), function (req, res) {
 * PUT /users/:id
 * Auth -> admin
 */
-router.post('/users/:id', User.auth('admin'), function (req, res) {
+router.put('/users/:id', User.auth('admin'), function (req, res) {
   User
     .findById(req.params.id)
     .update(req.body)

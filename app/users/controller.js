@@ -44,8 +44,21 @@ router.post('/users', function (req, res) {
 */
 router.post('/users/quick', User.auth('admin', 'staff'), function (req, res) {
   var test = schema({
-
+    email: {
+      type: 'string',
+      required: true
+    },
+    name: {
+      type: 'string',
+      required: true
+    },
+    phone: {
+      type: 'string',
+      required: true
+    }
   });
+  var errors = test.validate(req.body);
+  if (errors.length) return res.multiError(errors);
   var application = new Application({
     name: req.body.name,
     phone: req.body.phone
@@ -53,11 +66,11 @@ router.post('/users/quick', User.auth('admin', 'staff'), function (req, res) {
   application.save(function (err, app) {
     if (err) return res.internalError();
 
-    var salt = User.helpers.salt();
-    var pass = User.helpers.salt();
+    var salt = User.Helpers.salt();
+    var pass = User.Helpers.salt();
     var user = new User({
       email: req.body.email,
-      password: User.helpers.hash(pass, salt),
+      password: User.Helpers.hash(pass, salt),
       salt: salt,
       created: Date.now(),
       application: app._id
@@ -180,11 +193,12 @@ router.patch('/users', User.auth(), function (req, res) {
       }
       if (req.body.password) {
         user.salt = User.Helpers.salt();
-        user.password = User.Helpers.hash(req.body.password, salt);
+        user.password = User.Helpers.hash(req.body.password, user.salt);
       }
-      user.save(function (err, user) {
+      user.save(function (err) {
         if (err) return res.singleError('That email is already taken');
         return res.json({
+          _id: user._id,
           email: user.email
         });
       });
@@ -198,11 +212,15 @@ router.patch('/users', User.auth(), function (req, res) {
 */
 router.patch('/users/:id', User.auth('admin'), function (req, res) {
   User
-    .findById(req.params.id)
-    .update(req.body)
+    .findByIdAndUpdate(req.params.id, req.body)
     .exec(function (err, user) {
       if (err) return res.internalError();
-      return res.json(user);
+      return res.json({
+        _id: user._id,
+        email: user.email,
+        role: user.role,
+        created: user.created
+      });
     });
 });
 
@@ -217,7 +235,9 @@ router.delete('/users/:id', User.auth('admin'), function (req, res) {
     .remove()
     .exec(function (err) {
       if (err) return res.internalError();
-      return res.json(user);
+      return res.json({
+        _id: req.params.id
+      });
     });
 });
 

@@ -193,9 +193,9 @@ describe('API', function () {
     it('should partially update the logged in user', function (done) {
       request(app)
         .patch('/users')
-        .auth(userKey, userToken)
+        .auth(personKey, personToken)
         .send({
-          email: 'myuser@test.com',
+          email: 'myperson@test.com',
           password: 'mypass'
         })
         .expect(200)
@@ -203,7 +203,7 @@ describe('API', function () {
           if (err) throw err;
           res.body.should.have.property('_id');
           res.body.should.have.property('email');
-          res.body.email.should.equal('myuser@test.com');
+          res.body.email.should.equal('myperson@test.com');
           done();
         });
     });
@@ -213,7 +213,7 @@ describe('API', function () {
     */
     it('should partially update a user by ID', function (done) {
       request(app)
-        .put('/users/'+userKey)
+        .patch('/users/'+userKey)
         .auth(adminKey, adminToken)
         .send({
           role: 'staff'
@@ -272,7 +272,7 @@ describe('API', function () {
 
   // Remove the test user
   after(function (done) {
-    User.remove({email: 'person@test.com'}, function (err) {
+    User.remove({email: 'myperson@test.com'}, function (err) {
       if (err) throw err;
       done();
     });

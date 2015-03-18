@@ -120,7 +120,7 @@ var Helpers = {
   * @param callback (Optional) Called when caching is complete
   */
   cache: function (user, callback) {
-    redis.hmset('user:id:'+user._id, {
+    redis.hmset('users:id:'+user._id, {
       token: user.token,
       role: user.role
     }, function (err, status) {
@@ -134,7 +134,7 @@ var Helpers = {
   * @param callback (Optional) Called when the operation is complete
   */
   uncache: function (user, callback) {
-    redis.del('user:id:'+user._id, function (err) {
+    redis.del('users:id:'+user._id, function (err) {
       callback && callback();
     });
   }

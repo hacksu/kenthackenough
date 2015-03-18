@@ -6,7 +6,7 @@ var _APPROVED = 'approved',
     _WAITLISTED = 'waitlisted',
     _PENDING = 'pending';
 
-var Application = {
+var Application = mongoose.model('Application', {
   status: {type: String, enum: [_APPROVED, _DENIED, _WAITLISTED, _PENDING]},
   going: Boolean,         // rsvp status
   checked: Boolean,       // check-in status
@@ -28,7 +28,7 @@ var Application = {
   conduct: Boolean,       // agree to MLH code of conduct?
   travel: Boolean,        // need travel reimbursement?
   waiver: Boolean         // agreed to waiver?
-};
+});
 
 var Helpers = {
 

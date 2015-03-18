@@ -7,7 +7,6 @@ var _APPROVED = 'approved',
     _PENDING = 'pending';
 
 var Application = {
-  submitted: Boolean,     // app submitted?
   status: {type: String, enum: [_APPROVED, _DENIED, _WAITLISTED, _PENDING]},
   going: Boolean,         // rsvp status
   checked: Boolean,       // check-in status

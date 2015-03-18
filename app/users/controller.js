@@ -2,6 +2,7 @@ var router = getRouter();
 var User = require('./model');
 var Application = require('./application/model');
 var Message = rootRequire('app/helpers/mailer');
+var schema = require('validate');
 
 /**
 * Create a new user
@@ -42,6 +43,9 @@ router.post('/users', function (req, res) {
 * Auth -> admin, staff
 */
 router.post('/users/quick', User.auth('admin', 'staff'), function (req, res) {
+  var test = schema({
+
+  });
   var application = new Application({
     name: req.body.name,
     phone: req.body.phone

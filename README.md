@@ -254,7 +254,12 @@ HTTP/1.1 200 OK
     "major": String,
     "conduct": Boolean,
     "travel": Boolean,
-    "waiver": Boolean
+    "waiver": Boolean,
+    "status": String,
+    "going": Boolean,
+    "checked": Boolean,
+    "created": Date,
+    "door": Boolean
   }
 }
 ```
@@ -284,7 +289,12 @@ HTTP/1.1 200 OK
     "major": String,
     "conduct": Boolean,
     "travel": Boolean,
-    "waiver": Boolean
+    "waiver": Boolean,
+    "status": String,
+    "going": Boolean,
+    "checked": Boolean,
+    "created": Date,
+    "door": Boolean
   }
 }
 ```
@@ -314,7 +324,12 @@ HTTP/1.1 200 OK
     "major": String,
     "conduct": Boolean,
     "travel": Boolean,
-    "waiver": Boolean
+    "waiver": Boolean,
+    "status": String,
+    "going": Boolean,
+    "checked": Boolean,
+    "created": Date,
+    "door": Boolean
   }
 }
 ```
@@ -345,7 +360,12 @@ HTTP/1.1 200 OK
       "major": String,
       "conduct": Boolean,
       "travel": Boolean,
-      "waiver": Boolean
+      "waiver": Boolean,
+      "status": String,
+      "going": Boolean,
+      "checked": Boolean,
+      "created": Date,
+      "door": Boolean
     }
   }]
 }
@@ -392,7 +412,12 @@ HTTP/1.1 200 OK
     "major": String,
     "conduct": Boolean,
     "travel": Boolean,
-    "waiver": Boolean
+    "waiver": Boolean,
+    "status": String,
+    "going": Boolean,
+    "checked": Boolean,
+    "created": Date,
+    "door": Boolean
   }
 }
 ```
@@ -439,7 +464,12 @@ HTTP/1.1 200 OK
     "major": String,
     "conduct": Boolean,
     "travel": Boolean,
-    "waiver": Boolean
+    "waiver": Boolean,
+    "status": String,
+    "going": Boolean,
+    "checked": Boolean,
+    "created": Date,
+    "door": Boolean
   }
 }
 ```

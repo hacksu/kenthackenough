@@ -260,7 +260,207 @@ describe('API', function () {
         });
     });
 
-  });
+    // Test users/application
+    describe('Application', function () {
+
+      function assertApplication(user) {
+        user.should.have.property('_id');
+        user.should.have.property('email');
+        user.should.have.property('role');
+        user.should.have.property('created');
+        user.should.have.property('application');
+        user.application.should.have.property('name');
+        user.application.should.have.property('school');
+        user.application.should.have.property('phone');
+        user.application.should.have.property('shirt');
+        user.application.should.have.property('demographic');
+        user.application.should.have.property('first');
+        user.application.should.have.property('dietary');
+        user.application.should.have.property('year');
+        user.application.should.have.property('age');
+        user.application.should.have.property('gender');
+        user.application.should.have.property('major');
+        user.application.should.have.property('conduct');
+        user.application.should.have.property('travel');
+        user.application.should.have.property('waiver');
+        user.application.should.have.property('status');
+        user.application.should.have.property('going');
+        user.application.should.have.property('checked');
+        user.application.should.have.property('created');
+        user.application.should.have.property('door');
+      }
+
+      /**
+      * Create an application
+      */
+      it('should create an application', function (done) {
+        request(app)
+          .post('/users/application')
+          .auth(personKey, personToken)
+          .send({
+            name: 'Person Guy',
+            school: 'State University',
+            phone: '5555555555',
+            shirt: 'XL',
+            demographic: true,
+            first: true,
+            dietary: 'Vegan|Vegetarian',
+            year: 'Senior',
+            age: 21,
+            gender: 'Male',
+            major: 'Basket Weaving',
+            conduct: true,
+            travel: false,
+            waiver: true
+          })
+          .expect(200)
+          .end(function (err, res) {
+            if (err) throw err;
+            assertApplication(res.body);
+            res.body.name.should.equal('Person Guy');
+            res.body.school.should.equal('State University');
+            res.body.phone.should.equal('5555555555');
+            res.body.shirt.should.equal('XL');
+            res.body.demographic.should.equal(true);
+            res.body.status.should.equal('pending');
+            res.body.going.should.equal(false);
+            done();
+          });
+      });
+
+      /**
+      * Get the logged in user with their application
+      */
+      it('should get the logged in user with their application', function (done) {
+        request(app)
+          .get('/users/me/application')
+          .auth(personKey, personToken)
+          .expect(200)
+          .end(function (err, res) {
+            if (err) throw err;
+            assertApplication(res.body);
+            res.body.name.should.equal('Person Guy');
+            done();
+          });
+      });
+
+      /**
+      * Get a user by ID with their application
+      */
+      it('should get a user by ID with their application', function (done) {
+        request(app)
+          .get('/users/'+personKey+'/application')
+          .auth(adminKey, adminToken)
+          .expect(200)
+          .end(function (err, res) {
+            if (err) throw err;
+            assertApplication(res.body);
+            res.body.name.should.equal('Person Guy');
+            done();
+          });
+      });
+
+      /**
+      * Get a list of users with their applications
+      */
+      it('should get a list of users with their applications', function (done) {
+        request(app)
+          .get('/users/application')
+          .auth(adminKey, adminToken)
+          .expect(200)
+          .end(function (err, res) {
+            if (err) throw err;
+            res.body.length.should.be.above(0);
+            assertApplication(res.body[0]);
+            done();
+          });
+      });
+
+      /**
+      * Update the logged in user's application (completely overwrites application)
+      */
+      it('should overwrite the logged in user\'s application', function (done) {
+        request(app)
+          .put('/users/me/application')
+          .auth(personKey, personToken)
+          .send({
+            name: 'Guy Person',
+            school: 'State College',
+            phone: '1234567890',
+            shirt: 'L',
+            demographic: true,
+            first: true,
+            year: 'Junior',
+            age: 20,
+            gender: 'Male',
+            major: 'Basket Weaving',
+            conduct: true,
+            travel: true,
+            waiver: true
+          })
+          .expect(200)
+          .end(function (err, res) {
+            if (err) throw err;
+            assertApplication(res.body);
+            res.body.name.should.equal('Guy Person');
+            res.body.school.should.equal('State College');
+            res.body.age.should.equal(20);
+            done();
+          });
+      });
+
+      /**
+      * Partially update a user's application by ID
+      */
+      it('should partially update a user\'s application by ID', function (done) {
+        request(app)
+          .patch('/users/'+personKey+'/application')
+          .auth(adminKey, adminToken)
+          .send({
+            status: 'accepted'
+          })
+          .expect(200)
+          .end(function (err, res) {
+            if (err) throw err;
+            assertApplication(res.body);
+            res.body.status.should.equal('accepted');
+            done();
+          });
+      });
+
+      /**
+      * Delete the logged in user's application
+      */
+      it('should delete the logged in user\'s application', function (done) {
+        request(app)
+          .delete('/users/me/application')
+          .auth(personKey, personToken)
+          .expect(200)
+          .end(function (err, res) {
+            if (err) throw err;
+            res.body.should.have.property('_id');
+            done();
+          });
+      });
+
+      /**
+      * Delete a user's application by ID
+      */
+      it('should delete a user\'s application by ID', function (done) {
+        request(app)
+          .delete('/users/'+personKey+'/application')
+          .auth(adminKey, adminToken)
+          .expect(200)
+          .end(function (err, res) {
+            if (err) throw err;
+            res.body.should.have.property('_id');
+            done();
+          });
+      });
+
+    }); // end application
+
+  }); // end User
 
   // Remove the admin user
   after(function (done) {

@@ -317,13 +317,13 @@ describe('API', function () {
           .end(function (err, res) {
             if (err) throw err;
             assertApplication(res.body);
-            res.body.name.should.equal('Person Guy');
-            res.body.school.should.equal('State University');
-            res.body.phone.should.equal('5555555555');
-            res.body.shirt.should.equal('XL');
-            res.body.demographic.should.equal(true);
-            res.body.status.should.equal('pending');
-            res.body.going.should.equal(false);
+            res.body.application.name.should.equal('Person Guy');
+            res.body.application.school.should.equal('State University');
+            res.body.application.phone.should.equal('5555555555');
+            res.body.application.shirt.should.equal('XL');
+            res.body.application.demographic.should.equal(true);
+            res.body.application.status.should.equal('pending');
+            res.body.application.going.should.equal(false);
             done();
           });
       });
@@ -339,7 +339,7 @@ describe('API', function () {
           .end(function (err, res) {
             if (err) throw err;
             assertApplication(res.body);
-            res.body.name.should.equal('Person Guy');
+            res.body.application.name.should.equal('Person Guy');
             done();
           });
       });
@@ -355,7 +355,7 @@ describe('API', function () {
           .end(function (err, res) {
             if (err) throw err;
             assertApplication(res.body);
-            res.body.name.should.equal('Person Guy');
+            res.body.application.name.should.equal('Person Guy');
             done();
           });
       });
@@ -370,18 +370,17 @@ describe('API', function () {
           .expect(200)
           .end(function (err, res) {
             if (err) throw err;
-            res.body.length.should.be.above(0);
-            assertApplication(res.body[0]);
+            res.body.users.length.should.be.above(0);
             done();
           });
       });
 
       /**
-      * Update the logged in user's application (completely overwrites application)
+      * Partially update the logged in user's application
       */
-      it('should overwrite the logged in user\'s application', function (done) {
+      it('should partially update the logged in user\'s application', function (done) {
         request(app)
-          .put('/users/me/application')
+          .patch('/users/me/application')
           .auth(personKey, personToken)
           .send({
             name: 'Guy Person',
@@ -402,9 +401,9 @@ describe('API', function () {
           .end(function (err, res) {
             if (err) throw err;
             assertApplication(res.body);
-            res.body.name.should.equal('Guy Person');
-            res.body.school.should.equal('State College');
-            res.body.age.should.equal(20);
+            res.body.application.name.should.equal('Guy Person');
+            res.body.application.school.should.equal('State College');
+            res.body.application.age.should.equal(20);
             done();
           });
       });
@@ -423,7 +422,7 @@ describe('API', function () {
           .end(function (err, res) {
             if (err) throw err;
             assertApplication(res.body);
-            res.body.status.should.equal('accepted');
+            res.body.application.status.should.equal('accepted');
             done();
           });
       });

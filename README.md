@@ -371,9 +371,9 @@ HTTP/1.1 200 OK
 }
 ```
 
-#### *Update the logged in user's application (completely overwrites application)
+#### *Update the logged in user's application
 ```javascript
-PUT /users/me/application
+PATCH /users/me/application
 Auth
 {
   "name": String,

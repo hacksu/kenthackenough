@@ -85,8 +85,8 @@ GLOBAL.getIo = function () {
   // 'messages',
   // 'tickets',
   // 'urls',
-  'users',
-  // 'users/applications'
+  'users/application',
+  'users'
 ].forEach(function (module) {
   require('./app/' + module + '/controller');
 });

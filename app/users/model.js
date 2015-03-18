@@ -36,7 +36,7 @@ var User = mongoose.model('User', {
   password: String,
   salt: String,
   token: String,
-  application: mongoose.Schema.Types.ObjectId,
+  application: {type: mongoose.Schema.Types.ObjectId, ref: 'Application'},
   created: { type : Date, default: Date.now() }
 });
 
@@ -171,6 +171,7 @@ var auth = function (roles) {
               _id: key,
               token: token
             };
+            Helpers.cache(user);
             next();
           } else {
             Helpers.authError(res);

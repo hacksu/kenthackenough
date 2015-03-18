@@ -2,212 +2,186 @@ var router = getRouter();
 var io = getIo();
 var User = require('../model');
 var Application = require('./model');
-var chance = require('chance')();
-var schema = require('validate');
-var Message = rootRequire('app/helpers/mailer');
+var extend = require('extend');
 
 /**
-* Submit application
-* AUTH: any user
-* POST:
-*   name (string), school (string), phone (string), shirt (string),
-*   demographic (bool), first (bool), dietary (string, separate each by |),
-*   year (string), age (number), gender (string), major (string),
-*   conduct (bool), travel (bool), waiver (bool)
+* Create an application
+* POST /users/application
+* Auth
 */
-router.post('/application/submit', User.auth(), function (req, res) {
-  if (req.user.application.submitted) return res.singleError('You have already submitted your application');
-  var errors = Application.validate(req.body);
-  if (errors.length) return res.multiError(errors);
-  req.user.application = req.body;
-  if (req.body.dietary) req.user.application.dietary = req.body.dietary.split('|');
-  req.user.application.submitted = true;
-  req.user.application.status = Application.PENDING;
-  req.user.application.time = Date.now();
-  req.user.save(function (err, u) {
-    if (err) return res.internalError();
-    if (process.env.NODE_ENV == 'production') {
-      sendApplicationEmail(u);
-    }
-    return res.send(u.application);
-  });
-});
-
-/**
-* Update application
-* AUTH: any user
-* POST (all params are required, submit old data if you want it to stay):
-*   name (string), school (string), phone (string), shirt (string),
-*   demographic (bool), first (bool), dietary (string, separate each by |),
-*   year (string), age (number), gender (string), major (string),
-*   conduct (bool), travel (bool), waiver (bool)
-*/
-router.post('/application/update', User.auth(), function (req, res) {
-  if (!req.user.application.submitted) return res.singleError('You haven\'t submitted an application yet');
-  var errors = Application.validate(req.body);
-  if (errors.length) return res.multiError(errors);
-  var oldStatus = req.user.application.status;
-  var oldTime = req.user.application.time;
-  req.user.application = req.body;
-  if (req.body.dietary) req.user.application.dietary = req.body.dietary.split('|');
-  req.user.application.submitted = true;
-  req.user.application.status = oldStatus;
-  req.user.application.time = oldTime;
-  req.user.save(function (err, u) {
-    if (err) return res.internalError();
-    return res.send(u.application);
-  });
-});
-
-/**
-* Update RSVP status
-* AUTH: any user
-* POST:
-*   going (bool)
-*/
-router.post('/application/rsvp', User.auth(), function (req, res) {
-  if (req.user.application.status == Application.APPROVED) {
-    req.user.application.going = req.body.going;
-    req.user.save(function (err, user) {
+router.post('/users/application', User.auth(), function (req, res) {
+  User
+    .findById(req.user._id)
+    .select('email application role created')
+    .exec(function (err, user) {
       if (err) return res.internalError();
-      return res.send(user.application);
+      if (user.application) return res.singleError('You have already submitted an application');
+      var errors = Application.validate(req.body);
+      if (errors.length) return res.multiError(errors);
+      extend(req.body, {
+        status: Application.Status.PENDING,
+        going: false,
+        checked: false,
+        created: Date.now(),
+        door: false
+      });
+      var application = new Application(req.body);
+      application.save(function (err, application) {
+        if (err) return res.internalError();
+        user.application = application._id;
+        user.save(function (err, user) {
+          if (err) res.internalError();
+          return res.json({
+            _id: user._id,
+            email: user.email,
+            role: user.role,
+            created: user.created,
+            application: application
+          });
+        });
+      });
     });
-  } else {
-    return res.singleError('Your application has not been approved');
-  }
 });
 
 /**
-* Return the attendee status
-* AUTH: any user
+* Get the logged in user with their application
+* GET /users/me/application
+* Auth
 */
-router.get('/application', User.auth(), function (req, res) {
-  if (req.user.application.submitted) {
-    return res.send(req.user.application);
-  } else {
-    return res.singleError('You have not submitted an application yet');
-  }
+router.get('/users/me/application', User.auth(), function (req, res) {
+  User
+    .findById(req.user._id)
+    .select('email application role created')
+    .populate('application')
+    .exec(function (err, user) {
+      if (err) return res.internalError();
+      return res.json(user);
+    });
 });
 
 /**
-* Update an application by ID
-* AUTH: staff, admin
-* URL params: id A user's ID
-* POST: the parts of the application to update (any part)
+* Get a list of users with their applications
+* GET /users/application
+* Auth -> admin, staff
 */
-router.post('/application/update/:id', User.auth('admin', 'staff'), function (req, res) {
-  var update = {};
-  if (req.body.submitted !== undefined) update["application.submitted"] = req.body.submitted;
-  if (req.body.status) update["application.status"] = req.body.status;
-  if (req.body.going !== undefined) update["application.going"] = req.body.going;
-  if (req.body.checked !== undefined) update["application.checked"] = req.body.checked;
-  if (req.body.time) update["application.time"] = req.body.time;
-  if (req.body.door !== undefined) update["application.door"] = req.body.door;
-  if (req.body.name) update["application.name"] = req.body.name;
-  if (req.body.school) update["application.school"] = req.body.school;
-  if (req.body.phone) update["application.phone"] = req.body.phone;
-  if (req.body.shirt) update["application.shirt"] = req.body.shirt;
-  if (req.body.demographic !== undefined) update["application.demographic"] = req.body.demographic;
-  if (req.body.first !== undefined) update["application.first"] = req.body.first;
-  if (req.body.dietary) update["application.dietary"] = req.body.dietary;
-  if (req.body.year) update["application.year"] = req.body.year;
-  if (req.body.age) update["application.age"] = req.body.age;
-  if (req.body.gender) update["application.gender"] = req.body.gender;
-  if (req.body.major) update["application.major"] = req.body.major;
-  if (req.body.conduct !== undefined) update["application.conduct"] = req.body.conduct;
-  if (req.body.travel !== undefined) update["application.travel"] = req.body.travel;
-  if (req.body.waiver !== undefined) update["application.waiver"] = req.body.waiver;
-  User.findOneAndUpdate({_id: req.params.id}, {$set: update}, function (err, user) {
-    if (err) return res.internalError();
-    io.emit('/application/update', user);
-    return res.send(user);
-  });
+router.get('/users/application', User.auth('admin', 'staff'), function (req, res) {
+  User
+    .find()
+    .select('email application role created')
+    .populate('application')
+    .exec(function (err, users) {
+      if (err) return res.internalError();
+      return res.json({users: users});
+    });
 });
 
 /**
-* Remove a user's application (gently)
-* Sets application.submitted to false
-* AUTH: staff, admin
-* POST: userId
+* Get a user by ID with their application
+* GET /users/:id/application
+* Auth -> admin, staff
 */
-router.post('/application/remove', User.auth('admin', 'staff'), function (req, res) {
-  return res.send('Method stub');
+router.get('/users/:id/application', User.auth('admin', 'staff'), function (req, res) {
+  User
+    .findById(req.params.id)
+    .select('email application role created')
+    .populate('application')
+    .exec(function (err, user) {
+      if (err) return res.internalError();
+      return res.json(user);
+    });
 });
 
 /**
-* Quickly register a user
-* (Use for people who show up without registering)
-* AUTH: staff, admin
-* POST: name, email, phone
+* Partially update the logged in user's application
+* PATCH /users/me/application
+* Auth
 */
-router.post('/application/quick', User.auth('admin', 'staff'), function (req, res) {
-  var test = schema({
-    name: {
-      required: true,
-      type: 'string',
-      match: /.{2,32}/,
-      message: 'Your name is required'
-    },
-    email: {
-      type: 'string',
-      required: true,
-      message: 'A valid email address is required'
-    },
-    phone: {
-      required: true,
-      type: 'number',
-      match: /^[0-9]{10,20}$/,
-      message: 'You must provide a valid phone number'
-    }
-  }, {typecast: true});
-  var errors = test.validate(req.body);
+router.patch('/users/me/application', User.auth(), function (req, res) {
+  var errors = Application.validate(req.body);
   if (errors.length) return res.multiError(errors);
-  var salt = User.Helpers.salt();
-  var user = new User({
-    email: req.body.email,
-    role: User.ATTENDEE,
-    password: User.Helpers.hash(chance.string(), salt),
-    salt: salt,
-    activated: true,
-    application: {
-      name: req.body.name,
-      phone: req.body.phone,
-      submitted: true,
-      status: Application.APPROVED,
-      going: true,
-      checked: true,
-      time: Date.now(),
-      demographic: true,
-      conduct: true,
-      travel: false,
-      waiver: true,
-      door: true
-    }
-  });
-  user.save(function (err, user) {
-    if (err) return res.internalError();
-    io.emit('/application/quick', user);
-    return res.send(user);
-  });
+  User
+    .findByIdAndUpdate(req.user._id)
+    .select('email application role created')
+    .exec(function (err, user) {
+      if (err) return res.internalError();
+      Application
+        .findByIdAndUpdate(user.application, req.body)
+        .exec(function (err, application) {
+          return res.json({
+            _id: user._id,
+            email: user.email,
+            role: user.role,
+            created: user.created,
+            application: application
+          });
+        });
+    });
 });
 
 /**
-* Helper methods to clean up routes
+* Partially update a user's application by ID
+* PATCH /users/:id/application
+* Auth -> admin, staff
 */
+router.patch('/users/:id/application', User.auth('admin', 'staff'), function (req, res) {
+  User
+    .findById(req.params.id)
+    .select('email application role created')
+    .exec(function (err, user) {
+      if (err) return res.internalError();
+      Application
+        .findByIdAndUpdate(user.application, req.body)
+        .exec(function (err, application) {
+          if (err) return res.internalError();
+          return res.json({
+            _id: user._id,
+            email: user.email,
+            role: user.role,
+            created: user.created,
+            application: application
+          });
+        });
+    });
+});
 
-function sendApplicationEmail(user) {
-  var message = new Message({
-    template: 'application',
-    subject: 'Kent Hack Enough Application',
-    recipients: [{
-      email: user.email,
-      locals: {
-        name: {
-          first: user.application.name.split(' ')[0],
-          last: user.application.name.split(' ')[1]
-        }
-      }
-    }]
-  });
-  message.send();
-}
+/**
+* Delete the logged in user's application
+* DELETE /users/me/application
+* Auth
+*/
+router.delete('/users/me/application', User.auth(), function (req, res) {
+  User
+    .findById(req.user._id)
+    .select('application')
+    .exec(function (err, user) {
+      if (err) return res.internalError();
+      Application
+        .findById(user.application)
+        .remove()
+        .exec(function (err) {
+          if (err) return res.internalError();
+          return res.json({_id: req.user._id});
+        });
+    });
+});
+
+/**
+* Delete a user's application by ID
+* DELETE /users/:id/application
+* Auth -> admin, staff
+*/
+router.delete('/users/:id/application', User.auth('admin', 'staff'), function (req, res) {
+  User
+    .findById(req.params.id)
+    .select('application')
+    .exec(function (err, user) {
+      if (err) return res.internalError();
+      Application
+        .findById(user.application)
+        .remove()
+        .exec(function (err) {
+          if (err) return res.internalError();
+          return res.json({_id: req.params.id});
+        });
+    });
+});

@@ -61,7 +61,11 @@ router.post('/users/quick', User.auth('admin', 'staff'), function (req, res) {
   if (errors.length) return res.multiError(errors);
   var application = new Application({
     name: req.body.name,
-    phone: req.body.phone
+    phone: req.body.phone,
+    door: true,
+    going: true,
+    status: Application.Status.APPROVED,
+    checked: true
   });
   application.save(function (err, app) {
     if (err) return res.internalError();

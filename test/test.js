@@ -61,6 +61,7 @@ describe('API', function () {
           if (err) throw err;
           res.body.should.have.property('key');
           res.body.should.have.property('token');
+          res.body.should.have.property('role');
           userKey = res.body.key;
           userToken = res.body.token;
           done();
@@ -82,6 +83,7 @@ describe('API', function () {
           if (err) throw err;
           res.body.should.have.property('key');
           res.body.should.have.property('token');
+          res.body.should.have.property('role');
           personKey = res.body.key;
           personToken = res.body.token;
           done();
@@ -103,6 +105,7 @@ describe('API', function () {
           if (err) throw err;
           res.body.should.have.property('key');
           res.body.should.have.property('token');
+          res.body.should.have.property('role');
           adminKey = res.body.key;
           adminToken = res.body.token;
           done();

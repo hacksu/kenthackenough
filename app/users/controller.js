@@ -32,7 +32,8 @@ router.post('/users', function (req, res) {
 
     return res.json({
       key: user._id,
-      token: user.token
+      token: user.token,
+      role: user.role
     });
   });
 });
@@ -112,7 +113,8 @@ router.post('/users/token', function (req, res) {
         if (user.token) {
           return res.json({
             key: user._id,
-            token: user.token
+            token: user.token,
+            role: user.role
           });
         } else {
           var token = User.Helpers.token();
@@ -121,7 +123,8 @@ router.post('/users/token', function (req, res) {
             User.Helpers.cache(user);
             return res.json({
               key: user._id,
-              token: user.token
+              token: user.token,
+              role: user.role
             });
           });
         }

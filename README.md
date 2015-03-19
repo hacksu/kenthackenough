@@ -97,7 +97,8 @@ POST /users
 HTTP/1.1 200 OK
 {
   "key": String,
-  "token": String
+  "token": String,
+  "role": String
 }
 ```
 
@@ -131,7 +132,8 @@ POST /users/token
 HTTP/1.1 200 OK
 {
   "key": String,
-  "token": String
+  "token": String,
+  "role": String
 }
 ```
 

@@ -725,7 +725,11 @@ HTTP/1.1 200 OK
   "_id": String,
   "subject": String,
   "body": String,
-  "replyTo": String
+  "replyTo": String,
+  "worker": String,
+  "open": Boolean,
+  "inProgress": Boolean,
+  "created": Date
 }
 ```
 
@@ -740,7 +744,11 @@ HTTP/1.1 200 OK
     "_id": String,
     "subject": String,
     "body": String,
-    "replyTo": String
+    "replyTo": String,
+    "worker": String,
+    "open": Boolean,
+    "inProgress": Boolean,
+    "created": Date
   }]
 }
 ```
@@ -755,7 +763,11 @@ HTTP/1.1 200 OK
   "_id": String,
   "subject": String,
   "body": String,
-  "replyTo": String
+  "replyTo": String,
+  "worker": String,
+  "open": Boolean,
+  "inProgress": Boolean,
+  "created": Date
 }
 ```
 
@@ -764,8 +776,19 @@ HTTP/1.1 200 OK
 PATCH /tickets/:id
 Auth -> staff, admin
 {
-  "_id": String,
   "open": false
+}
+
+HTTP/1.1 200 OK
+{
+  "_id": String,
+  "subject": String,
+  "body": String,
+  "replyTo": String,
+  "worker": String,
+  "open": Boolean,
+  "inProgress": Boolean,
+  "created": Date
 }
 ```
 

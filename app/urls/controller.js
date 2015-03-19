@@ -4,50 +4,73 @@ var User = require('../users/model');
 var Url = require('./model');
 
 /**
-* Shorten a URL
-* AUTH: staff, admin
-* POST: full, short
+* Create a new shortened URL
+* POST /urls
+* Auth -> admin, staff
 */
-router.post('/urls/shorten', User.auth('admin', 'staff'), function (req, res) {
+router.post('/urls', User.auth('admin', 'staff'), function (req, res) {
   var errors = Url.validate(req.body);
   if (errors.length) return res.multiError(errors);
   var url = new Url(req.body);
   url.save(function (err, url) {
     if (err) return res.singleError('The URL must be unique');
-    return res.send(url);
+    return res.json(url);
   });
 });
 
 /**
 * Resolve a shortened URL
-* URL param: the short url
+* GET /urls/go/:short
 */
-app.get('/go/:url', function (req, res) {
-  Url.findOne({short: req.params.url}, function (err, url) {
-    if (err) return res.send(404);
-    return res.redirect(url.full);
-  });
+router.get('/urls/go/:url', function (req, res) {
+  Url
+    .findOne({short: req.params.url})
+    .exec(function (err, url) {
+      if (err) return res.status(404).send();
+      return res.redirect(url.full);
+    });
 });
 
 /**
-* Remove a shortened URL
-* AUTH: staff, admin
-* POST: id
+* Get a single URL
+* GET /urls/:id
+* Auth -> admin, staff
 */
-router.post('/urls/remove', User.auth('admin', 'staff'), function (req, res) {
-  Url.remove({_id: req.body.id}, function (err) {
-    if (err) return res.singleError('URL not found');
-    return res.send({});
-  });
+router.get('/urls/:id', function (req, res) {
+  Url
+    .findById(req.params.id)
+    .exec(function (err, url) {
+      if (err) return res.internalError();
+      return res.json(url);
+    });
 });
 
 /**
-* Get a list of URLs currently available
-* AUTH: staff, admin
+* Get a list of URLs
+* GET /urls
+* Auth -> admin, staff
 */
 router.get('/urls', User.auth('admin', 'staff'), function (req, res) {
-  Url.find({}, function (err, urls) {
-    if (err) return res.internalError();
-    return res.send({urls: urls});
-  });
+  Url
+    .find()
+    .exec(function (err, urls) {
+      if (err) return res.internalError();
+      return res.json({urls: urls});
+    });
+});
+
+/**
+* Delete a URL
+* DELETE /urls/:id
+* Auth -> admin, staff
+*/
+router.delete('/urls/:id', User.auth('admin', 'staff'), function (req, res) {
+  Url
+    .findByIdAndRemove(req.params.id)
+    .exec(function (err, url) {
+      if (err) return res.internalError();
+      return res.json({
+        _id: url._id
+      });
+    });
 });

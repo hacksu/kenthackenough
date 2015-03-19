@@ -755,13 +755,13 @@ describe('API', function () {
           res.body.should.have.property('body');
           res.body.should.have.property('replyTo');
           res.body.should.have.property('open');
-          res.body.should.have.property('inProgess');
+          res.body.should.have.property('inProgress');
           res.body.should.have.property('created');
           res.body.subject.should.equal('Test Ticket');
           res.body.body.should.equal('This is a ticket from the tests');
           res.body.replyTo.should.equal('test@test.com');
           res.body.open.should.equal(true);
-          res.body.inProgess.should.equal(false);
+          res.body.inProgress.should.equal(false);
           ticketId = res.body._id;
           done();
         });
@@ -784,7 +784,7 @@ describe('API', function () {
           res.body.tickets[0].should.have.property('body');
           res.body.tickets[0].should.have.property('replyTo');
           res.body.tickets[0].should.have.property('open');
-          res.body.tickets[0].should.have.property('inProgess');
+          res.body.tickets[0].should.have.property('inProgress');
           res.body.tickets[0].should.have.property('created');
           done();
         });
@@ -805,13 +805,13 @@ describe('API', function () {
           res.body.should.have.property('body');
           res.body.should.have.property('replyTo');
           res.body.should.have.property('open');
-          res.body.should.have.property('inProgess');
+          res.body.should.have.property('inProgress');
           res.body.should.have.property('created');
           res.body.subject.should.equal('Test Ticket');
           res.body.body.should.equal('This is a ticket from the tests');
           res.body.replyTo.should.equal('test@test.com');
           res.body.open.should.equal(true);
-          res.body.inProgess.should.equal(false);
+          res.body.inProgress.should.equal(false);
           done();
         });
     });
@@ -821,7 +821,7 @@ describe('API', function () {
     */
     it('should partially update a ticket', function (done) {
       request(app)
-        .patch('/tickets/:id')
+        .patch('/tickets/'+ticketId)
         .auth(adminKey, adminToken)
         .send({
           open: false
@@ -834,13 +834,13 @@ describe('API', function () {
           res.body.should.have.property('body');
           res.body.should.have.property('replyTo');
           res.body.should.have.property('open');
-          res.body.should.have.property('inProgess');
+          res.body.should.have.property('inProgress');
           res.body.should.have.property('created');
           res.body.subject.should.equal('Test Ticket');
           res.body.body.should.equal('This is a ticket from the tests');
           res.body.replyTo.should.equal('test@test.com');
           res.body.open.should.equal(false);
-          res.body.inProgess.should.equal(false);
+          res.body.inProgress.should.equal(false);
           done();
         });
     });

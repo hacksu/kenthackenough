@@ -774,7 +774,7 @@ HTTP/1.1 200 OK
 #### *Partially update a ticket
 ```javascript
 PATCH /tickets/:id
-Auth -> staff, admin
+Auth -> admin, staff
 {
   "open": false
 }
@@ -795,7 +795,7 @@ HTTP/1.1 200 OK
 #### *Delete a ticket
 ```javascript
 DELETE /tickets/:id
-Auth -> staff, admin
+Auth -> admin, staff
 
 HTTP/1.1 200 OK
 {

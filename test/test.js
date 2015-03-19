@@ -495,7 +495,7 @@ describe('API', function () {
     it('should resolve a shortened URL', function (done) {
       request(app)
         .get('/urls/go/shortenedexample')
-        .expect(301)
+        .expect(302)
         .end(function (err, res) {
           if (err) throw err;
           done();
@@ -556,6 +556,81 @@ describe('API', function () {
     });
 
   }); // end URL Shortener
+
+  describe('Emails', function () {
+
+    var emailId;
+
+    /**
+    * Create a new email and send it
+    */
+    it('should create a new email and send it', function (done) {
+      request(app)
+        .post('/emails')
+        .auth(adminKey, adminToken)
+        .send({
+          subject: "Test Email",
+          body: "This is an email from our API tests",
+          recipients: {
+            nickname: "Attendees",
+            where: {
+              role: "attendee"
+            }
+          }
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('_id');
+          res.body.should.have.property('subject');
+          res.body.should.have.property('body');
+          res.body.should.have.property('recipients');
+          res.body.recipients.should.have.property('nickname');
+          res.body.recipients.should.have.property('where');
+          res.body.recipients.where.should.have.property('role');
+          res.body.recipients.where.role.should.equal('attendee');
+          emailId = res.body._id;
+          done();
+        });
+    });
+
+    /**
+    * Get a list of sent emails
+    */
+    it('should get a list of sent emails', function (done) {
+      request(app)
+        .get('/emails')
+        .auth(adminKey, adminToken)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('emails');
+          res.body.emails.length.should.be.above(0);
+          res.body.emails[0].should.have.property('_id');
+          res.body.emails[0].should.have.property('subject');
+          res.body.emails[0].should.have.property('sent');
+          res.body.emails[0].should.have.property('body');
+          res.body.emails[0].should.have.property('recipients');
+          done();
+        });
+    });
+
+    /**
+    * Delete a sent email
+    */
+    it('should delete a sent email', function (done) {
+      request(app)
+        .delete('/emails/'+emailId)
+        .auth(adminKey, adminToken)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body._id.should.equal(emailId);
+          done();
+        });
+    });
+
+  }); // end Emails
 
   // Remove the admin user
   after(function (done) {

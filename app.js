@@ -81,10 +81,10 @@ GLOBAL.getIo = function () {
 
 // Include modules
 [
-  // 'emails',
+  'emails',
   // 'messages',
   // 'tickets',
-  // 'urls',
+  'urls',
   'users/application',
   'users'
 ].forEach(function (module) {

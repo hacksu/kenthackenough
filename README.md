@@ -3,6 +3,9 @@ The world's best hackathon website.
 
 ## ToDo
 - Judging system
+- SendGrid for emails
+- Websockets (authorize somehow)
+- Speed up slower tests if possible
 
 ## Installation
 
@@ -623,7 +626,7 @@ HTTP/1.1 200 OK
 #### *Delete a sent email
 ```javascript
 DELETE /emails/:id
-Auth -> admin, staff
+Auth -> admin
 
 HTTP/1.1 200 OK
 {

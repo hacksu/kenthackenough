@@ -146,13 +146,16 @@ router.patch('/users/:id/application', User.auth('admin', 'staff'), function (re
         var application = new Application(req.body);
         application.created = Date.now();
         application.save(function (err, application) {
-          if (err) return res.internalError();
-          return res.json({
-            _id: user._id,
-            email: user.email,
-            role: user.role,
-            created: user.created,
-            application: application
+          user.application = application;
+          user.save(function (err, user) {
+            if (err) return res.internalError();
+            return res.json({
+              _id: user._id,
+              email: user.email,
+              role: user.role,
+              created: user.created,
+              application: application
+            });
           });
         });
       }

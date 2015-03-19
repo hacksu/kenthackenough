@@ -143,10 +143,11 @@ var Helpers = {
 
 /**
 * Authenticate a user (protect a route)
-* @param roles An array of roles that are allowed into the route
+* @param ...roles An list of roles that are allowed into the route
 */
-var auth = function (roles) {
-  if (!roles) roles = ['attendee', 'staff', 'admin'];
+var auth = function () {
+  var roles = Array.prototype.slice.call(arguments);
+  if (!roles.length) roles = ['admin', 'staff', 'attendee'];
 
   return function (req, res, next) {
     var header = req.headers['Authorization'] || req.headers['authorization'] || false;

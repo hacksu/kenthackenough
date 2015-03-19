@@ -129,9 +129,25 @@ router.patch('/users/:id/application', User.auth('admin', 'staff'), function (re
     .select('email application role created')
     .exec(function (err, user) {
       if (err) return res.internalError();
-      Application
-        .findByIdAndUpdate(user.application, req.body)
-        .exec(function (err, application) {
+      if (user.application) {
+        Application
+          .findByIdAndUpdate(user.application, req.body)
+          .exec(function (err, application) {
+            if (err) return res.internalError();
+            return res.json({
+              _id: user._id,
+              email: user.email,
+              role: user.role,
+              created: user.created,
+              application: application
+            });
+          });
+      } else {
+        var errors = Application.validate(req.body);
+        if (errors.length) return res.multiError(errors);
+        var application = new Application(req.body);
+        application.created = Date.now();
+        application.save(function (err, application) {
           if (err) return res.internalError();
           return res.json({
             _id: user._id,
@@ -141,6 +157,7 @@ router.patch('/users/:id/application', User.auth('admin', 'staff'), function (re
             application: application
           });
         });
+      }
     });
 });
 

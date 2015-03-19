@@ -25,6 +25,7 @@ router.post('/users/application', User.auth(), function (req, res) {
         created: Date.now(),
         door: false
       });
+      if (req.body.dietary) req.body.dietary = req.body.dietary.split('|');
       var application = new Application(req.body);
       application.save(function (err, application) {
         if (err) return res.internalError();
@@ -99,6 +100,7 @@ router.get('/users/:id/application', User.auth('admin', 'staff'), function (req,
 router.patch('/users/me/application', User.auth(), function (req, res) {
   var errors = Application.validate(req.body);
   if (errors.length) return res.multiError(errors);
+  if (req.body.dietary) req.body.dietary = req.body.dietary.split('|');
   User
     .findByIdAndUpdate(req.user._id)
     .select('email application role created')
@@ -124,6 +126,7 @@ router.patch('/users/me/application', User.auth(), function (req, res) {
 * Auth -> admin, staff
 */
 router.patch('/users/:id/application', User.auth('admin', 'staff'), function (req, res) {
+  if (req.body.dietary) req.body.dietary = req.body.dietary.split('|');
   User
     .findById(req.params.id)
     .select('email application role created')

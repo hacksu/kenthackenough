@@ -683,6 +683,7 @@ HTTP/1.1 200 OK
 #### *Update a message
 ```javascript
 PATCH /messages/:id
+Auth -> admin, staff
 {
   "text": String
 }

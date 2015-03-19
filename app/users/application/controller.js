@@ -143,8 +143,6 @@ router.patch('/users/:id/application', User.auth('admin', 'staff'), function (re
             });
           });
       } else {
-        var errors = Application.validate(req.body);
-        if (errors.length) return res.multiError(errors);
         var application = new Application(req.body);
         application.created = Date.now();
         application.save(function (err, application) {

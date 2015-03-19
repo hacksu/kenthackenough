@@ -1,30 +1,11 @@
 var router = getRouter();
-var io = getIo();
 var Message = require('./model');
 var User = require('../users/model');
 
 /**
-* Get a list of messages
-*/
-router.get('/messages', function (req, res) {
-  Message.find({}, function (err, messages) {
-    if (err) return res.internalError();
-    return res.json({messages: messages});
-  });
-});
-
-/**
-* Get a single message
-*/
-router.get('/messages/:id', function (req, res) {
-  Message.findById(req.params.id, function (err, message) {
-    if (err) return res.internalError();
-    return res.json(message);
-  });
-});
-
-/**
 * Create a new message
+* POST /messages
+* Auth -> admin, staff
 */
 router.post('/messages', User.auth('admin', 'staff'), function (req, res) {
   var errors = Message.validate(req.body);
@@ -33,18 +14,64 @@ router.post('/messages', User.auth('admin', 'staff'), function (req, res) {
   message.created = Date.now();
   message.save(function (err, message) {
     if (err) return res.internalError();
-    io.emit('POST /messages', message);
     return res.json(message);
   });
 });
 
 /**
+* Get a list of messages
+* GET /messages
+*/
+router.get('/messages', function (req, res) {
+  Message
+    .find()
+    .exec(function (err, messages) {
+      if (err) return res.internalError();
+      return res.json({messages: messages});
+    });
+});
+
+/**
+* Get a single message
+* GET /messages/:id
+*/
+router.get('/messages/:id', function (req, res) {
+  Message
+    .findById(req.params.id)
+    .exec(function (err, message) {
+      if (err) return res.internalError();
+      return res.json(message);
+    });
+});
+
+/**
+* Update a message
+* PATCH /messages/:id
+* Auth -> admin, staff
+*/
+router.patch('/messages/:id', User.auth('admin', 'staff'), function (req, res) {
+  var errors = Message.validate(req.body);
+  if (errors.length) return res.multiError(errors);
+  Message
+    .findByIdAndUpdate(req.params.id, req.body)
+    .exec(function (err, message) {
+      if (err) return res.internalError();
+      return res.json(message);
+    });
+});
+
+/**
 * Delete a message
+* DELETE /messages/:id
+* Auth -> admin, staff
 */
 router.delete('/messages/:id', User.auth('admin', 'staff'), function (req, res) {
-  Message.remove({_id: req.params.id}, function (err) {
-    if (err) return res.internalError();
-    io.emit('DELETE /messages/:id', req.params.id);
-    return res.json({});
-  });
+  Message
+    .findByIdAndRemove(req.params.id)
+    .exec(function (err, message) {
+      if (err) return res.internalError();
+      return res.json({
+        _id: message._id
+      });
+    });
 });

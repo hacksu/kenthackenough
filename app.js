@@ -82,7 +82,7 @@ GLOBAL.getIo = function () {
 // Include modules
 [
   'emails',
-  // 'messages',
+  'messages',
   // 'tickets',
   'urls',
   'users/application',

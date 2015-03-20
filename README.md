@@ -64,6 +64,14 @@ Just send that header with each request that needs authorized, the rest is done 
 To obtain a key and token, please see `POST /users/token`.
 
 ### Live Updates
+We are using Socket.IO to get live updates to/from the server. To connect from a client:
+```javascript
+io.connect(API_URL, {
+  query: 'key=USER_KEY&token=USER_TOKEN'
+});
+```
+Users that have read access to a module will have access to socket updates. For example, since only admin and staff can get a list of users, only admin and staff can subscribe to new users. (**This is not yet implemented**)
+
 All the routes marked with an asterisk before their title can be subscribed to with Socket.IO. Any url params will be scrubbed away on the broadcast channel (for example, if there is an ID as a url parameter, it will be removed so there is no need to use a wildcard in your subscription URI). Here's a couple of example subscriptions:
 ```javascript
 // Listen for new messages
@@ -86,7 +94,7 @@ As you can see, the responses you get in your subscriber are exactly the same re
 
 ### Users
 
-#### Create a new user
+#### *Create a new user
 ```javascript
 POST /users
 {

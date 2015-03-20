@@ -1,12 +1,10 @@
 var router = getRouter();
 var socket = rootRequire('app/helpers/socket');
+var io = socket('/users', ['admin', 'staff']);
 var User = require('./model');
 var Application = require('./application/model');
 var Message = rootRequire('app/helpers/mailer');
 var schema = require('validate');
-
-// Create socket namespace
-var io = socket('/users', ['admin', 'staff']);
 
 /**
 * Create a new user

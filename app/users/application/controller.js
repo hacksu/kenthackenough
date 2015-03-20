@@ -1,5 +1,6 @@
 var router = getRouter();
-var io = getIo();
+var socket = rootRequire('app/helpers/socket');
+var io = socket('/users/application', ['admin', 'staff']);
 var User = require('../model');
 var Application = require('./model');
 var extend = require('extend');
@@ -32,13 +33,15 @@ router.post('/users/application', User.auth(), function (req, res) {
         user.application = application._id;
         user.save(function (err, user) {
           if (err) res.internalError();
-          return res.json({
+          var response = {
             _id: user._id,
             email: user.email,
             role: user.role,
             created: user.created,
             application: application
-          });
+          };
+          io.emit('create', response);
+          return res.json(response);
         });
       });
     });
@@ -109,13 +112,15 @@ router.patch('/users/me/application', User.auth(), function (req, res) {
       Application
         .findByIdAndUpdate(user.application, req.body)
         .exec(function (err, application) {
-          return res.json({
+          var response = {
             _id: user._id,
             email: user.email,
             role: user.role,
             created: user.created,
             application: application
-          });
+          };
+          io.emit('update', response);
+          return res.json(response);
         });
     });
 });
@@ -137,13 +142,15 @@ router.patch('/users/:id/application', User.auth('admin', 'staff'), function (re
           .findByIdAndUpdate(user.application, req.body)
           .exec(function (err, application) {
             if (err) return res.internalError();
-            return res.json({
+            var response = {
               _id: user._id,
               email: user.email,
               role: user.role,
               created: user.created,
               application: application
-            });
+            };
+            io.emit('update', response);
+            return res.json(response);
           });
       } else {
         var application = new Application(req.body);
@@ -152,13 +159,15 @@ router.patch('/users/:id/application', User.auth('admin', 'staff'), function (re
           user.application = application;
           user.save(function (err, user) {
             if (err) return res.internalError();
-            return res.json({
+            var response = {
               _id: user._id,
               email: user.email,
               role: user.role,
               created: user.created,
               application: application
-            });
+            };
+            io.emit('update', response);
+            return res.json(response);
           });
         });
       }
@@ -181,7 +190,9 @@ router.delete('/users/me/application', User.auth(), function (req, res) {
         .remove()
         .exec(function (err) {
           if (err) return res.internalError();
-          return res.json({_id: req.user._id});
+          var response = {_id: req.user._id};
+          io.emit('delete', response);
+          return res.json(response);
         });
     });
 });
@@ -202,7 +213,9 @@ router.delete('/users/:id/application', User.auth('admin', 'staff'), function (r
         .remove()
         .exec(function (err) {
           if (err) return res.internalError();
-          return res.json({_id: req.params.id});
+          var response = {_id: req.params.id};
+          io.emit('delete', response);
+          return res.json(response);
         });
     });
 });

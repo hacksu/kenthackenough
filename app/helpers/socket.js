@@ -14,7 +14,7 @@ var User = rootRequire('app/users/model');
 
 module.exports = function (namespace, roles) {
 
-  if (!roles) roles = ['admin', 'staff', 'attendee'];
+  if (!roles) return next();
 
   var nsp = io.of(namespace);
 

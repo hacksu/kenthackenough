@@ -1,4 +1,6 @@
 var router = getRouter();
+var socket = rootRequire('app/helpers/socket');
+var io = socket('/tickets', ['admin', 'staff']);
 var Ticket = require('./model');
 var User = require('../users/model');
 
@@ -12,6 +14,7 @@ router.post('/tickets', function (req, res) {
   var ticket = new Ticket(req.body);
   ticket.save(function (err, ticket) {
     if (err) return res.internalError();
+    io.emit('create', ticket);
     return res.json(ticket);
   });
 });
@@ -54,6 +57,7 @@ router.patch('/tickets/:id', function (req, res) {
     .findByIdAndUpdate(req.params.id, req.body)
     .exec(function (err, ticket) {
       if (err) return res.internalError();
+      io.emit('update', ticket);
       return res.json(ticket);
     });
 });
@@ -67,8 +71,10 @@ router.delete('/tickets/:id', function (req, res) {
     .findByIdAndRemove(req.params.id)
     .exec(function (err, ticket) {
       if (err) return res.internalError();
-      return res.json({
+      var response = {
         _id: ticket._id
-      });
+      };
+      io.emit('delete', response);
+      return res.json(response);
     });
 });

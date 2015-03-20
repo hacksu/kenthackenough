@@ -1,4 +1,6 @@
 var router = getRouter();
+var socket = rootRequire('app/helpers/socket');
+var io = socket('/messages');
 var Message = require('./model');
 var User = require('../users/model');
 
@@ -14,6 +16,7 @@ router.post('/messages', User.auth('admin', 'staff'), function (req, res) {
   message.created = Date.now();
   message.save(function (err, message) {
     if (err) return res.internalError();
+    io.emit('create', message);
     return res.json(message);
   });
 });
@@ -56,6 +59,7 @@ router.patch('/messages/:id', User.auth('admin', 'staff'), function (req, res) {
     .findByIdAndUpdate(req.params.id, req.body)
     .exec(function (err, message) {
       if (err) return res.internalError();
+      io.emit('update', message);
       return res.json(message);
     });
 });
@@ -70,8 +74,10 @@ router.delete('/messages/:id', User.auth('admin', 'staff'), function (req, res) 
     .findByIdAndRemove(req.params.id)
     .exec(function (err, message) {
       if (err) return res.internalError();
-      return res.json({
+      var response = {
         _id: message._id
-      });
+      };
+      io.emit('delete', response);
+      return res.json(response);
     });
 });

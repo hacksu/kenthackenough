@@ -1,4 +1,6 @@
 var router = getRouter();
+var socket = rootRequire('app/helpers/socket');
+var io = socket('/emails', ['admin', 'staff']);
 var Email = require('./model');
 var User = require('../users/model');
 
@@ -18,6 +20,7 @@ router.post('/emails', User.auth('admin'), function (req, res) {
       var message = new Email.Message(email);
       message.send();
     }
+    io.emit('create', email);
     return res.json(email);
   });
 });
@@ -46,8 +49,10 @@ router.delete('/emails/:id', User.auth('admin'), function (req, res) {
     .findByIdAndRemove(req.params.id)
     .exec(function (err, email) {
       if (err) res.internalError();
-      return res.json({
+      var response = {
         _id: email._id
-      });
+      };
+      io.emit('delete', response);
+      return res.json(response);
     });
 });

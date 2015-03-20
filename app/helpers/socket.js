@@ -14,11 +14,12 @@ var User = rootRequire('app/users/model');
 
 module.exports = function (namespace, roles) {
 
-  if (!roles) return next();
-
   var nsp = io.of(namespace);
 
   nsp.use(function (socket, next) {
+    // If no roles are defined, you don't have to be authorized
+    if (!roles) return next();
+
     var header = socket.request._query.authorization || false;
     if (!header) return next(new Error('not authorized'));
 

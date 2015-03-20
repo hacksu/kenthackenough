@@ -1,5 +1,6 @@
 var router = getRouter();
-var app = getApp();
+var socket = rootRequire('app/helpers/socket');
+var io = socket('/urls', ['admin', 'staff']);
 var User = require('../users/model');
 var Url = require('./model');
 
@@ -14,6 +15,7 @@ router.post('/urls', User.auth('admin', 'staff'), function (req, res) {
   var url = new Url(req.body);
   url.save(function (err, url) {
     if (err) return res.singleError('The URL must be unique');
+    io.emit('create', url);
     return res.json(url);
   });
 });
@@ -69,8 +71,10 @@ router.delete('/urls/:id', User.auth('admin', 'staff'), function (req, res) {
     .findByIdAndRemove(req.params.id)
     .exec(function (err, url) {
       if (err) return res.internalError();
-      return res.json({
+      var response = {
         _id: url._id
-      });
+      };
+      io.emit('delete', response);
+      return res.json(response);
     });
 });

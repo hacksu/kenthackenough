@@ -4,7 +4,7 @@
   "description": "The world's best hackathon website.",
   "scripts": {
     "test": "vagrant ssh -c 'cd /vagrant && mocha'",
-    "start": "node app.js"
+    "start": "vagrant ssh -c 'cd /vagrant && pm2 startOrRestart processes.json'"
   },
   "repository": {
     "type": "git",

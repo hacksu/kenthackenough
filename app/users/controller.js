@@ -1,9 +1,12 @@
 var router = getRouter();
-var io = getIo();
+var socket = rootRequire('app/helpers/socket');
 var User = require('./model');
 var Application = require('./application/model');
 var Message = rootRequire('app/helpers/mailer');
 var schema = require('validate');
+
+// Create socket namespace
+var io = socket('/users', ['admin', 'staff']);
 
 /**
 * Create a new user
@@ -31,7 +34,7 @@ router.post('/users', function (req, res) {
       sendRegistrationEmail(user.email);
     }
 
-    io.emit('POST /users', {
+    io.emit('create', {
       _id: user._id,
       email: user.email
     });
@@ -99,7 +102,7 @@ router.post('/users/quick', User.auth('admin', 'staff'), function (req, res) {
         email: user.email,
         phone: app.phone
       };
-      io.emit('POST /users/quick', response);
+      io.emit('create', response);
       return res.json(response);
     });
 
@@ -212,11 +215,11 @@ router.patch('/users', User.auth(), function (req, res) {
       }
       user.save(function (err) {
         if (err) return res.singleError('That email is already taken');
-        var respones = {
+        var response = {
           _id: user._id,
           email: user.email
         };
-        io.emit('PATCH /users', response);
+        io.emit('update', response);
         return res.json(response);
       });
     });
@@ -238,7 +241,7 @@ router.patch('/users/:id', User.auth('admin'), function (req, res) {
         role: user.role,
         created: user.created
       };
-      io.emit('PATCH /users', response);
+      io.emit('update', response);
       return res.json(response);
     });
 });
@@ -257,7 +260,7 @@ router.delete('/users/:id', User.auth('admin'), function (req, res) {
       var response = {
         _id: req.params.id
       };
-      io.emit('DELETE /users', response);
+      io.emit('delete', response);
       return res.json(response);
     });
 });

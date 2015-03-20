@@ -26,7 +26,7 @@ User Model
 
 var mongoose = require('mongoose');
 var redis = require('redis').createClient();
-var bcrypt = require('bcrypt-nodejs');
+var bcrypt = require('bcrypt');
 var uuid = require('uuid');
 var schema = require('validate');
 

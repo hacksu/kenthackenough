@@ -6,9 +6,6 @@ The world's best hackathon website.
   + Need to figure out what this is first
 - SendGrid for emails
   + Refactor entire email system
-- Speed up slower tests if possible
-  + The switch to redis for cacheing login has already more than doubled the speed of most routes, but there are still a few that lag behind
-- Implement `express-mongoose` to clean up controllers (maybe?)
 
 ## Installation
 

@@ -1,4 +1,5 @@
 var router = getRouter();
+var io = getIo();
 var User = require('./model');
 var Application = require('./application/model');
 var Message = rootRequire('app/helpers/mailer');
@@ -29,6 +30,11 @@ router.post('/users', function (req, res) {
     if (process.env.NODE_ENV == 'production') {
       sendRegistrationEmail(user.email);
     }
+
+    io.emit('POST /users', {
+      _id: user._id,
+      email: user.email
+    });
 
     return res.json({
       key: user._id,
@@ -87,12 +93,14 @@ router.post('/users/quick', User.auth('admin', 'staff'), function (req, res) {
         sendRegistrationEmail(user.email);
       }
 
-      return res.json({
+      var response = {
         _id: user._id,
         name: app.name,
         email: user.email,
         phone: app.phone
-      });
+      };
+      io.emit('POST /users/quick', response);
+      return res.json(response);
     });
 
   });
@@ -204,10 +212,12 @@ router.patch('/users', User.auth(), function (req, res) {
       }
       user.save(function (err) {
         if (err) return res.singleError('That email is already taken');
-        return res.json({
+        var respones = {
           _id: user._id,
           email: user.email
-        });
+        };
+        io.emit('PATCH /users', response);
+        return res.json(response);
       });
     });
 });
@@ -222,12 +232,14 @@ router.patch('/users/:id', User.auth('admin'), function (req, res) {
     .findByIdAndUpdate(req.params.id, req.body)
     .exec(function (err, user) {
       if (err) return res.internalError();
-      return res.json({
+      var response = {
         _id: user._id,
         email: user.email,
         role: user.role,
         created: user.created
-      });
+      };
+      io.emit('PATCH /users', response);
+      return res.json(response);
     });
 });
 
@@ -242,9 +254,11 @@ router.delete('/users/:id', User.auth('admin'), function (req, res) {
     .remove()
     .exec(function (err) {
       if (err) return res.internalError();
-      return res.json({
+      var response = {
         _id: req.params.id
-      });
+      };
+      io.emit('DELETE /users', response);
+      return res.json(response);
     });
 });
 

@@ -64,31 +64,31 @@ Just send that header with each request that needs authorized, the rest is done 
 To obtain a key and token, please see `POST /users/token`.
 
 ### Live Updates
-We are using Socket.IO to get live updates to/from the server. To connect from a client:
+We are using Socket.IO to get live updates to/from the server. To connect from a client, use the same base64 encoded string from above:
 ```javascript
-io.connect(API_URL, {
-  query: 'key=USER_KEY&token=USER_TOKEN'
+io.connect(API_URL + '/namespace', {
+  query: 'authorization=ENCODED_KEY_TOKEN'
 });
 ```
-Users that have read access to a module will have access to socket updates. For example, since only admin and staff can get a list of users, only admin and staff can subscribe to new users. (**This is not yet implemented**)
+Authorization is based on namespaces. Each module has its own namespace (e.g. Users = `/users`). Users that have read access to a module have access to its socket namespace, so look at the `GET` methods for each module to see what level of access it takes. If a module does not require authentication for read access, then its socket namespace does not require authentication.
 
-All the routes marked with an asterisk before their title can be subscribed to with Socket.IO. Any url params will be scrubbed away on the broadcast channel (for example, if there is an ID as a url parameter, it will be removed so there is no need to use a wildcard in your subscription URI). Here's a couple of example subscriptions:
+All the routes marked with an asterisk before their title can be subscribed to with Socket.IO. Each module/namespace has the following methods: `create`, `update`, and `delete`.
 ```javascript
 // Listen for new messages
-io.on('POST /messages', function (message) {
+io.on('create', function (message) {
   // A new message has been created
   console.log(message);
   //=> { _id: String, created: Date, text: String }
 });
 
 // Listen for message deletions
-io.on('DELETE /messages', function (message) {
+io.on('delete', function (message) {
   // A message has been deleted
   console.log(message);
   //=> { _id: String }
 });
 ```
-As you can see, the responses you get in your subscriber are exactly the same responses that you get from the standard HTTP requests. Hopefully the API docs will be just as useful for sockets as they are for the standard API :)
+As you can see, the responses you get in your subscriber are exactly the same responses that you get from the standard HTTP requests. Hopefully the API docs will be just as useful for sockets as they are for the REST API :)
 
 ## API
 

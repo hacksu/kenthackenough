@@ -3,7 +3,6 @@ var socket = rootRequire('app/helpers/socket');
 var io = socket('/users', ['admin', 'staff']);
 var User = require('./model');
 var Application = require('./application/model');
-var Message = rootRequire('app/helpers/mailer');
 var schema = require('validate');
 
 /**
@@ -262,15 +261,3 @@ router.delete('/users/:id', User.auth('admin'), function (req, res) {
       return res.json(response);
     });
 });
-
-/**
-* Helper method to send a registration email
-*/
-function sendRegistrationEmail(email) {
-  var message = new Message({
-    template: 'registration',
-    subject: 'Kent Hack Enough Registration',
-    recipients: [{email: email}]
-  });
-  message.send();
-}

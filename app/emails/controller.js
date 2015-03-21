@@ -14,12 +14,8 @@ router.post('/emails', User.auth('admin'), function (req, res) {
   if (errors.length) return res.multiError(errors);
   req.body.sent = Date.now();
   var email = new Email(req.body);
-  email.save(function (err, email) {
+  email.send(true, function (err, email) {
     if (err) return res.internalError();
-    if (process.env.NODE_ENV == 'production') {
-      var message = new Email.Message(email);
-      message.send();
-    }
     io.emit('create', email);
     return res.json(email);
   });

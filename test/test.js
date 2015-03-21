@@ -576,9 +576,7 @@ describe('API', function () {
           body: "This is an email from our API tests",
           recipients: {
             nickname: "Attendees",
-            where: {
-              role: "attendee"
-            }
+            emails: ["test@test.com"]
           }
         })
         .expect(200)
@@ -589,9 +587,8 @@ describe('API', function () {
           res.body.should.have.property('body');
           res.body.should.have.property('recipients');
           res.body.recipients.should.have.property('nickname');
-          res.body.recipients.should.have.property('where');
-          res.body.recipients.where.should.have.property('role');
-          res.body.recipients.where.role.should.equal('attendee');
+          res.body.recipients.should.have.property('emails');
+          res.body.recipients.emails[0].should.equal('test@test.com');
           emailId = res.body._id;
           done();
         });

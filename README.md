@@ -6,6 +6,9 @@ The world's best hackathon website.
   + Need to figure out what this is first
 - SendGrid for emails
   + Refactor entire email system
+  + Emails sent for acceptance, waitlisting, denial
+  + Email sent after applying
+- Resume upload & access for sponsors
 
 ## Installation
 
@@ -589,11 +592,7 @@ Auth -> admin
   "body": String, // markdown formatted
   "recipients": {
     "nickname": String, // optional, a nickname for this group of people
-    "emails": [String], // optional
-    "where": { // optional
-      "role": "attendee", // optional
-      "application.going": true // optional
-    }
+    "emails": [String]
   }
 }
 
@@ -604,11 +603,7 @@ HTTP/1.1 200 OK
   "body": String, // markdown formatted
   "recipients": {
     "nickname": String, // optional, a nickname for this group of people
-    "emails": [String], // optional
-    "where": { // optional
-      "role": "attendee", // optional
-      "application.going": true // optional
-    }
+    "emails": [String]
   }
 }
 ```

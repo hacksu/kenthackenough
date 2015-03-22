@@ -1,6 +1,17 @@
 # Kent Hack Enough
 The world's best hackathon website.
 
+## Table of Contents
+- [Installation](#installation)
+- [Overview](#overview)
+- [API](#api)
+  + [Users](#users)
+  + [Application](#application)
+  + [URL Shotener](#url-shortener)
+  + [Emails](#emails)
+  + [Live Feed](#live-feed)
+  + [Tickets](#tickets)
+
 ## ToDo
 - Judging system
   + Need to figure out what this is first
@@ -37,7 +48,7 @@ This is an alias for: `vagrant ssh -c 'cd /vagrant && mocha'`
 1. `cp config_example.js config.js`
 1. Enter values into config.js
 
-## General
+## Overview
 
 ### Error Handling
 Every time an error occurrs, the response header will match the appropriate HTTP error code. The body of the response will contain an array of errors.

@@ -35,10 +35,10 @@ var router = express.Router();
 // Tell winston to use a log file
 winston.add(winston.transports.File, {
   filename: config.log,
-  // handleExceptions: true
+  handleExceptions: true
 });
-winston.remove(winston.transports.Console);
-// winston.exitOnError = false;
+// winston.remove(winston.transports.Console);
+winston.exitOnError = false;
 
 // Configure app
 app.use(cors());

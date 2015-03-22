@@ -11,7 +11,7 @@ var marked = require('marked');
 var EmailSchema = mongoose.Schema({
   subject: String,
   body: String, // stored as markdown
-  sent: {type: Date, default: Date.now},
+  sent: {type: Date, default: Date.now()},
   recipients: {
     nickname: String, // optional
     emails: [String]
@@ -21,6 +21,7 @@ var EmailSchema = mongoose.Schema({
 /**
 * Sends an email using sendgrid
 * @param save:bool Whether or not to save the email to the database
+* @param callback An optional callback
 */
 EmailSchema.methods.send = function (save, callback) {
   var message = new sendgrid.Email({
@@ -35,6 +36,7 @@ EmailSchema.methods.send = function (save, callback) {
   });
   sendgrid.send(message);
   if (save) {
+    this.sent = Date.now();
     this.save(function (err, email) {
       callback && callback(err, email);
     });

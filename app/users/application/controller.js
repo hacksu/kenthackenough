@@ -3,6 +3,7 @@ var socket = rootRequire('app/helpers/socket');
 var io = socket('/users/application', ['admin', 'staff']);
 var User = require('../model');
 var Application = require('./model');
+var Email = rootRequire('app/emails/model');
 var extend = require('extend');
 
 /**
@@ -33,6 +34,18 @@ router.post('/users/application', User.auth(), function (req, res) {
         user.application = application._id;
         user.save(function (err, user) {
           if (err) res.internalError();
+
+          if (process.env.NODE_ENV == 'production') {
+            var email = new Email({
+              subject: 'Your Kent Hack Enough Application',
+              body: '# Thanks for applying to Kent Hack Enough!\nWe appreciate your interest.',
+              recipients: {
+                emails: [user.email]
+              }
+            });
+            email.send(false);
+          }
+
           var response = {
             _id: user._id,
             email: user.email,

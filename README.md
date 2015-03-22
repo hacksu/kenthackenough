@@ -5,7 +5,6 @@ The world's best hackathon website.
 - Judging system
   + Need to figure out what this is first
 - SendGrid for emails
-  + Refactor entire email system
   + Emails sent for acceptance, waitlisting, denial
   + Email sent after applying
 - Resume upload & access for sponsors

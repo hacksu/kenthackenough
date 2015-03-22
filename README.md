@@ -7,7 +7,7 @@ The world's best hackathon website.
 - [API](#api)
   + [Users](#users)
   + [Application](#application)
-  + [URL Shotener](#url-shortener)
+  + [URL Shortener](#url-shortener)
   + [Emails](#emails)
   + [Live Feed](#live-feed)
   + [Tickets](#tickets)

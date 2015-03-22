@@ -4,10 +4,10 @@ The world's best hackathon website.
 ## ToDo
 - Judging system
   + Need to figure out what this is first
-- SendGrid for emails
-  + Emails sent for acceptance, waitlisting, denial
-  + Email sent after applying
-- Resume upload & access for sponsors
+- Emails sent for acceptance, waitlisting, denial
+- Resume book
+  + Upload your resume during application (optional?)
+  + Access for sponsors
 
 ## Installation
 

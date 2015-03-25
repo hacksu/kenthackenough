@@ -131,9 +131,30 @@ Auth -> admin, staff
 HTTP/1.1 200 OK
 {
   "_id": String,
-  "name": String,
   "email": String,
-  "phone": String
+  "role": String,
+  "created": Date,
+  "application": {
+    "name": String,
+    "school": String,
+    "phone": String,
+    "shirt": String,
+    "demographic": Boolean,
+    "first": Boolean,
+    "dietary": String,
+    "year": String,
+    "age": Number,
+    "gender": String,
+    "major": String,
+    "conduct": Boolean,
+    "travel": Boolean,
+    "waiver": Boolean,
+    "status": String,
+    "going": Boolean,
+    "checked": Boolean,
+    "created": Date,
+    "door": Boolean
+  }
 }
 ```
 

@@ -128,12 +128,15 @@ describe('API', function () {
         .end(function (err, res) {
           if (err) throw err;
           res.body.should.have.property('_id');
-          res.body.should.have.property('name');
           res.body.should.have.property('email');
-          res.body.should.have.property('phone');
-          res.body.name.should.equal('John Doe');
+          res.body.should.have.property('role');
+          res.body.should.have.property('created');
+          res.body.should.have.property('application');
+          res.body.application.should.have.property('name');
+          res.body.application.should.have.property('phone');
           res.body.email.should.equal('jdoe@test.com');
-          res.body.phone.should.equal('5555555555');
+          res.body.application.name.should.equal('John Doe');
+          res.body.application.phone.should.equal('5555555555');
           jdoeId = res.body._id;
           done();
         });

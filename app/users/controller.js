@@ -72,7 +72,8 @@ router.post('/users/quick', User.auth('admin', 'staff'), function (req, res) {
     door: true,
     going: true,
     status: Application.Status.APPROVED,
-    checked: true
+    checked: true,
+    created: Date.now()
   });
   application.save(function (err, app) {
     if (err) return res.internalError();
@@ -84,7 +85,8 @@ router.post('/users/quick', User.auth('admin', 'staff'), function (req, res) {
       password: User.Helpers.hash(pass, salt),
       salt: salt,
       created: Date.now(),
-      application: app._id
+      application: app._id,
+      role: 'attendee'
     });
     user.save(function (err, user) {
       if (err) return res.singleError('That email is already in use');
@@ -95,9 +97,10 @@ router.post('/users/quick', User.auth('admin', 'staff'), function (req, res) {
 
       var response = {
         _id: user._id,
-        name: app.name,
         email: user.email,
-        phone: app.phone
+        role: user.role,
+        created: user.created,
+        application: app
       };
       io.emit('create', response);
       return res.json(response);

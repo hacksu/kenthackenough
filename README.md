@@ -23,30 +23,63 @@ The world's best hackathon website.
 ## Installation
 
 ### Development
-1. Clone repository
-1. Install [Vagrant](http://vagrantup.com)
-1. `vagrant up`
+1. Install [Vagrant](https://www.vagrantup.com/downloads.html)
+2. Install [VirtualBox](https://www.virtualbox.org)
+3. Clone this repository
+4. `cp config/config_example.js config/config.js`
+5. Open `config/config.js` and enter desired values
+6. `vagrant up`
 
-**To test:**
+**Run tests:**
 
-Run: `npm test`
+Simply run: `npm test`
 
 This is an alias for: `vagrant ssh -c 'cd /vagrant && mocha'`
 
-### Production
-1. Install [MongoDB](http://docs.mongodb.org/manual/installation/)
-1. Install [redis](http://redis.io)
-1. Install [NodeJS](http://nodejs.org/)
-1. `npm install -g npm`
-2. `npm install -g n pm2`
-1. `n stable`
-1. Clone repository
-1. `npm install`
-1. `pm2 start app.js`
+**Start the server:**
 
-### Configuration
-1. `cp config_example.js config.js`
-1. Enter values into config.js
+To actually start/restart the dev server, just run `npm start`.
+
+This is an alias for: `vagrant ssh -c 'cd /vagrant && pm2 startOrRestart processes.json'`
+
+### Production
+These instructions are designed for Ubuntu 14.04LTS. I hope to add the production server as a Vagrant provider soon, but for now just follow these steps to set up the production server.
+
+**Install nginx, node, npm, and mocha**
+1. `apt-get update`
+2. `apt-get install -y nginx nodejs npm`
+3. `npm install -g npm`
+4. `npm install -g n mocha`
+5. `n stable`
+
+**Install MongoDB**
+1. `apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10`
+2. `echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list`
+3. `apt-get update`
+4. `apt-get install -y mongodb-org`
+5. `service mongod start`
+
+**Install redis**
+1. `apt-get install -y redis-server`
+2. `service redis-server start`
+
+**Install PM2**
+1. `npm install -g pm2`
+
+**Set up repository**
+1. Clone this repository
+2. `npm install`
+
+**Configure nginx**
+1. `rm /etc/nginx/sites-available/default`
+2. `rm /etc/nginx/sites-enabled/default`
+3. Configure `config/api.khe.conf`
+4. `cp /vagrant/config/api.khe.conf /etc/nginx/sites-available`
+5. `ln -s /etc/nginx/sites-available/api.khe.conf /etc/nginx/sites-enabled`
+6. `service nginx reload`
+
+**Start the app**
+1. `pm2 start processes.json`
 
 ## Overview
 

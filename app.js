@@ -37,7 +37,7 @@ winston.add(winston.transports.File, {
   filename: config.log,
   handleExceptions: true
 });
-// winston.remove(winston.transports.Console);
+winston.remove(winston.transports.Console);
 winston.exitOnError = false;
 
 // Configure app

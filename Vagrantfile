@@ -34,7 +34,9 @@ Vagrant.configure(2) do |config|
     ln -s /etc/nginx/sites-available/api.khe.conf /etc/nginx/sites-enabled
     service nginx reload
     # install libraries
-    cd /vagrant && npm install
+    cd /vagrant
+    npm install
+    npm rebuild
     # pm2
     npm install -g pm2
     cd /vagrant

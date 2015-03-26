@@ -4,7 +4,8 @@
   "description": "The world's best hackathon website.",
   "scripts": {
     "test": "vagrant ssh -c 'cd /vagrant && mocha'",
-    "start": "vagrant ssh -c 'cd /vagrant && pm2 startOrRestart processes.json'"
+    "start": "vagrant ssh -c 'cd /vagrant && pm2 startOrRestart processes.json'",
+    "build": "vagrant ssh -c 'cd /vagrant && npm rebuild'"
   },
   "repository": {
     "type": "git",
@@ -17,9 +18,6 @@
   },
   "homepage": "http://khe.io",
   "devDependencies": {
-    "bower": "1.3.x",
-    "grunt": "0.4.x",
-    "grunt-contrib-jshint": "0.11.x",
     "mocha": "2.1.x",
     "should": "5.0.x",
     "supertest": "0.15.x"

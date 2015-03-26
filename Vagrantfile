@@ -36,7 +36,6 @@ Vagrant.configure(2) do |config|
     # install libraries
     cd /vagrant
     npm install
-    npm rebuild
     # pm2
     npm install -g pm2
     cd /vagrant

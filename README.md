@@ -29,6 +29,7 @@ The world's best hackathon website.
 4. `cp config/config_example.js config/config.js`
 5. Open `config/config.js` and enter desired values
 6. `vagrant up`
+7. `npm run build`
 
 ##### Run tests:
 Simply run: `npm test`

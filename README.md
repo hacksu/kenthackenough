@@ -43,43 +43,13 @@ To actually start/restart the dev server, just run `npm start`.
 This is an alias for: `vagrant ssh -c 'cd /vagrant && pm2 startOrRestart processes.json'`
 
 ### Production
-These instructions are designed for Ubuntu 14.04LTS. I hope to add the production server as a Vagrant provider soon, but for now just follow these steps to set up the production server.
+We're running Ubuntu 14.04LTS in production. The `provision.sh` script should install and setup everything you need to run the app, as long as you put the repository in `/var/www/kenthackenough`.
 
-##### Install nginx, node, npm, and mocha
-1. `apt-get update`
-2. `apt-get install -y nginx nodejs npm`
-3. `npm install -g npm`
-4. `npm install -g n mocha`
-5. `n stable`
-
-##### Install MongoDB
-1. `apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10`
-2. `echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list`
-3. `apt-get update`
-4. `apt-get install -y mongodb-org`
-5. `service mongod start`
-
-##### Install redis
-1. `apt-get install -y redis-server`
-2. `service redis-server start`
-
-##### Install PM2
-1. `npm install -g pm2`
-
-##### Set up repository
 1. Clone this repository
-2. `npm install`
-
-##### Configure nginx
-1. `rm /etc/nginx/sites-available/default`
-2. `rm /etc/nginx/sites-enabled/default`
-3. Configure `config/api.khe.conf`
-4. `cp /vagrant/config/api.khe.conf /etc/nginx/sites-available`
-5. `ln -s /etc/nginx/sites-available/api.khe.conf /etc/nginx/sites-enabled`
-6. `service nginx reload`
-
-##### Start the app
-1. `pm2 start processes.json`
+2. `cp config/config_example.js config/config.js`
+3. Open `config/config.js` and enter desired values
+4. `npm install`
+5. `./provision.sh`
 
 ## Overview
 

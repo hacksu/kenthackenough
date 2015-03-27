@@ -49,7 +49,8 @@ We're running Ubuntu 14.04LTS in production. The `provision.sh` script should in
 2. `cp config/config_example.js config/config.js`
 3. Open `config/config.js` and enter desired values
 4. `npm install`
-5. `./provision.sh`
+5. `npm rebuild`
+6. `./provision.sh`
 
 ## Overview
 

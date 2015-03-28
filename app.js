@@ -79,10 +79,6 @@ GLOBAL.getIo = function () {
   return io;
 };
 
-router.get('/', function (req, res) {
-  res.send('Welcome the the Kent Hack Enough API');
-});
-
 // Include modules
 [
   'emails',

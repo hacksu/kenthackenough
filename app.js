@@ -83,6 +83,7 @@ GLOBAL.getIo = function () {
 [
   'emails',
   'messages',
+  'news',
   'tickets',
   'urls',
   'users/application',

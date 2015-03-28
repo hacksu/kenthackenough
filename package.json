@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "description": "The world's best hackathon website.",
   "scripts": {
-    "test": "vagrant ssh -c 'cd /vagrant && mocha'",
-    "start": "vagrant ssh -c 'cd /vagrant && pm2 startOrRestart processes.json'",
-    "build": "vagrant ssh -c 'cd /vagrant && npm rebuild'"
+    "test": "vagrant ssh -c 'cd /var/www/kenthackenough && mocha'",
+    "start": "vagrant ssh -c 'cd /var/www/kenthackenough && pm2 startOrRestart processes.json'",
+    "build": "vagrant ssh -c 'cd /var/www/kenthackenough && npm rebuild'"
   },
   "repository": {
     "type": "git",

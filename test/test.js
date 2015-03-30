@@ -945,6 +945,127 @@ describe('API', function () {
 
   }); // end News List
 
+  describe('Events', function () {
+
+    var eventId;
+
+    /**
+    * Add a new event
+    */
+    it('should add a new event', function (done) {
+      request(app)
+        .post('/events')
+        .auth(adminKey, adminToken)
+        .send({
+          name: 'Test Event',
+          start: new Date(2015, 1, 1, 10, 30),
+          end: new Date(2015, 1, 1, 11, 0),
+          group: 'staff',
+          notify: true
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('_id');
+          res.body.should.have.property('name');
+          res.body.should.have.property('start');
+          res.body.should.have.property('end');
+          res.body.should.have.property('group');
+          res.body.should.have.property('notify');
+          res.body.name.should.equal('Test Event');
+          res.body.group.should.equal('staff');
+          res.body.notify.should.equal(true);
+          eventId = res.body._id;
+          done();
+        });
+    });
+
+    /**
+    * Get an event by ID
+    */
+    it('should get an event by ID', function (done) {
+      request(app)
+        .get('/events/'+eventId)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('_id');
+          res.body.should.have.property('name');
+          res.body.should.have.property('start');
+          res.body.should.have.property('end');
+          res.body.should.have.property('group');
+          res.body.should.have.property('notify');
+          res.body.name.should.equal('Test Event');
+          res.body.group.should.equal('staff');
+          res.body.notify.should.equal(true);
+          done();
+        });
+    });
+
+    /**
+    * Get a list of events
+    */
+    it('should get a list of events', function (done) {
+      request(app)
+        .get('/events')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('events');
+          res.body.events.length.should.be.above(0);
+          res.body.events[0].should.have.property('_id');
+          res.body.events[0].should.have.property('name');
+          res.body.events[0].should.have.property('start');
+          res.body.events[0].should.have.property('end');
+          res.body.events[0].should.have.property('group');
+          res.body.events[0].should.have.property('notify');
+          done();
+        });
+    });
+
+    /**
+    * Partially update an event
+    */
+    it('should partially update event', function (done) {
+      request(app)
+        .patch('/events/'+eventId)
+        .auth(adminKey, adminToken)
+        .send({
+          name: 'Hello World Test Event'
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('_id');
+          res.body.should.have.property('name');
+          res.body.should.have.property('start');
+          res.body.should.have.property('end');
+          res.body.should.have.property('group');
+          res.body.should.have.property('notify');
+          res.body.name.should.equal('Hello World Test Event');
+          res.body.group.should.equal('staff');
+          res.body.notify.should.equal(true);
+          done();
+        });
+    });
+
+    /**
+    * Delete an event
+    */
+    it('should delete an event', function (done) {
+      request(app)
+        .delete('/events/'+eventId)
+        .auth(adminKey, adminToken)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('_id');
+          done();
+        });
+    });
+
+  }); // end Events
+
   // Remove the admin user
   after(function (done) {
     User.remove({email: 'admin@test.com'}, function (err) {

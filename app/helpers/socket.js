@@ -6,6 +6,8 @@
 * var socket = require('./socket');
 * var io = socket('/namespace', ['admin', 'staff']);
 * // only admin and staff will be able to access this namespace
+* var io = socket('/namespace');
+* // no authorization required for above namespace
 */
 
 var io = getIo();

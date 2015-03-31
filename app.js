@@ -46,7 +46,17 @@ app.use(compress());
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(multer({dest: './uploads/'}));
+app.use(multer({
+  dest: './uploads/',
+  limits: {
+    fileSize: 1000000, // 1mb
+    files: 1
+  },
+  putSingleFilesInArray: true,
+  rename: function (fieldname, filename, req, res) {
+    return new Date().getTime();
+  }
+}));
 app.use(error);
 app.use(function (req, res, next) {
   winston.info(req.method + ' ' + req.url);

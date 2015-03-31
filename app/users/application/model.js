@@ -27,7 +27,8 @@ var Application = mongoose.model('Application', {
   major: String,          // degree
   conduct: Boolean,       // agree to MLH code of conduct?
   travel: Boolean,        // need travel reimbursement?
-  waiver: Boolean         // agreed to waiver?
+  waiver: Boolean,        // agreed to waiver?
+  resume: String          // the path to their resume
 });
 
 var Helpers = {

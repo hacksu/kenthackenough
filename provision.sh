@@ -31,8 +31,3 @@ npm install
 
 # pm2
 npm install -g pm2
-cd /var/www/kenthackenough
-pm2 startOrRestart processes.json
-echo "------------------------------------------"
-echo "|  KHE API up at http://localhost:3000/  |"
-echo "------------------------------------------"

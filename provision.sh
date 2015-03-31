@@ -31,3 +31,8 @@ npm install
 
 # pm2
 npm install -g pm2
+
+echo "-----------------------"
+echo "| test:     npm test  |"
+echo "| start:    npm start |"
+echo "-----------------------"

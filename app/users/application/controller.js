@@ -25,9 +25,13 @@ router.post('/users/application', User.auth(), function (req, res) {
         going: false,
         checked: false,
         created: Date.now(),
-        door: false,
-        resume: req.files.filedata[0].path
+        door: false
       });
+      if (req.files.filedata) {
+        extend(req.body, {
+          resume: req.files.filedata[0].path
+        });
+      }
       if (req.body.dietary) req.body.dietary = req.body.dietary.split('|');
       var application = new Application(req.body);
       application.save(function (err, application) {

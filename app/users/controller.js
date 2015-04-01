@@ -173,6 +173,7 @@ router.delete('/users/token', User.auth(), function (req, res) {
 router.get('/users', User.auth('admin', 'staff'), function (req, res) {
   User
     .find()
+    .select('email role permissions created')
     .exec(function (err, users) {
       if (err) return res.internalError();
       return res.json({

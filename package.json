@@ -1,6 +1,6 @@
 {
   "name": "kenthackenough",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "The world's best hackathon website.",
   "scripts": {
     "test": "vagrant ssh -c 'cd /var/www/kenthackenough && mocha'",

@@ -14,7 +14,7 @@ router.post('/news', function (req, res) {
   req.body.created = Date.now();
   var news = new News(req.body);
   news.save(function (err, news) {
-    if (err) return res.internalError();
+    if (err) return res.singleError('That email is already on the list');
     io.emit('create', news);
     return res.json(news);
   });

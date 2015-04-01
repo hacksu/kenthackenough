@@ -11,6 +11,15 @@ describe('API', function () {
     var admin = new User({
       email: 'admin@test.com',
       role: 'admin',
+      permissions: [
+        'emails',
+        'events',
+        'messages',
+        'news',
+        'tickets',
+        'urls',
+        'users'
+      ],
       password: User.Helpers.hash('pass', salt),
       salt: salt
     });

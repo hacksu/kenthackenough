@@ -24,17 +24,19 @@ var EmailSchema = mongoose.Schema({
 * @param callback An optional callback
 */
 EmailSchema.methods.send = function (save, callback) {
-  var message = new sendgrid.Email({
-    from: config.sendgrid.from,
-    fromname: config.sendgrid.fromname,
-    subject: this.subject,
-    text: this.body,
-    html: marked(this.body)
-  });
-  this.recipients.emails.forEach(function (address) {
-    message.addTo(address);
-  });
-  sendgrid.send(message);
+  if (process.env.NODE_ENV == 'production') {
+    var message = new sendgrid.Email({
+      from: config.sendgrid.from,
+      fromname: config.sendgrid.fromname,
+      subject: this.subject,
+      text: this.body,
+      html: marked(this.body)
+    });
+    this.recipients.emails.forEach(function (address) {
+      message.addTo(address);
+    });
+    sendgrid.send(message);
+  }
   if (save) {
     this.sent = Date.now();
     this.save(function (err, email) {

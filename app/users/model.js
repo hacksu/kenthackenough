@@ -29,12 +29,10 @@ var redis = require('redis').createClient();
 var bcrypt = require('bcrypt');
 var uuid = require('uuid');
 var schema = require('validate');
-var _ = require('underscore');
 
 var User = mongoose.model('User', {
   email: {type: String, unique: true},
   role: {type: String, enum: ['attendee', 'staff', 'admin'], default: 'attendee'},
-  permissions: {type: [String], default: []},
   password: String,
   salt: String,
   token: String,
@@ -124,8 +122,7 @@ var Helpers = {
   cache: function (user, callback) {
     redis.hmset('users:id:'+user._id, {
       token: user.token,
-      role: user.role,
-      permissions: user.permissions
+      role: user.role
     }, function (err, status) {
       callback && callback();
     });
@@ -143,87 +140,6 @@ var Helpers = {
   }
 
 };
-
-/**
-* Authenticate a user
-* @param ..args.. A list of permissions that are allowed to proceed
-*/
-var permit = function () {
-  var permissions = Array.prototype.slice.call(arguments);
-
-  function checkUser(user, token) {
-    if (user.token == token) {
-      user.permissions = user.permissions.split(',');
-      var i = _.intersection(user.permissions, permissions);
-      if (i.length) {
-        // we're good, let them in
-        return true;
-      } else {
-        // they don't share any permissions, so they're not allowed in
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-
-  return function (req, res, next) {
-    console.log(Date.now());
-    var access = parseAuthHeader(req.headers);
-    if (!access) return Helpers.authError(res);
-
-    var rkey = 'users:id:' + access.key;
-    redis.hgetall(rkey, function (err, user) {
-      if (err || !user) {
-        // it's not in redis, but let's check mongo just to be sure (this
-        // shouldn't happen if the user is logged in)
-        User.findById(access.key, function (err, user) {
-          if (err || !user) return Helpers.authError(res);
-          if (checkUser(user, access.token)) {
-            // let them in
-            req.user = {
-              _id: access.key,
-              token: access.token
-            };
-            next();
-          } else {
-            return Helpers.authError(res);
-          }
-        });
-      } else {
-        // we have our user in redis
-        if (checkUser(user, access.token)) {
-          req.user = {
-            _id: access.key,
-            token: access.token
-          };
-          console.log(Date.now());
-          next();
-        } else {
-          return Helpers.authError(res);
-        }
-      }
-    }); // end redis
-
-  };
-};
-
-/**
-* Parse the Authorization headers
-* @return {key: String, token: String}
-*/
-function parseAuthHeader(headers) {
-  var header = headers['Authorization'] || headers['authorization'] || false;
-  if (!header) return null;
-
-  var encoded = header.split(/\s+/).pop() || '';
-  var full = new Buffer(encoded, 'base64').toString();
-  var parts = full.split(/:/);
-  var key = parts[0];
-  var token = parts[1];
-
-  return {key: key, token: token};
-}
 
 /**
 * Authenticate a user (protect a route)
@@ -283,6 +199,5 @@ var auth = function () {
 
 module.exports = User;
 module.exports.auth = auth;
-module.exports.permit = permit;
 module.exports.Helpers = Helpers;
 module.exports.validate = Helpers.validate;

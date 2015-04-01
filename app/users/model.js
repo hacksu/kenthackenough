@@ -33,7 +33,6 @@ var _ = require('underscore');
 
 var User = mongoose.model('User', {
   email: {type: String, unique: true},
-  role: {type: String, enum: ['attendee', 'staff', 'admin'], default: 'attendee'},
   permissions: {type: [String], default: []},
   password: String,
   salt: String,
@@ -82,6 +81,23 @@ var Helpers = {
       return true;
     }
     return false;
+  },
+
+  /**
+  * Parse the Authorization headers
+  * @return {key: String, token: String}
+  */
+  parseAuthHeader: function (headers) {
+    var header = headers['Authorization'] || headers['authorization'] || false;
+    if (!header) return null;
+
+    var encoded = header.split(/\s+/).pop() || '';
+    var full = new Buffer(encoded, 'base64').toString();
+    var parts = full.split(/:/);
+    var key = parts[0];
+    var token = parts[1];
+
+    return {key: key, token: token};
   },
 
   /**
@@ -169,7 +185,7 @@ var permit = function () {
 
   return function (req, res, next) {
     console.log(Date.now());
-    var access = parseAuthHeader(req.headers);
+    var access = Helpers.parseAuthHeader(req.headers);
     if (!access) return Helpers.authError(res);
 
     var rkey = 'users:id:' + access.key;
@@ -208,81 +224,7 @@ var permit = function () {
   };
 };
 
-/**
-* Parse the Authorization headers
-* @return {key: String, token: String}
-*/
-function parseAuthHeader(headers) {
-  var header = headers['Authorization'] || headers['authorization'] || false;
-  if (!header) return null;
-
-  var encoded = header.split(/\s+/).pop() || '';
-  var full = new Buffer(encoded, 'base64').toString();
-  var parts = full.split(/:/);
-  var key = parts[0];
-  var token = parts[1];
-
-  return {key: key, token: token};
-}
-
-/**
-* Authenticate a user (protect a route)
-* @param ...roles An list of roles that are allowed into the route
-*/
-var auth = function () {
-  var roles = Array.prototype.slice.call(arguments);
-  if (!roles.length) roles = ['admin', 'staff', 'attendee'];
-
-  return function (req, res, next) {
-    var header = req.headers['Authorization'] || req.headers['authorization'] || false;
-    if (!header) return Helpers.authError(res);
-
-    var encoded = header.split(/\s+/).pop() || '';
-    var full = new Buffer(encoded, 'base64').toString();
-    var parts = full.split(/:/);
-    var key = parts[0];
-    var token = parts[1];
-
-    // Check for logged in user in redis
-    var rkey = 'users:id:' + key;
-    redis.hgetall(rkey, function (err, user) {
-      if (err || !user) {
-        // it's not in redis, but let's check mongo just to be sure (this
-        // shouldn't happen if the user is logged in)
-        User.findById(key, function (err, user) {
-          if (err || !user) return Helpers.authError(res);
-          if (user.token == token && roles.indexOf(user.role) >= 0) {
-            req.user = {
-              _id: key,
-              token: token
-            };
-            Helpers.cache(user);
-            next();
-          } else {
-            Helpers.authError(res);
-          }
-        });
-      } else {
-        // we have our use in redis
-        if (user.token == token && roles.indexOf(user.role) >= 0) {
-          req.user = {
-            _id: key,
-            token: token
-          };
-          next();
-        } else {
-          Helpers.authError(res);
-        }
-      }
-
-    });
-
-  }
-
-};
-
 module.exports = User;
-module.exports.auth = auth;
 module.exports.permit = permit;
 module.exports.Helpers = Helpers;
 module.exports.validate = Helpers.validate;

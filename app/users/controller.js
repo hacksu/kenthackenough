@@ -4,6 +4,7 @@ var io = socket('/users', ['admin', 'staff']);
 var User = require('./model');
 var Application = require('./application/model');
 var schema = require('validate');
+var config = rootRequire('config/config');
 
 /**
 * Create a new user
@@ -15,12 +16,19 @@ router.post('/users', function (req, res) {
 
   var salt = User.Helpers.salt();
   var token = User.Helpers.token();
+  var refresh = User.Helpers.token();
+  var expires = User.Helpers.expires();
 
   var user = new User({
     email: req.body.email,
     password: User.Helpers.hash(req.body.password, salt),
     salt: salt,
-    token: token,
+    tokens: [{
+      client: req.body.client,
+      token: token,
+      refresh: refresh,
+      expires: expires
+    }],
     created: Date.now()
   });
 
@@ -37,9 +45,11 @@ router.post('/users', function (req, res) {
     });
 
     return res.json({
+      role: user.role,
       key: user._id,
-      token: user.token,
-      role: user.role
+      token: token,
+      refresh: refresh,
+      expires: new Date(expires)
     });
   });
 });
@@ -114,6 +124,9 @@ router.post('/users/quick', User.auth('admin', 'staff'), function (req, res) {
 * POST /users/token
 */
 router.post('/users/token', function (req, res) {
+  var errors = User.validate(req.body);
+  if (errors.length) return res.multiError(errors);
+
   User
     .findOne()
     .where({email: req.body.email})
@@ -121,27 +134,102 @@ router.post('/users/token', function (req, res) {
       if (err || !user) return res.singleError('Email or password incorrect');
 
       if (User.Helpers.checkPassword(user.password, req.body.password, user.salt)) {
-        if (user.token) {
-          return res.json({
-            key: user._id,
-            token: user.token,
-            role: user.role
-          });
-        } else {
-          var token = User.Helpers.token();
-          user.token = token;
+
+        // get tokens for this client
+        var t;
+        for (var i = 0; i < user.tokens.length; ++i) {
+          if (user.tokens[i].client == req.body.client) {
+            t = user.tokens[i];
+            break;
+          }
+        }
+
+        if (t) {
+          // we already have a token for this client
+          t.token = User.Helpers.token();
+          t.refresh = User.Helpers.token();
+          t.expires = User.Helpers.expires();
+
           user.save(function (err, user) {
-            User.Helpers.cache(user);
+            if (err) return res.internalError();
             return res.json({
+              role: user.role,
               key: user._id,
-              token: user.token,
-              role: user.role
+              token: t.token,
+              refresh: t.refresh,
+              expires: new Date(t.expires)
             });
           });
+        } else {
+          // we need to create a new token for this client
+          // first, make sure the client is valid
+          if (config.clients.indexOf(req.body.client) > -1) {
+            var token = User.Helpers.token();
+            var refresh = User.Helpers.token();
+            var expires = User.Helpers.expires();
+            user.tokens.push({
+              client: req.body.client,
+              token: token,
+              refresh: refresh,
+              expires: expires
+            });
+            user.save(function (err, user) {
+              if (err) return res.internalError();
+              return res.json({
+                role: user.role,
+                key: user._id,
+                token: token,
+                refresh: refresh,
+                expires: new Date(expires)
+              });
+            });
+          } else {
+            // not a valid client
+            return res.singleError('You must be a valid client');
+          }
+
         }
+
       } else {
         return res.singleError('Email or password incorrect');
       }
+    });
+});
+
+/**
+* Refresh a token
+* POST /users/token/refresh
+* Auth
+*/
+router.post('/users/token/refresh', function (req, res) {
+  User
+    .findById(req.body.key)
+    .exec(function (err, user) {
+      if (err) return res.internalError();
+
+      var token = User.Helpers.token();
+      var refresh = User.Helpers.token();
+      var expires = User.Helpers.expires();
+
+      for (var i = 0; i < user.tokens.length; ++i) {
+        if (user.tokens[i].client == req.body.client) {
+          user.tokens[i].token = token;
+          user.tokens[i].refresh = refresh;
+          user.tokens[i].expires = expires;
+          break;
+        }
+      }
+
+      user.save(function (err, user) {
+        if (err) return res.internalError();
+        return res.json({
+          role: user.role,
+          key: user._id,
+          token: token,
+          refresh: refresh,
+          expires: new Date(expires)
+        });
+      });
     });
 });
 
@@ -155,7 +243,14 @@ router.delete('/users/token', User.auth(), function (req, res) {
     .findById(req.user._id)
     .exec(function (err, user) {
       if (err || !user) return res.internalError();
-      user.token = null;
+
+      for (var i = 0; i < user.tokens.length; ++i) {
+        if (user.tokens[i].client == req.body.client) {
+          user.tokens.splice(i, 1);
+          break;
+        }
+      }
+
       user.save(function (err, user) {
         if (err) return res.internalError();
         User.Helpers.uncache(user, function () {

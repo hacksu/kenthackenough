@@ -50,11 +50,6 @@ module.exports = function (namespace, roles) {
 
             if (t.token == token && roles.indexOf(user.role) > -1 && Date.now() < new Date(t.expires).getTime()) {
               // Token matches, role has acccess, and token is not expired
-              req.user = {
-                _id: user._id,
-                email: user.email,
-                role: user.role
-              };
               return next();
             } else {
               return next(new Error('Not authorized'));
@@ -63,11 +58,6 @@ module.exports = function (namespace, roles) {
       } else {
         // User is cached in redis
         if (roles.indexOf(user.role) > -1 && Date.now() < user.expires) {
-          req.user = {
-            _id: user._id,
-            email: user.email,
-            role: user.role
-          };
           return next();
         } else {
           return next(new Error('Not authorized'));

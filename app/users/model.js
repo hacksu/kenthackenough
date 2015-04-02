@@ -191,7 +191,7 @@ var Helpers = {
 
 /**
 * Authenticate a user (protect a route)
-* @param ...roles An list of roles that are allowed into the route
+* @param ...roles A list of roles that are allowed into the route
 */
 var auth = function () {
   var roles = Array.prototype.slice.call(arguments);

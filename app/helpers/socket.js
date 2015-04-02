@@ -31,30 +31,48 @@ module.exports = function (namespace, roles) {
     var key = parts[0];
     var token = parts[1];
 
-    // Check for logged in user in redis
-    var rkey = 'users:id:' + key;
-    redis.hgetall(rkey, function (err, user) {
+    User.Helpers.retrieve(key, token, function (err, user) {
       if (err || !user) {
-        // it's not in redis, but let's check mongo just to be sure (this
-        // shouldn't happen if the user is logged in)
-        User.findById(key, function (err, user) {
-          if (err || !user) return next(new Error('not authorized'));
-          if (user.token == token && roles.indexOf(user.role) >= 0) {
-            User.Helpers.cache(user);
-            next();
-          } else {
-            next(new Error('not authorized'));
-          }
-        });
+        // User is not cached, fall back on mongoose
+        User
+          .findById(key)
+          .select('email role tokens')
+          .exec(function (err, user) {
+            if (err || !user.tokens.length) return next(new Error('Not authorized'));
+
+            var t;
+            for (var i = 0; i < user.tokens.length; ++i) {
+              if (user.tokens[i].token == token) {
+                t = user.tokens[i];
+                break;
+              }
+            }
+
+            if (t.token == token && roles.indexOf(user.role) > -1 && Date.now() < new Date(t.expires).getTime()) {
+              // Token matches, role has acccess, and token is not expired
+              req.user = {
+                _id: user._id,
+                email: user.email,
+                role: user.role
+              };
+              return next();
+            } else {
+              return next(new Error('Not authorized'));
+            }
+          });
       } else {
-        // we have our use in redis
-        if (user.token == token && roles.indexOf(user.role) >= 0) {
-          next();
+        // User is cached in redis
+        if (roles.indexOf(user.role) > -1 && Date.now() < user.expires) {
+          req.user = {
+            _id: user._id,
+            email: user.email,
+            role: user.role
+          };
+          return next();
         } else {
-          next(new Error('not authorized'));
+          return next(new Error('Not authorized'));
         }
       }
-
     });
   });
 

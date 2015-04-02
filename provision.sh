@@ -1,5 +1,6 @@
 # nginx and node
 apt-get update
+apt-get upgrade
 apt-get install -y nginx node nodejs npm
 npm install -g npm
 npm install -g n mocha

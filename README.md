@@ -9,3 +9,52 @@ To get familiar with this repository, please check out the documentation in the 
 
 ## Documentation
 See the repository's [Wiki](wiki) for detailed documentation.
+
+## Thursday
+- Introduction
+    + What are we doing?
+    + Why are we doing this?
+    + How are we doing this?
+- Repositories
+    + `kenthackenough`
+        * What is it?
+        * Tech stack
+        * Documentation
+    + `kenthackenough-ui-staff`
+        * What is it?
+        * Tech stack
+    + `kenthackenough-ui-main`
+        * What is it?
+        * Tech stack
+- Functionality
+    + Registration, emails, ticketing, live updates, URL shortener, check-in
+    + More ideas?
+- Devops stuff
+    + Three stages
+        * Local machine
+        * Development server
+        * _(Going to add staging server here)_
+        * Production server
+    + Vagrant   
+        * What is it?
+        * Why are we using it?
+- Getting set up
+    + [Instructions](wiki/Setup)
+    + All three repositories
+        * Running tests, configuration, etc.
+- How to contribute
+    + Contributing guide
+    + Slack
+- More details if we have time
+    + API
+        * Authentication/Security measures
+        * Routes
+        * Database
+        * Speed optimizations
+    + Writing a client
+        * Mobile apps
+            - What features do we want?
+            - Design is important
+        * Repositories in HacKSU
+            - Easy to maintain in the future
+            - Leave behind something for after you graduate

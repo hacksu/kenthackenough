@@ -53,6 +53,7 @@ describe('API', function () {
       request(app)
         .post('/users')
         .send({
+          client: 'mocha',
           email: 'user@test.com',
           password: 'pass'
         })
@@ -62,8 +63,11 @@ describe('API', function () {
           res.body.should.have.property('key');
           res.body.should.have.property('token');
           res.body.should.have.property('role');
+          res.body.should.have.property('refresh');
+          res.body.should.have.property('expires');
           userKey = res.body.key;
           userToken = res.body.token;
+          userRefresh = res.body.refresh;
           done();
         });
     });
@@ -75,6 +79,7 @@ describe('API', function () {
       request(app)
         .post('/users/token')
         .send({
+          client: 'mocha',
           email: 'person@test.com',
           password: 'pass'
         })
@@ -84,6 +89,8 @@ describe('API', function () {
           res.body.should.have.property('key');
           res.body.should.have.property('token');
           res.body.should.have.property('role');
+          res.body.should.have.property('refresh');
+          res.body.should.have.property('expires');
           personKey = res.body.key;
           personToken = res.body.token;
           done();
@@ -97,6 +104,7 @@ describe('API', function () {
       request(app)
         .post('/users/token')
         .send({
+          client: 'mocha',
           email: 'admin@test.com',
           password: 'pass'
         })
@@ -106,6 +114,8 @@ describe('API', function () {
           res.body.should.have.property('key');
           res.body.should.have.property('token');
           res.body.should.have.property('role');
+          res.body.should.have.property('refresh');
+          res.body.should.have.property('expires');
           adminKey = res.body.key;
           adminToken = res.body.token;
           done();
@@ -143,11 +153,40 @@ describe('API', function () {
     });
 
     /**
+    * Refresh a token
+    */
+    it('should refresh a token', function (done) {
+      request(app)
+        .post('/users/token/refresh')
+        .send({
+          client: 'mocha',
+          key: userKey,
+          refresh: userRefresh
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('role');
+          res.body.should.have.property('key');
+          res.body.should.have.property('token');
+          res.body.should.have.property('refresh');
+          res.body.should.have.property('expires');
+          userKey = res.body.key;
+          userToken = res.body.token;
+          userRefresh = res.body.refresh;
+          done();
+        });
+    });
+
+    /**
     * Remove a token
     */
     it('should remove a token', function (done) {
       request(app)
         .delete('/users/token')
+        .send({
+          client: 'mocha'
+        })
         .auth(userKey, userToken)
         .expect(200)
         .end(function (err, res) {

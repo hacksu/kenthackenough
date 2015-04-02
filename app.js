@@ -35,6 +35,7 @@ var router = express.Router();
 // Tell winston to use a log file
 winston.add(winston.transports.File, {
   filename: config.log,
+  json: false,
   handleExceptions: true
 });
 winston.remove(winston.transports.Console);
@@ -58,10 +59,6 @@ app.use(multer({
   }
 }));
 app.use(error);
-app.use(function (req, res, next) {
-  winston.info(req.method + ' ' + req.url);
-  next();
-});
 app.use(router);
 app.set('json spaces', 2);
 var port = process.env.PORT || config.port;

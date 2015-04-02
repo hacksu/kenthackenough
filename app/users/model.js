@@ -33,11 +33,19 @@ var schema = require('validate');
 var User = mongoose.model('User', {
   email: {type: String, unique: true},
   role: {type: String, enum: ['attendee', 'staff', 'admin'], default: 'attendee'},
+
+  application: {type: mongoose.Schema.Types.ObjectId, ref: 'Application'},
+  created: { type : Date, default: Date.now() },
+
   password: String,
   salt: String,
-  token: String,
-  application: {type: mongoose.Schema.Types.ObjectId, ref: 'Application'},
-  created: { type : Date, default: Date.now() }
+
+  tokens: [{
+    client: String,
+    token: String,
+    refresh: String,
+    expires: Date
+  }]
 });
 
 var Helpers = {
@@ -69,6 +77,13 @@ var Helpers = {
   },
 
   /**
+  * Generate an expiration date for a token (3 days from now)
+  */
+  expires: function () {
+    return Date.now() + (3 * (1000 * 60 * 60 * 24));
+  },
+
+  /**
   * Check a user's password
   * @param password The actual user's fully hashed password
   * @param attempt The password to attempt with
@@ -93,6 +108,20 @@ var Helpers = {
   },
 
   /**
+  * Parse authorization headers
+  * @param headers The request headers (req.headers)
+  * @return {key: String, token: String} || null
+  */
+  parseAuthHeader: function (headers) {
+    var header = headers['Authorization'] || headers['authorization'] || false;
+    if (!header) return null;
+    var encoded = header.split(/\s+/).pop() || '';
+    var full = new Buffer(encoded, 'base64').toString();
+    var parts = full.split(/:/);
+    return {key: parts[0], token: parts[1]};
+  },
+
+  /**
   * Validate a user
   * @param user An object representing the potential user
   * @return An array of error messages
@@ -109,6 +138,11 @@ var Helpers = {
         required: true,
         match: /.{2,32}/,
         message: 'Your password must be between 2 and 32 characters long.'
+      },
+      client: {
+        type: 'string',
+        required: true,
+        message: 'You must be using a valid client'
       }
     }, {typecast: true});
     return test.validate(user);
@@ -117,15 +151,28 @@ var Helpers = {
   /**
   * Cache a user's authorization credentials (key and token)
   * @param user The user document
+  * @param token A user's token
   * @param callback (Optional) Called when caching is complete
   */
-  cache: function (user, callback) {
-    redis.hmset('users:id:'+user._id, {
-      token: user.token,
+  cache: function (user, token, callback) {
+    redis.hmset('users:id:'+user._id+':'+token, {
+      _id: user._id,
+      email: user.email,
       role: user.role
     }, function (err, status) {
       callback && callback();
     });
+  },
+
+  /**
+  * Retrieve a user from the cache
+  * @param key A user's key (ID)
+  * @param token The access token
+  * @param callback(err, Object) A callback that takes a user object:
+  *                      {_id: String, email: String, role: String}
+  */
+  retrieve: function (key, token, callback) {
+    redis.hgetall('users:id:'+key+':'+token, callback);
   },
 
   /**
@@ -150,51 +197,50 @@ var auth = function () {
   if (!roles.length) roles = ['admin', 'staff', 'attendee'];
 
   return function (req, res, next) {
-    var header = req.headers['Authorization'] || req.headers['authorization'] || false;
-    if (!header) return Helpers.authError(res);
 
-    var encoded = header.split(/\s+/).pop() || '';
-    var full = new Buffer(encoded, 'base64').toString();
-    var parts = full.split(/:/);
-    var key = parts[0];
-    var token = parts[1];
+    var access = Helpers.parseAuthHeader(req.headers);
+    if (!access) return Helpers.authError(res);
 
-    // Check for logged in user in redis
-    var rkey = 'users:id:' + key;
-    redis.hgetall(rkey, function (err, user) {
+    Helpers.retrieve(access.key, access.token, function (err, user) {
       if (err || !user) {
-        // it's not in redis, but let's check mongo just to be sure (this
-        // shouldn't happen if the user is logged in)
-        User.findById(key, function (err, user) {
-          if (err || !user) return Helpers.authError(res);
-          if (user.token == token && roles.indexOf(user.role) >= 0) {
-            req.user = {
-              _id: key,
-              token: token
-            };
-            Helpers.cache(user);
-            next();
-          } else {
-            Helpers.authError(res);
-          }
-        });
+        // User is not cached, fall back on mongoose
+        User
+          .findById(access.key)
+          .select('email role tokens')
+          .exec(function (err, user) {
+            if (err) return Helpers.authError(res);
+            var tokens = user.tokens.map(function (t) {
+              return t.token;
+            });
+            if (tokens.indexOf(access.token) > -1 && roles.indexOf(user.role) > -1) {
+              // Token matches and role has acccess
+              req.user = {
+                _id: user._id,
+                email: user.email,
+                role: user.role
+              };
+              Helpers.cache(user, access.token);
+              return next();
+            } else {
+              return Helpers.authError(res);
+            }
+          });
       } else {
-        // we have our use in redis
-        if (user.token == token && roles.indexOf(user.role) >= 0) {
+        // User is cached in redis
+        if (roles.indexOf(user.role) > -1) {
           req.user = {
-            _id: key,
-            token: token
+            _id: user._id,
+            email: user.email,
+            role: user.role
           };
-          next();
+          return next();
         } else {
-          Helpers.authError(res);
+          return Helpers.authError(res);
         }
       }
-
     });
 
-  }
-
+  };
 };
 
 module.exports = User;

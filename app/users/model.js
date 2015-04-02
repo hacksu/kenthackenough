@@ -154,11 +154,12 @@ var Helpers = {
   * @param token A user's token
   * @param callback (Optional) Called when caching is complete
   */
-  cache: function (user, token, callback) {
+  cache: function (user, token, expires, callback) {
     redis.hmset('users:id:'+user._id+':'+token, {
       _id: user._id,
       email: user.email,
-      role: user.role
+      role: user.role,
+      expires: expires
     }, function (err, status) {
       callback && callback();
     });
@@ -169,7 +170,7 @@ var Helpers = {
   * @param key A user's key (ID)
   * @param token The access token
   * @param callback(err, Object) A callback that takes a user object:
-  *                      {_id: String, email: String, role: String}
+  *                      {_id: String, email: String, role: String, expires: Number}
   */
   retrieve: function (key, token, callback) {
     redis.hgetall('users:id:'+key+':'+token, callback);
@@ -180,8 +181,8 @@ var Helpers = {
   * @param user The user document
   * @param callback (Optional) Called when the operation is complete
   */
-  uncache: function (user, callback) {
-    redis.del('users:id:'+user._id, function (err) {
+  uncache: function (user, token, callback) {
+    redis.del('users:id:'+user._id+':'+token, function (err) {
       callback && callback();
     });
   }
@@ -208,18 +209,24 @@ var auth = function () {
           .findById(access.key)
           .select('email role tokens')
           .exec(function (err, user) {
-            if (err) return Helpers.authError(res);
-            var tokens = user.tokens.map(function (t) {
-              return t.token;
-            });
-            if (tokens.indexOf(access.token) > -1 && roles.indexOf(user.role) > -1) {
-              // Token matches and role has acccess
+            if (err || !user.tokens.length) return Helpers.authError(res);
+
+            var t;
+            for (var i = 0; i < user.tokens.length; ++i) {
+              if (user.tokens[i].token == access.token) {
+                t = user.tokens[i];
+                break;
+              }
+            }
+
+            if (t.token == access.token && roles.indexOf(user.role) > -1 && Date.now() < new Date(t.expires).getTime()) {
+              // Token matches, role has acccess, and token is not expired
               req.user = {
                 _id: user._id,
                 email: user.email,
                 role: user.role
               };
-              Helpers.cache(user, access.token);
+              Helpers.cache(user, access.token, t.expires);
               return next();
             } else {
               return Helpers.authError(res);
@@ -227,7 +234,7 @@ var auth = function () {
           });
       } else {
         // User is cached in redis
-        if (roles.indexOf(user.role) > -1) {
+        if (roles.indexOf(user.role) > -1 && Date.now() < user.expires) {
           req.user = {
             _id: user._id,
             email: user.email,

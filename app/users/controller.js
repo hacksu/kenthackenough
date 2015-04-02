@@ -35,6 +35,8 @@ router.post('/users', function (req, res) {
   user.save(function (err, user) {
     if (err) return res.singleError('That email is already in use');
 
+    User.Helpers.cache(user, token, expires);
+
     if (process.env.NODE_ENV == 'production') {
       sendRegistrationEmail(user.email);
     }
@@ -146,12 +148,10 @@ router.post('/users/token', function (req, res) {
 
         if (t) {
           // we already have a token for this client
-          t.token = User.Helpers.token();
-          t.refresh = User.Helpers.token();
           t.expires = User.Helpers.expires();
-
           user.save(function (err, user) {
             if (err) return res.internalError();
+            User.Helpers.cache(user, t.token, new Date(t.expires).getTime());
             return res.json({
               role: user.role,
               key: user._id,
@@ -175,6 +175,7 @@ router.post('/users/token', function (req, res) {
             });
             user.save(function (err, user) {
               if (err) return res.internalError();
+              User.Helpers.cache(user, token, expires);
               return res.json({
                 role: user.role,
                 key: user._id,
@@ -211,17 +212,23 @@ router.post('/users/token/refresh', function (req, res) {
       var refresh = User.Helpers.token();
       var expires = User.Helpers.expires();
 
+      if (!user.tokens.length) return res.singleError('Invalid refresh token');
+
       for (var i = 0; i < user.tokens.length; ++i) {
         if (user.tokens[i].client == req.body.client) {
-          user.tokens[i].token = token;
-          user.tokens[i].refresh = refresh;
-          user.tokens[i].expires = expires;
+          if (user.tokens[i].refresh == req.body.refresh) {
+            user.tokens[i].token = token;
+            user.tokens[i].refresh = refresh;
+            user.tokens[i].expires = expires;
+          } else {
+            return res.singleError('Invalid refresh token');
+          }
           break;
         }
       }
-
       user.save(function (err, user) {
         if (err) return res.internalError();
+        User.Helpers.cache(user, token, expires);
         return res.json({
           role: user.role,
           key: user._id,
@@ -253,7 +260,7 @@ router.delete('/users/token', User.auth(), function (req, res) {
 
       user.save(function (err, user) {
         if (err) return res.internalError();
-        User.Helpers.uncache(user, function () {
+        User.Helpers.uncache(user, req.user.token, function () {
           return res.json({});
         });
       });

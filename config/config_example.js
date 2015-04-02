@@ -36,8 +36,8 @@ module.exports = {
   // A list of enabled client IDs
   // Clients must use one of these IDs to get a token for a user
   clients: [
-    'abcdefg123456',
-    'hijklmn789012'
+    'mocha', // You should leave this one here if you want to run `npm test`
+    'abc123'
   ]
 
 };

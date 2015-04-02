@@ -31,6 +31,13 @@ module.exports = {
     email: 'user@example.com',
     password: 'password123',
     role: 'attendee|staff|admin'
-  }]
+  }],
+
+  // A list of enabled client IDs
+  // Clients must use one of these IDs to get a token for a user
+  clients: [
+    'abcdefg123456',
+    'hijklmn789012'
+  ]
 
 };

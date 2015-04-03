@@ -14,4 +14,9 @@ Vagrant.configure(2) do |config|
   # Provision
   config.vm.provision "shell", path: "provision.sh"
 
+  # Make symlinks work on Windows
+  config.vm.provider "virtualbox" do |v|
+    v.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
+  end
+
 end

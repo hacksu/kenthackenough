@@ -9,7 +9,7 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "./", "/var/www/kenthackenough"
 
   # Port forwarding
-  config.vm.network "forwarded_port", guest: 80, host: 3000
+  config.vm.network "forwarded_port", guest: 3000, host: 3000
 
   # Provision
   config.vm.provision "shell", path: "provision.sh"

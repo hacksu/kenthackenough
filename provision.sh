@@ -22,8 +22,6 @@ if [ -f /etc/nginx/sites-available/default ]; then
   rm /etc/nginx/sites-available/default
   rm /etc/nginx/sites-enabled/default
 fi
-cp /var/www/kenthackenough/config/api.khe.conf /etc/nginx/sites-available
-ln -s /etc/nginx/sites-available/api.khe.conf /etc/nginx/sites-enabled
 service nginx reload
 
 # install libraries

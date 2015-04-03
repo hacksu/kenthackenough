@@ -1,6 +1,6 @@
 # nginx and node
 apt-get update
-apt-get upgrade
+apt-get upgrade -y
 apt-get install -y nginx node nodejs npm
 npm install -g npm
 npm install -g n mocha
@@ -22,6 +22,10 @@ if [ -f /etc/nginx/sites-available/default ]; then
   rm /etc/nginx/sites-available/default
   rm /etc/nginx/sites-enabled/default
 fi
+if [ $1 == "dev" ]; then
+  cp /var/www/kenthackenough/config/dev.conf /etc/nginx/sites-available
+  ln -s /etc/nginx/sites-available/dev.conf /etc/nginx/sites-enabled
+fi
 service nginx reload
 
 # install libraries
@@ -31,7 +35,9 @@ npm install
 # pm2
 npm install -g pm2
 
-echo "-----------------------"
-echo "| test:     npm test  |"
-echo "| start:    npm start |"
-echo "-----------------------"
+echo "Next steps:"
+echo "----------------------------------------"
+echo "| rebuild node_modules:  npm run build |"
+echo "| run tests:             npm test      |"
+echo "| start the app:         npm start     |"
+echo "----------------------------------------"

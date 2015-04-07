@@ -59,7 +59,7 @@ app.use(multer({
   }
 }));
 app.use(error);
-app.use(router);
+app.use('/v1.0', router);
 app.set('json spaces', 2);
 var port = process.env.PORT || config.port;
 var server = app.listen(port);

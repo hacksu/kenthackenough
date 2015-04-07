@@ -3,7 +3,7 @@ var should = require('should');
 var request = require('supertest');
 var User = require('../app/users/model');
 
-describe('API', function () {
+describe('API v1.0', function () {
 
   // Create an admin user
   before(function (done) {
@@ -51,7 +51,7 @@ describe('API', function () {
     */
     it('should create a new user', function (done) {
       request(app)
-        .post('/users')
+        .post('/v1.0/users')
         .send({
           client: 'mocha',
           email: 'user@test.com',
@@ -77,7 +77,7 @@ describe('API', function () {
     */
     it('should get a key and token', function (done) {
       request(app)
-        .post('/users/token')
+        .post('/v1.0/users/token')
         .send({
           client: 'mocha',
           email: 'person@test.com',
@@ -102,7 +102,7 @@ describe('API', function () {
     */
     it('should get a key and token for the admin', function (done) {
       request(app)
-        .post('/users/token')
+        .post('/v1.0/users/token')
         .send({
           client: 'mocha',
           email: 'admin@test.com',
@@ -127,7 +127,7 @@ describe('API', function () {
     */
     it('should quickly create a fully applied user', function (done) {
       request(app)
-        .post('/users/quick')
+        .post('/v1.0/users/quick')
         .auth(adminKey, adminToken)
         .send({
           name: 'John Doe',
@@ -157,7 +157,7 @@ describe('API', function () {
     */
     it('should refresh a token', function (done) {
       request(app)
-        .post('/users/token/refresh')
+        .post('/v1.0/users/token/refresh')
         .send({
           client: 'mocha',
           key: userKey,
@@ -183,7 +183,7 @@ describe('API', function () {
     */
     it('should remove a token', function (done) {
       request(app)
-        .delete('/users/token')
+        .delete('/v1.0/users/token')
         .send({
           client: 'mocha'
         })
@@ -200,7 +200,7 @@ describe('API', function () {
     */
     it('should get a list of all users', function (done) {
       request(app)
-        .get('/users')
+        .get('/v1.0/users')
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -219,7 +219,7 @@ describe('API', function () {
     */
     it('should get a user by ID', function (done) {
       request(app)
-        .get('/users/'+userKey)
+        .get('/v1.0/users/'+userKey)
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -237,7 +237,7 @@ describe('API', function () {
     */
     it('should partially update the logged in user', function (done) {
       request(app)
-        .patch('/users')
+        .patch('/v1.0/users')
         .auth(personKey, personToken)
         .send({
           email: 'myperson@test.com',
@@ -258,7 +258,7 @@ describe('API', function () {
     */
     it('should partially update a user by ID', function (done) {
       request(app)
-        .patch('/users/'+userKey)
+        .patch('/v1.0/users/'+userKey)
         .auth(adminKey, adminToken)
         .send({
           role: 'staff'
@@ -280,7 +280,7 @@ describe('API', function () {
     */
     it('should delete a user', function (done) {
       request(app)
-        .delete('/users/'+userKey)
+        .delete('/v1.0/users/'+userKey)
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -295,7 +295,7 @@ describe('API', function () {
     */
     it('should delete the quickly created user', function (done) {
       request(app)
-        .delete('/users/'+jdoeId)
+        .delete('/v1.0/users/'+jdoeId)
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -340,7 +340,7 @@ describe('API', function () {
       */
       it('should create an application', function (done) {
         request(app)
-          .post('/users/application')
+          .post('/v1.0/users/application')
           .auth(personKey, personToken)
           .send({
             name: 'Person Guy',
@@ -378,7 +378,7 @@ describe('API', function () {
       */
       it('should get the logged in user with their application', function (done) {
         request(app)
-          .get('/users/me/application')
+          .get('/v1.0/users/me/application')
           .auth(personKey, personToken)
           .expect(200)
           .end(function (err, res) {
@@ -394,7 +394,7 @@ describe('API', function () {
       */
       it('should get a user by ID with their application', function (done) {
         request(app)
-          .get('/users/'+personKey+'/application')
+          .get('/v1.0/users/'+personKey+'/application')
           .auth(adminKey, adminToken)
           .expect(200)
           .end(function (err, res) {
@@ -410,7 +410,7 @@ describe('API', function () {
       */
       it('should get a list of users with their applications', function (done) {
         request(app)
-          .get('/users/application')
+          .get('/v1.0/users/application')
           .auth(adminKey, adminToken)
           .expect(200)
           .end(function (err, res) {
@@ -425,7 +425,7 @@ describe('API', function () {
       */
       it('should partially update the logged in user\'s application', function (done) {
         request(app)
-          .patch('/users/me/application')
+          .patch('/v1.0/users/me/application')
           .auth(personKey, personToken)
           .send({
             name: 'Guy Person',
@@ -458,7 +458,7 @@ describe('API', function () {
       */
       it('should partially update a user\'s application by ID', function (done) {
         request(app)
-          .patch('/users/'+personKey+'/application')
+          .patch('/v1.0/users/'+personKey+'/application')
           .auth(adminKey, adminToken)
           .send({
             status: 'accepted'
@@ -477,7 +477,7 @@ describe('API', function () {
       */
       it('should delete the logged in user\'s application', function (done) {
         request(app)
-          .delete('/users/me/application')
+          .delete('/v1.0/users/me/application')
           .auth(personKey, personToken)
           .expect(200)
           .end(function (err, res) {
@@ -492,7 +492,7 @@ describe('API', function () {
       */
       it('should delete a user\'s application by ID', function (done) {
         request(app)
-          .delete('/users/'+personKey+'/application')
+          .delete('/v1.0/users/'+personKey+'/application')
           .auth(adminKey, adminToken)
           .expect(200)
           .end(function (err, res) {
@@ -515,7 +515,7 @@ describe('API', function () {
     */
     it('should create a new shortened URL', function (done) {
       request(app)
-        .post('/urls')
+        .post('/v1.0/urls')
         .auth(adminKey, adminToken)
         .send({
           full: 'http://example.com',
@@ -539,7 +539,7 @@ describe('API', function () {
     */
     it('should resolve a shortened URL', function (done) {
       request(app)
-        .get('/urls/go/shortenedexample')
+        .get('/v1.0/urls/go/shortenedexample')
         .expect(302)
         .end(function (err, res) {
           if (err) throw err;
@@ -552,7 +552,7 @@ describe('API', function () {
     */
     it('should get a single URL', function (done) {
       request(app)
-        .get('/urls/'+urlId)
+        .get('/v1.0/urls/'+urlId)
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -571,7 +571,7 @@ describe('API', function () {
     */
     it('should get a list of URLs', function (done) {
       request(app)
-        .get('/urls')
+        .get('/v1.0/urls')
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -590,7 +590,7 @@ describe('API', function () {
     */
     it('should delete a URL', function (done) {
       request(app)
-        .delete('/urls/'+urlId)
+        .delete('/v1.0/urls/'+urlId)
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -611,7 +611,7 @@ describe('API', function () {
     */
     it('should create a new email and send it', function (done) {
       request(app)
-        .post('/emails')
+        .post('/v1.0/emails')
         .auth(adminKey, adminToken)
         .send({
           subject: "Test Email",
@@ -641,7 +641,7 @@ describe('API', function () {
     */
     it('should get a list of sent emails', function (done) {
       request(app)
-        .get('/emails')
+        .get('/v1.0/emails')
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -662,7 +662,7 @@ describe('API', function () {
     */
     it('should delete a sent email', function (done) {
       request(app)
-        .delete('/emails/'+emailId)
+        .delete('/v1.0/emails/'+emailId)
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -683,7 +683,7 @@ describe('API', function () {
     */
     it('should create a new message', function (done) {
       request(app)
-        .post('/messages')
+        .post('/v1.0/messages')
         .auth(adminKey, adminToken)
         .send({
           text: 'Test message'
@@ -705,7 +705,7 @@ describe('API', function () {
     */
     it('should get a list of messages', function (done) {
       request(app)
-        .get('/messages')
+        .get('/v1.0/messages')
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;
@@ -723,7 +723,7 @@ describe('API', function () {
     */
     it('should get a single message', function (done) {
       request(app)
-        .get('/messages/'+messageId)
+        .get('/v1.0/messages/'+messageId)
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;
@@ -740,7 +740,7 @@ describe('API', function () {
     */
     it('should update a message', function (done) {
       request(app)
-        .patch('/messages/'+messageId)
+        .patch('/v1.0/messages/'+messageId)
         .auth(adminKey, adminToken)
         .send({
           text: 'Oops we had to change it'
@@ -761,7 +761,7 @@ describe('API', function () {
     */
     it('should delete a message', function (done) {
       request(app)
-        .delete('/messages/'+messageId)
+        .delete('/v1.0/messages/'+messageId)
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -783,7 +783,7 @@ describe('API', function () {
     */
     it('should create a new ticket', function (done) {
       request(app)
-        .post('/tickets')
+        .post('/v1.0/tickets')
         .send({
           subject: 'Test Ticket',
           body: 'This is a ticket from the tests',
@@ -814,7 +814,7 @@ describe('API', function () {
     */
     it('should get a list of tickets', function (done) {
       request(app)
-        .get('/tickets')
+        .get('/v1.0/tickets')
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -837,7 +837,7 @@ describe('API', function () {
     */
     it('should get a ticket by ID', function (done) {
       request(app)
-        .get('/tickets/'+ticketId)
+        .get('/v1.0/tickets/'+ticketId)
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -863,7 +863,7 @@ describe('API', function () {
     */
     it('should partially update a ticket', function (done) {
       request(app)
-        .patch('/tickets/'+ticketId)
+        .patch('/v1.0/tickets/'+ticketId)
         .auth(adminKey, adminToken)
         .send({
           open: false
@@ -892,7 +892,7 @@ describe('API', function () {
     */
     it('should delete a ticket', function (done) {
       request(app)
-        .delete('/tickets/'+ticketId)
+        .delete('/v1.0/tickets/'+ticketId)
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -914,7 +914,7 @@ describe('API', function () {
     */
     it('should add an email to the list', function (done) {
       request(app)
-        .post('/news')
+        .post('/v1.0/news')
         .send({
           email: 'test@test.com'
         })
@@ -935,7 +935,7 @@ describe('API', function () {
     */
     it('should get a single email from the list', function (done) {
       request(app)
-        .get('/news/' + newsId)
+        .get('/v1.0/news/' + newsId)
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -953,7 +953,7 @@ describe('API', function () {
     */
     it('should get a list of emails on the news list', function (done) {
       request(app)
-        .get('/news')
+        .get('/v1.0/news')
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -972,7 +972,7 @@ describe('API', function () {
     */
     it('should delete an email from the list', function (done) {
       request(app)
-        .delete('/news/' + newsId)
+        .delete('/v1.0/news/' + newsId)
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {
@@ -993,7 +993,7 @@ describe('API', function () {
     */
     it('should add a new event', function (done) {
       request(app)
-        .post('/events')
+        .post('/v1.0/events')
         .auth(adminKey, adminToken)
         .send({
           name: 'Test Event',
@@ -1024,7 +1024,7 @@ describe('API', function () {
     */
     it('should get an event by ID', function (done) {
       request(app)
-        .get('/events/'+eventId)
+        .get('/v1.0/events/'+eventId)
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;
@@ -1046,7 +1046,7 @@ describe('API', function () {
     */
     it('should get a list of events', function (done) {
       request(app)
-        .get('/events')
+        .get('/v1.0/events')
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;
@@ -1067,7 +1067,7 @@ describe('API', function () {
     */
     it('should partially update event', function (done) {
       request(app)
-        .patch('/events/'+eventId)
+        .patch('/v1.0/events/'+eventId)
         .auth(adminKey, adminToken)
         .send({
           name: 'Hello World Test Event'
@@ -1093,7 +1093,7 @@ describe('API', function () {
     */
     it('should delete an event', function (done) {
       request(app)
-        .delete('/events/'+eventId)
+        .delete('/v1.0/events/'+eventId)
         .auth(adminKey, adminToken)
         .expect(200)
         .end(function (err, res) {

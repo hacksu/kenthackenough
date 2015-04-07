@@ -16,7 +16,7 @@ var User = rootRequire('app/users/model');
 
 module.exports = function (namespace, roles) {
 
-  var nsp = io.of(namespace);
+  var nsp = io.of('/v1.0' + namespace);
 
   nsp.use(function (socket, next) {
     // If no roles are defined, you don't have to be authorized

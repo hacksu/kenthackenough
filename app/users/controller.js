@@ -14,6 +14,8 @@ router.post('/users', function (req, res) {
   var errors = User.validate(req.body);
   if (errors.length) return res.multiError(errors);
 
+  if (config.clients.indexOf(req.body.client) < 0) return res.singleError('Invalid client ID');
+
   var salt = User.Helpers.salt();
   var token = User.Helpers.token();
   var refresh = User.Helpers.token();
@@ -129,6 +131,8 @@ router.post('/users/token', function (req, res) {
   var errors = User.validate(req.body);
   if (errors.length) return res.multiError(errors);
 
+  if (config.clients.indexOf(req.body.client) < 0) return res.singleError('Invalid client ID');
+
   User
     .findOne()
     .where({email: req.body.email})
@@ -186,7 +190,7 @@ router.post('/users/token', function (req, res) {
             });
           } else {
             // not a valid client
-            return res.singleError('You must be a valid client');
+            return res.singleError('Invalid client ID');
           }
 
         }
@@ -203,6 +207,8 @@ router.post('/users/token', function (req, res) {
 * Auth
 */
 router.post('/users/token/refresh', function (req, res) {
+  if (config.clients.indexOf(req.body.client) < 0) return res.singleError('Invalid client ID');
+
   User
     .findById(req.body.key)
     .exec(function (err, user) {

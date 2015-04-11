@@ -40,6 +40,8 @@ router.put('/projects/pair', function (req, res) {
         if (err) return res.internalError();
         loser.save(function (err, loser) {
           if (err) return res.internalError();
+          io.emit('update', winner);
+          io.emit('update', loser);
           return res.json({
             projects: [winner, loser]
           });

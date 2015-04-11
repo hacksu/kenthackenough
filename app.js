@@ -95,7 +95,8 @@ GLOBAL.getIo = function () {
   'tickets',
   'urls',
   'users/application',
-  'users'
+  'users',
+  'projects'
 ].forEach(function (module) {
   require('./app/' + module + '/controller');
 });

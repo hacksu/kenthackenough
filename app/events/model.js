@@ -5,8 +5,8 @@ var Event = mongoose.model('Event', {
   name: String,
   start: Date,
   end: Date,
-  group: String,
-  notify: Boolean
+  group: {type: String, enum: ['attendee', 'staff', 'admin'], default: 'attendee'},
+  notify: {type: Boolean, default: true}
 });
 
 var validate = function (event) {
@@ -27,12 +27,10 @@ var validate = function (event) {
       message: 'You must provide an end time.'
     },
     group: {
-      type: 'string',
-      required: false
+      type: 'string'
     },
     notify: {
-      type: 'boolean',
-      required: false
+      type: 'boolean'
     }
   }, {typecast: true});
   return test.validate(event);

@@ -121,7 +121,11 @@ router.get('/users/:id/application', User.auth('admin', 'staff'), function (req,
 router.patch('/users/me/application', User.auth(), function (req, res) {
   var errors = Application.validate(req.body);
   if (errors.length) return res.multiError(errors);
-  if (req.body.dietary) req.body.dietary = req.body.dietary.split('|');
+  if (req.body.dietary) {
+    req.body.dietary = req.body.dietary.split('|');
+  } else {
+    req.body.dietary = [];
+  }
   User
     .findByIdAndUpdate(req.user._id)
     .select('email application role created')
@@ -204,8 +208,7 @@ router.delete('/users/me/application', User.auth(), function (req, res) {
     .exec(function (err, user) {
       if (err) return res.internalError();
       Application
-        .findById(user.application)
-        .remove()
+        .findByIdAndRemove(user.application)
         .exec(function (err) {
           if (err) return res.internalError();
           var response = {_id: req.user._id};
@@ -227,8 +230,7 @@ router.delete('/users/:id/application', User.auth('admin', 'staff'), function (r
     .exec(function (err, user) {
       if (err) return res.internalError();
       Application
-        .findById(user.application)
-        .remove()
+        .findByIdAndRemove(user.application)
         .exec(function (err) {
           if (err) return res.internalError();
           var response = {_id: req.params.id};

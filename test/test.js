@@ -291,6 +291,21 @@ describe('API v1.0', function () {
     });
 
     /**
+    * Delete the quickly created user's application
+    */
+    it('should delete the quickly created user\'s application by ID', function (done) {
+      request(app)
+        .delete('/v1.0/users/'+jdoeId+'/application')
+        .auth(adminKey, adminToken)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('_id');
+          done();
+        });
+    });
+
+    /**
     * Delete another user
     */
     it('should delete the quickly created user', function (done) {
@@ -1287,6 +1302,43 @@ describe('API v1.0', function () {
     });
 
   }); // end Projects
+
+  describe('Statistics', function () {
+
+    /**
+    * Get registrations over time
+    */
+    it('should build a graph of registrations over time', function (done) {
+      request(app)
+        .get('/v1.0/stats/registrations')
+        .auth(adminKey, adminToken)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('months');
+          done();
+        });
+    });
+
+    /**
+    * Get shirt sizes
+    */
+    it('should get the distribution of t-shirt sizes', function (done) {
+      request(app)
+        .get('/v1.0/stats/shirts')
+        .auth(adminKey, adminToken)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('small');
+          res.body.should.have.property('medium');
+          res.body.should.have.property('large');
+          res.body.should.have.property('xlarge');
+          done();
+        });
+    });
+
+  }); // end Statistics
 
   // Remove the admin user
   after(function (done) {

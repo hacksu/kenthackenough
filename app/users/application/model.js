@@ -10,14 +10,14 @@ var Application = mongoose.model('Application', {
   status: {type: String, enum: [_APPROVED, _DENIED, _WAITLISTED, _PENDING]},
   going: Boolean,         // rsvp status
   checked: Boolean,       // check-in status
-  created: { type : Date, default: Date.now() },
+  created: { type : Date, default: Date.now },
   door: Boolean,          // was this person registered during check-in?
 
   // Actual application form
   name: String,           // full name
   school: String,         // name of school
   phone: String,          // phone number
-  shirt: String,          // t-shirt size
+  shirt: {type: String, enum: ['S', 'M', 'L', 'XL']}, // t-shirt size
   demographic: Boolean,   // allowed to use demographic info?
   first: Boolean,         // is this your first hackathon?
   dietary: [String],      // an array of dietary restrictions

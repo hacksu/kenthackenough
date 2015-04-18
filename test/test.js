@@ -1011,9 +1011,13 @@ describe('API v1.0', function () {
         .post('/v1.0/events')
         .auth(adminKey, adminToken)
         .send({
-          name: 'Test Event',
+          title: 'Test Event',
+          description: 'Test Event description',
           start: new Date(2015, 1, 1, 10, 30),
           end: new Date(2015, 1, 1, 11, 0),
+          type: 'Food',
+          icon: 'http://google.com',
+          location: 'Library',
           group: 'staff',
           notify: true
         })
@@ -1021,12 +1025,20 @@ describe('API v1.0', function () {
         .end(function (err, res) {
           if (err) throw err;
           res.body.should.have.property('_id');
-          res.body.should.have.property('name');
+          res.body.should.have.property('title');
+          res.body.should.have.property('description');
           res.body.should.have.property('start');
           res.body.should.have.property('end');
+          res.body.should.have.property('type');
+          res.body.should.have.property('icon');
+          res.body.should.have.property('location');
           res.body.should.have.property('group');
           res.body.should.have.property('notify');
-          res.body.name.should.equal('Test Event');
+          res.body.title.should.equal('Test Event');
+          res.body.description.should.equal('Test Event description');
+          res.body.type.should.equal('Food');
+          res.body.icon.should.equal('http://google.com');
+          res.body.location.should.equal('Library');
           res.body.group.should.equal('staff');
           res.body.notify.should.equal(true);
           eventId = res.body._id;
@@ -1044,12 +1056,20 @@ describe('API v1.0', function () {
         .end(function (err, res) {
           if (err) throw err;
           res.body.should.have.property('_id');
-          res.body.should.have.property('name');
+          res.body.should.have.property('title');
+          res.body.should.have.property('description');
           res.body.should.have.property('start');
           res.body.should.have.property('end');
+          res.body.should.have.property('type');
+          res.body.should.have.property('icon');
+          res.body.should.have.property('location');
           res.body.should.have.property('group');
           res.body.should.have.property('notify');
-          res.body.name.should.equal('Test Event');
+          res.body.title.should.equal('Test Event');
+          res.body.description.should.equal('Test Event description');
+          res.body.type.should.equal('Food');
+          res.body.icon.should.equal('http://google.com');
+          res.body.location.should.equal('Library');
           res.body.group.should.equal('staff');
           res.body.notify.should.equal(true);
           done();
@@ -1068,9 +1088,7 @@ describe('API v1.0', function () {
           res.body.should.have.property('events');
           res.body.events.length.should.be.above(0);
           res.body.events[0].should.have.property('_id');
-          res.body.events[0].should.have.property('name');
-          res.body.events[0].should.have.property('start');
-          res.body.events[0].should.have.property('end');
+          res.body.events[0].should.have.property('title');
           res.body.events[0].should.have.property('group');
           res.body.events[0].should.have.property('notify');
           done();
@@ -1085,18 +1103,26 @@ describe('API v1.0', function () {
         .patch('/v1.0/events/'+eventId)
         .auth(adminKey, adminToken)
         .send({
-          name: 'Hello World Test Event'
+          title: 'Hello World Test Event'
         })
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;
           res.body.should.have.property('_id');
-          res.body.should.have.property('name');
+          res.body.should.have.property('title');
+          res.body.should.have.property('description');
           res.body.should.have.property('start');
           res.body.should.have.property('end');
+          res.body.should.have.property('type');
+          res.body.should.have.property('icon');
+          res.body.should.have.property('location');
           res.body.should.have.property('group');
           res.body.should.have.property('notify');
-          res.body.name.should.equal('Hello World Test Event');
+          res.body.title.should.equal('Hello World Test Event');
+          res.body.description.should.equal('Test Event description');
+          res.body.type.should.equal('Food');
+          res.body.icon.should.equal('http://google.com');
+          res.body.location.should.equal('Library');
           res.body.group.should.equal('staff');
           res.body.notify.should.equal(true);
           done();

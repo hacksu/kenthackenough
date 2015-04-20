@@ -1379,6 +1379,23 @@ describe('API v1.0', function () {
         });
     });
 
+    /**
+    * Gender comparison
+    */
+    it('should get a gender comparison', function (done) {
+      request(app)
+        .get('/v1.0/stats/gender')
+        .auth(adminKey, adminToken)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('male');
+          res.body.should.have.property('female');
+          res.body.should.have.property('other');
+          done();
+        });
+    });
+
   }); // end Statistics
 
   // Remove the admin user

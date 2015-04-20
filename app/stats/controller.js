@@ -124,3 +124,33 @@ router.get('/stats/dietary', User.auth('admin', 'staff'), function (err, res) {
       return res.json({restrictions: dietary});
     });
 });
+
+/**
+* Gender comparison
+* GET /stats/gender
+* Auth -> admin, staff
+*/
+router.get('/stats/gender', User.auth('admin', 'staff'), function (req, res) {
+  Application
+    .find()
+    .exec(function (err, apps) {
+      if (err) return res.internalError();
+      var male = 0;
+      var female = 0;
+      var other = 0;
+      for (var i = 0; i < apps.length; ++i) {
+        if (apps[i].gender.toLowerCase() == 'male') {
+          male++;
+        } else if (apps[i].gender.toLowerCase() == 'female') {
+          female++;
+        } else {
+          other++;
+        }
+      }
+      return res.json({
+        male: male,
+        female: female,
+        other: other
+      });
+    });
+});

@@ -92,6 +92,7 @@ router.get('/stats/shirts', User.auth('admin', 'staff'), function (req, res) {
 /**
 * Get a breakdown of dietary restrictions
 * GET /stats/dietary
+* Auth -> admin, staff
 */
 router.get('/stats/dietary', User.auth('admin', 'staff'), function (err, res) {
   Application
@@ -111,6 +112,15 @@ router.get('/stats/dietary', User.auth('admin', 'staff'), function (err, res) {
           }
         }
       }
-      return res.json(restrictions);
+      var dietary = [];
+      for (var key in restrictions) {
+        if (restrictions.hasOwnProperty(key)) {
+          dietary.push({
+            name: key,
+            count: restrictions[key]
+          });
+        }
+      }
+      return res.json({restrictions: dietary});
     });
 });

@@ -1364,6 +1364,21 @@ describe('API v1.0', function () {
         });
     });
 
+    /**
+    * Get a distribution of dietary restrictions
+    */
+    it('should get the distribution of dietary restrictions', function (done) {
+      request(app)
+        .get('/v1.0/stats/dietary')
+        .auth(adminKey, adminToken)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.not.equal(null);
+          done();
+        });
+    });
+
   }); // end Statistics
 
   // Remove the admin user

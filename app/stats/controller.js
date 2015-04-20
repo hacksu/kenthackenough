@@ -1,9 +1,7 @@
 /**
 age distribution
 class distribution
-gender comparison
 majors
-dietery restrictions
 schools
 first hackathons
 */
@@ -152,5 +150,31 @@ router.get('/stats/gender', User.auth('admin', 'staff'), function (req, res) {
         female: female,
         other: other
       });
+    });
+});
+
+/**
+* Get a distribution of schools
+* GET /stats/schools
+* Auth -> admin, staff
+*/
+router.get('/stats/schools', User.auth('admin', 'staff'), function (req, res) {
+  Application
+    .find()
+    .exec(function (err, apps) {
+      if (err) return res.internalError();
+      var s = {};
+      for (var i = 0; i < apps.length; ++i) {
+        var school = apps[i].school;
+        s[school] = (s[school] || 0) + 1;
+      }
+      var schools = [];
+      for (var key in s) {
+        schools.push({
+          name: key,
+          count: s[key]
+        });
+      }
+      return res.json({schools: schools});
     });
 });

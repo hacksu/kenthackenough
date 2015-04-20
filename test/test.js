@@ -1396,6 +1396,22 @@ describe('API v1.0', function () {
         });
     });
 
+    /**
+    * Get a distribution of schools
+    */
+    it('should get a distribution of schools', function (done) {
+      request(app)
+        .get('/v1.0/stats/schools')
+        .auth(adminKey, adminToken)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('schools');
+          res.body.schools.should.not.equal(null);
+          done();
+        });
+    });
+
   }); // end Statistics
 
   // Remove the admin user

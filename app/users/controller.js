@@ -22,7 +22,7 @@ router.post('/users', function (req, res) {
   var expires = User.Helpers.expires();
 
   var user = new User({
-    email: req.body.email,
+    email: req.body.email.toLowerCase(),
     password: User.Helpers.hash(req.body.password, salt),
     salt: salt,
     tokens: [{
@@ -95,7 +95,7 @@ router.post('/users/quick', User.auth('admin', 'staff'), function (req, res) {
     var salt = User.Helpers.salt();
     var pass = User.Helpers.salt();
     var user = new User({
-      email: req.body.email,
+      email: req.body.email.toLowerCase(),
       password: User.Helpers.hash(pass, salt),
       salt: salt,
       created: Date.now(),
@@ -135,7 +135,7 @@ router.post('/users/token', function (req, res) {
 
   User
     .findOne()
-    .where({email: req.body.email})
+    .where({email: req.body.email.toLowerCase()})
     .exec(function (err, user) {
       if (err || !user) return res.singleError('Email or password incorrect');
 
@@ -316,7 +316,7 @@ router.patch('/users', User.auth(), function (req, res) {
     .exec(function (err, user) {
       if (err) return res.internalError();
       if (req.body.email) {
-        user.email = req.body.email;
+        user.email = req.body.email.toLowerCase();
       }
       if (req.body.password) {
         user.salt = User.Helpers.salt();
@@ -340,6 +340,7 @@ router.patch('/users', User.auth(), function (req, res) {
 * Auth -> admin
 */
 router.patch('/users/:id', User.auth('admin'), function (req, res) {
+  if (req.body.email) req.body.email = req.body.email.toLowerCase();
   User
     .findByIdAndUpdate(req.params.id, req.body)
     .exec(function (err, user) {

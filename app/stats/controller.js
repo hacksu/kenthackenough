@@ -129,12 +129,14 @@ router.get('/stats/gender', User.auth('admin', 'staff'), function (req, res) {
       var female = 0;
       var other = 0;
       for (var i = 0; i < apps.length; ++i) {
-        if (apps[i].gender.toLowerCase() == 'male') {
-          male++;
-        } else if (apps[i].gender.toLowerCase() == 'female') {
-          female++;
-        } else {
-          other++;
+        if (apps[i].gender) {
+          if (apps[i].gender.toLowerCase() == 'male') {
+            male++;
+          } else if (apps[i].gender.toLowerCase() == 'female') {
+            female++;
+          } else {
+            other++;
+          }
         }
       }
       return res.json({
@@ -157,8 +159,10 @@ router.get('/stats/schools', User.auth('admin', 'staff'), function (req, res) {
       if (err) return res.internalError();
       var s = {};
       for (var i = 0; i < apps.length; ++i) {
-        var school = apps[i].school;
-        s[school] = (s[school] || 0) + 1;
+        if (apps[i].school) {
+          var school = apps[i].school;
+          s[school] = (s[school] || 0) + 1;
+        }
       }
       var schools = [];
       for (var key in s) {

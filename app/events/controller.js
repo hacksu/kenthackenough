@@ -16,6 +16,7 @@ router.post('/events', User.auth('admin', 'staff'), function (req, res) {
   var event = new Event(req.body);
   event.save(function (err, event) {
     if (err) return res.internalError();
+    io.emit('create', event);
     return res.json(event);
   });
 });
@@ -56,6 +57,7 @@ router.patch('/events/:id', User.auth('admin', 'staff'), function (req, res) {
     .findByIdAndUpdate(req.params.id, req.body)
     .exec(function (err, event) {
       if (err) return res.internalError();
+      io.emit('update', event);
       return res.json(event);
     });
 });
@@ -70,6 +72,7 @@ router.delete('/events/:id', User.auth('admin', 'staff'), function (req, res) {
     .findByIdAndRemove(req.params.id)
     .exec(function (err, event) {
       if (err) return res.internalError();
+      io.emit('delete', event._id);
       return res.json({_id: event._id});
     });
 });

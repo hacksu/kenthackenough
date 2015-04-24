@@ -72,7 +72,8 @@ router.delete('/events/:id', User.auth('admin', 'staff'), function (req, res) {
     .findByIdAndRemove(req.params.id)
     .exec(function (err, event) {
       if (err) return res.internalError();
-      io.emit('delete', event._id);
-      return res.json({_id: event._id});
+      var response = {_id: event._id};
+      io.emit('delete', response);
+      return res.json(response);
     });
 });

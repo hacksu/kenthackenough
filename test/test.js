@@ -802,7 +802,8 @@ describe('API v1.0', function () {
         .send({
           subject: 'Test Ticket',
           body: 'This is a ticket from the tests',
-          replyTo: 'test@test.com'
+          replyTo: 'test@test.com',
+          name: 'Test Person'
         })
         .expect(200)
         .end(function (err, res) {
@@ -811,12 +812,14 @@ describe('API v1.0', function () {
           res.body.should.have.property('subject');
           res.body.should.have.property('body');
           res.body.should.have.property('replyTo');
+          res.body.should.have.property('name');
           res.body.should.have.property('open');
           res.body.should.have.property('inProgress');
           res.body.should.have.property('created');
           res.body.subject.should.equal('Test Ticket');
           res.body.body.should.equal('This is a ticket from the tests');
           res.body.replyTo.should.equal('test@test.com');
+          res.body.name.should.equal('Test Person');
           res.body.open.should.equal(true);
           res.body.inProgress.should.equal(false);
           ticketId = res.body._id;
@@ -861,12 +864,14 @@ describe('API v1.0', function () {
           res.body.should.have.property('subject');
           res.body.should.have.property('body');
           res.body.should.have.property('replyTo');
+          res.body.should.have.property('name');
           res.body.should.have.property('open');
           res.body.should.have.property('inProgress');
           res.body.should.have.property('created');
           res.body.subject.should.equal('Test Ticket');
           res.body.body.should.equal('This is a ticket from the tests');
           res.body.replyTo.should.equal('test@test.com');
+          res.body.name.should.equal('Test Person');
           res.body.open.should.equal(true);
           res.body.inProgress.should.equal(false);
           done();
@@ -890,12 +895,14 @@ describe('API v1.0', function () {
           res.body.should.have.property('subject');
           res.body.should.have.property('body');
           res.body.should.have.property('replyTo');
+          res.body.should.have.property('name');
           res.body.should.have.property('open');
           res.body.should.have.property('inProgress');
           res.body.should.have.property('created');
           res.body.subject.should.equal('Test Ticket');
           res.body.body.should.equal('This is a ticket from the tests');
           res.body.replyTo.should.equal('test@test.com');
+          res.body.name.should.equal('Test Person');
           res.body.open.should.equal(false);
           res.body.inProgress.should.equal(false);
           done();

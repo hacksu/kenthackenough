@@ -53,7 +53,8 @@ router.get('/tickets/:id', User.auth('admin', 'staff'), function (req, res) {
 * PATCH /tickets/:id
 * Auth -> admin, staff
 */
-router.patch('/tickets/:id', function (req, res) {
+router.patch('/tickets/:id', User.auth('admin', 'staff'), function (req, res) {
+  if (req.user && req.user.email) req.body.worker = req.user.email;
   Ticket
     .findByIdAndUpdate(req.params.id, req.body)
     .exec(function (err, ticket) {

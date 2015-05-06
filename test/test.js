@@ -897,6 +897,7 @@ describe('API v1.0', function () {
           res.body.should.have.property('replyTo');
           res.body.should.have.property('name');
           res.body.should.have.property('open');
+          res.body.should.have.property('worker');
           res.body.should.have.property('inProgress');
           res.body.should.have.property('created');
           res.body.subject.should.equal('Test Ticket');

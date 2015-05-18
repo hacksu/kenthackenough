@@ -21,7 +21,6 @@ var socketio = require('socket.io');
 var cors = require('cors');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-var multer = require('multer');
 var winston = require('winston');
 var compress = require('compression');
 var error = require('./app/helpers/error');
@@ -45,19 +44,8 @@ winston.exitOnError = false;
 app.use(cors());
 app.use(compress());
 app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(multer({
-  dest: './uploads/',
-  limits: {
-    fileSize: 1000000, // 1mb
-    files: 1
-  },
-  putSingleFilesInArray: true,
-  rename: function (fieldname, filename, req, res) {
-    return new Date().getTime();
-  }
-}));
 app.use(error);
 app.use('/v1.0', router);
 app.set('json spaces', 2);

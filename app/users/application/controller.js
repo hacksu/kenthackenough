@@ -5,6 +5,10 @@ var User = require('../model');
 var Application = require('./model');
 var Email = rootRequire('app/emails/model');
 var extend = require('extend');
+var multiparty = require('multiparty');
+var fs = require('fs');
+var path = require('path');
+var uuid = require('uuid');
 
 /**
 * Create an application
@@ -27,11 +31,6 @@ router.post('/users/application', User.auth(), function (req, res) {
         created: Date.now(),
         door: false
       });
-      if (req.files.filedata) {
-        extend(req.body, {
-          resume: req.files.filedata[0].path
-        });
-      }
       if (req.body.dietary) req.body.dietary = req.body.dietary.split('|');
       var application = new Application(req.body);
       application.save(function (err, application) {
@@ -238,4 +237,26 @@ router.delete('/users/:id/application', User.auth('admin', 'staff'), function (r
           return res.json(response);
         });
     });
+});
+
+/**
+* Upload a resume
+*/
+router.post('/users/application/resume', function (req, res) {
+  var form = new multiparty.Form();
+  form.parse(req, function (err, fields, files) {
+    if (err || !files.resume) return res.internalError();
+    fs.readFile(files.resume[0].path, function (err, data) {
+      if (err) return res.internalError();
+      var ext = path.extname(files.resume[0].path);
+      var name = uuid.v4();
+      var dest = path.join(__dirname, '../../../uploads/' + name + ext);
+      fs.writeFile(dest, data, function (err) {
+        if (err) return res.internalError();
+        return res.json({
+          filename: name + ext
+        });
+      });
+    });
+  });
 });

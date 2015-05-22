@@ -3,8 +3,10 @@ var socket = rootRequire('app/helpers/socket');
 var io = socket('/users', ['admin', 'staff']);
 var User = require('./model');
 var Application = require('./application/model');
+var Email = rootRequire('app/emails/model');
 var schema = require('validate');
 var config = rootRequire('config/config');
+var uuid = require('uuid');
 
 /**
 * Create a new user
@@ -372,5 +374,34 @@ router.delete('/users/:id', User.auth('admin'), function (req, res) {
       };
       io.emit('delete', response);
       return res.json(response);
+    });
+});
+
+/**
+* Send a password reset email
+* POST /users/reset
+*/
+router.post('/users/reset', function (req, res) {
+  User
+    .findOne({email: req.body.email})
+    .exec(function (err, user) {
+      if (err) return res.internalError();
+      var random = uuid.v4().substr(0, 8);
+      var newSalt = User.Helpers.salt();
+      var newHash = User.Helpers.hash(random, newSalt);
+      user.salt = newSalt;
+      user.password = newHash;
+      user.save(function (err) {
+        if (err) return res.internalError();
+        var email = new Email({
+          subject: '[KHE] Password reset',
+          body: '# Kent Hack Enough \n ## Password Reset \n Your password has been reset. Your new password is: "' + random + '". Please login at [khe.io](https://khe.io) and change your password immediately.',
+          recipients: {
+            emails: [user.email]
+          }
+        });
+        email.send(false);
+        return res.json({});
+      });
     });
 });

@@ -32,6 +32,7 @@ router.post('/users/application', User.auth(), function (req, res) {
         door: false
       });
       if (req.body.dietary) req.body.dietary = req.body.dietary.split('|');
+      req.body.created = Date.now();
       var application = new Application(req.body);
       application.save(function (err, application) {
         if (err) return res.internalError();
@@ -241,6 +242,7 @@ router.delete('/users/:id/application', User.auth('admin', 'staff'), function (r
 
 /**
 * Upload a resume
+* POST /users/application/resume
 */
 router.post('/users/application/resume', function (req, res) {
   var form = new multiparty.Form();
@@ -263,6 +265,7 @@ router.post('/users/application/resume', function (req, res) {
 
 /**
 * Retreive a resume
+* GET /users/application/resume/:filename
 */
 router.get('/users/application/resume/:filename', function (req, res) {
   var file = path.join(__dirname, '../../../uploads', req.params.filename);

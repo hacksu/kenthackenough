@@ -260,3 +260,11 @@ router.post('/users/application/resume', function (req, res) {
     });
   });
 });
+
+/**
+* Retreive a resume
+*/
+router.get('/users/application/resume/:filename', function (req, res) {
+  var file = path.join(__dirname, '../../../uploads', req.params.filename);
+  res.download(file);
+});

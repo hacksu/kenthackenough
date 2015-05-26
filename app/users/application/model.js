@@ -27,7 +27,6 @@ var Application = mongoose.model('Application', {
   major: String,          // degree
   conduct: Boolean,       // agree to MLH code of conduct?
   travel: Boolean,        // need travel reimbursement?
-  waiver: Boolean,        // agreed to waiver?
   resume: String,         // the file name of their resume
   link: String            // a link to github/linkedin/personal
 });
@@ -105,11 +104,6 @@ var Helpers = {
       travel: {
         type: 'boolean',
         message: 'You must specify whether you will require travel reimbursement'
-      },
-      waiver: {
-        required: true,
-        type: 'boolean',
-        message: 'You must agree to the terms of our event waiver'
       },
       resume: {
         type: 'string',

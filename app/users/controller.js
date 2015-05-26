@@ -395,7 +395,7 @@ router.post('/users/reset', function (req, res) {
         if (err) return res.internalError();
         var email = new Email({
           subject: '[KHE] Password reset',
-          body: '# Kent Hack Enough \n ## Password Reset \n Your password has been reset. Your new password is: "' + random + '". Please login at [khe.io](https://khe.io) and change your password immediately.',
+          body: '# Kent Hack Enough \n ## Password Reset \n Your password has been reset. Your new password is: <br>' + random + '<br>Please login at [khe.io](https://khe.io) and change your password immediately.',
           recipients: {
             emails: [user.email]
           }

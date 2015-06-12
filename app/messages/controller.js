@@ -13,7 +13,6 @@ router.post('/messages', User.auth('admin', 'staff'), function (req, res) {
   var errors = Message.validate(req.body);
   if (errors.length) return res.multiError(errors);
   var message = new Message(req.body);
-  message.created = Date.now();
   message.save(function (err, message) {
     if (err) return res.internalError();
     io.emit('create', message);

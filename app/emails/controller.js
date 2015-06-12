@@ -12,7 +12,6 @@ var User = require('../users/model');
 router.post('/emails', User.auth('admin'), function (req, res) {
   var errors = Email.validate(req.body);
   if (errors.length) return res.multiError(errors);
-  req.body.sent = Date.now();
   var email = new Email(req.body);
   email.send(true, function (err, email) {
     if (err) return res.internalError();

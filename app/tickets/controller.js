@@ -12,7 +12,6 @@ router.post('/tickets', function (req, res) {
   var errors = Ticket.validate(req.body);
   if (errors.length) return res.multiError(errors);
   var ticket = new Ticket(req.body);
-  ticket.created = Date.now();
   ticket.save(function (err, ticket) {
     if (err) return res.internalError();
     io.emit('create', ticket);

@@ -6,7 +6,7 @@ var schema = require('validate');
 */
 var News = mongoose.model('News', {
   email: {type: String, unique: true},
-  created: {type: Date, default: Date.now()}
+  created: {type: Date, default: Date.now}
 });
 
 /**

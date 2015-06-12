@@ -11,7 +11,7 @@ var marked = require('marked');
 var EmailSchema = mongoose.Schema({
   subject: String,
   body: String, // stored as markdown
-  sent: {type: Date, default: Date.now()},
+  sent: {type: Date, default: Date.now},
   recipients: {
     nickname: String, // optional
     emails: [String]

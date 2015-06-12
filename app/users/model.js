@@ -35,7 +35,7 @@ var User = mongoose.model('User', {
   role: {type: String, enum: ['attendee', 'staff', 'admin'], default: 'attendee'},
 
   application: {type: mongoose.Schema.Types.ObjectId, ref: 'Application'},
-  created: { type : Date, default: Date.now() },
+  created: {type : Date, default: Date.now},
 
   password: String,
   salt: String,

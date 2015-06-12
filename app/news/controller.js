@@ -11,7 +11,6 @@ var User = rootRequire('app/users/model');
 router.post('/news', function (req, res) {
   var errors = News.validate(req.body);
   if (errors.length) return res.multiError(errors);
-  req.body.created = Date.now();
   var news = new News(req.body);
   news.save(function (err, news) {
     if (err) return res.singleError('That email is already on the list');

@@ -3,7 +3,7 @@ var schema = require('validate');
 
 var Project = mongoose.model('Project', {
   name: {type: String, unique: true},
-  created: {type: Date, default: new Date()},
+  created: {type: Date, default: Date.now},
   rating: {type: Number, default: 0}
 });
 

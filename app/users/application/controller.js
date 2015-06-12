@@ -28,11 +28,9 @@ router.post('/users/application', User.auth(), function (req, res) {
         status: Application.Status.PENDING,
         going: false,
         checked: false,
-        created: Date.now(),
         door: false
       });
       if (req.body.dietary) req.body.dietary = req.body.dietary.split('|');
-      req.body.created = Date.now();
       var application = new Application(req.body);
       application.save(function (err, application) {
         if (err) return res.internalError();
@@ -176,7 +174,6 @@ router.patch('/users/:id/application', User.auth('admin', 'staff'), function (re
           });
       } else {
         var application = new Application(req.body);
-        application.created = Date.now();
         application.save(function (err, application) {
           user.application = application;
           user.save(function (err, user) {

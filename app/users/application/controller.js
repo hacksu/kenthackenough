@@ -162,6 +162,34 @@ router.patch('/users/:id/application', User.auth('admin', 'staff'), function (re
           .findByIdAndUpdate(user.application, req.body)
           .exec(function (err, application) {
             if (err) return res.internalError();
+            if (application.status == Application.Status.APPROVED) {
+              // Send acceptance email
+              new Email({
+                subject: 'You\'ve been accepted to KHE!',
+                body: 'Congratulations,\n\nYou have been accepted to Kent Hack Enough. Please RSVP by logging in here: [https://khe.io](https://khe.io). \n\n\n\nRegards,\n\nKent Hack Enough Team',
+                recipients: {
+                  emails: [user.email]
+                }
+              }).send();
+            } else if (application.status == Application.Status.WAITLISTED) {
+              // Send waitlist email
+              new Email({
+                subject: 'KHE Status: Waitlisted',
+                body: 'Hello,\n\nYou have been added to the Kent Hack Enough waitlist. Please standby for further emails, as we will try to accomodate as many hackers from the waitlist as we can. \n\n\n\nRegards,\n\nKent Hack Enough Team',
+                recipients: {
+                  emails: [user.email]
+                }
+              }).send();
+            } else if (application.status == Application.Status.DENIED) {
+              // Send denial email
+              new Email({
+                subject: 'KHE Status: Denied',
+                body: 'Hello,\n\nWe\'re sorry to say that you have been denied from Kent Hack Enough. We are trying to accomodate as many hackers as we can, but we just can\'t fit everyone in our venue. Thank you so much for your interest, and please come again next year! \n\n\n\nRegards,\n\nKent Hack Enough Team',
+                recipients: {
+                  emails: [user.email]
+                }
+              }).send();
+            }
             var response = {
               _id: user._id,
               email: user.email,

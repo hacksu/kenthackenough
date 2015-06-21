@@ -112,6 +112,10 @@ var Helpers = {
       link: {
         type: 'string',
         message: 'You must provide a link'
+      },
+      going: {
+        type: 'boolean',
+        message: 'Specify RSVP status'
       }
     }, {typecast: true});
     return test.validate(app);

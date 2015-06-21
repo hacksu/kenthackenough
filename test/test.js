@@ -342,7 +342,6 @@ describe('API v1.0', function () {
         user.application.should.have.property('major');
         user.application.should.have.property('conduct');
         user.application.should.have.property('travel');
-        user.application.should.have.property('waiver');
         user.application.should.have.property('status');
         user.application.should.have.property('going');
         user.application.should.have.property('checked');
@@ -370,8 +369,7 @@ describe('API v1.0', function () {
             gender: 'Male',
             major: 'Basket Weaving',
             conduct: true,
-            travel: false,
-            waiver: true
+            travel: false
           })
           .expect(200)
           .end(function (err, res) {
@@ -454,8 +452,7 @@ describe('API v1.0', function () {
             gender: 'Male',
             major: 'Basket Weaving',
             conduct: true,
-            travel: true,
-            waiver: true
+            travel: true
           })
           .expect(200)
           .end(function (err, res) {

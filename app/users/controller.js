@@ -41,10 +41,6 @@ router.post('/users', function (req, res) {
 
     User.Helpers.cache(user, token, expires);
 
-    if (process.env.NODE_ENV == 'production') {
-      sendRegistrationEmail(user.email);
-    }
-
     io.emit('create', {
       _id: user._id,
       email: user.email
@@ -106,10 +102,6 @@ router.post('/users/quick', User.auth('admin', 'staff'), function (req, res) {
     });
     user.save(function (err, user) {
       if (err) return res.singleError('That email is already in use');
-
-      if (process.env.NODE_ENV == 'production') {
-        sendRegistrationEmail(user.email);
-      }
 
       var response = {
         _id: user._id,

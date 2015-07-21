@@ -10,8 +10,9 @@ var Application = mongoose.model('Application', {
   status: {type: String, enum: [_APPROVED, _DENIED, _WAITLISTED, _PENDING]},
   going: Boolean,         // rsvp status
   checked: Boolean,       // check-in status
-  created: { type : Date, default: Date.now },
+  created: {type: Date, default: Date.now},
   door: Boolean,          // was this person registered during check-in?
+  probable: {type: Boolean, default: false}, // is this person a probable attendee?
 
   // Actual application form
   name: String,           // full name

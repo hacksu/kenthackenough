@@ -162,7 +162,7 @@ router.patch('/users/:id/application', User.auth('admin', 'staff'), function (re
           .findByIdAndUpdate(user.application, req.body)
           .exec(function (err, application) {
             if (err) return res.internalError();
-            if (application.status == Application.Status.APPROVED) {
+            if (req.body.status == Application.Status.APPROVED) {
               // Send acceptance email
               new Email({
                 subject: 'You\'ve been accepted to KHE!',
@@ -171,7 +171,7 @@ router.patch('/users/:id/application', User.auth('admin', 'staff'), function (re
                   emails: [user.email]
                 }
               }).send();
-            } else if (application.status == Application.Status.WAITLISTED) {
+            } else if (req.body.status == Application.Status.WAITLISTED) {
               // Send waitlist email
               new Email({
                 subject: 'KHE Status: Waitlisted',
@@ -180,7 +180,7 @@ router.patch('/users/:id/application', User.auth('admin', 'staff'), function (re
                   emails: [user.email]
                 }
               }).send();
-            } else if (application.status == Application.Status.DENIED) {
+            } else if (req.body.status == Application.Status.DENIED) {
               // Send denial email
               new Email({
                 subject: 'KHE Status: Denied',

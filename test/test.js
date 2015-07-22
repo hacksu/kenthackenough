@@ -347,7 +347,6 @@ describe('API v1.0', function () {
         user.application.should.have.property('checked');
         user.application.should.have.property('created');
         user.application.should.have.property('door');
-        user.application.should.have.property('probable');
       }
 
       /**
@@ -474,15 +473,13 @@ describe('API v1.0', function () {
           .patch('/v1.0/users/'+personKey+'/application')
           .auth(adminKey, adminToken)
           .send({
-            status: 'accepted',
-            probable: true
+            status: 'accepted'
           })
           .expect(200)
           .end(function (err, res) {
             if (err) throw err;
             assertApplication(res.body);
             res.body.application.status.should.equal('accepted');
-            res.body.application.probable.should.equal(true);
             done();
           });
       });

@@ -77,10 +77,10 @@ var Helpers = {
   },
 
   /**
-  * Generate an expiration date for a token (3 days from now)
+  * Generate an expiration date for a token (30 days from now)
   */
   expires: function () {
-    return Date.now() + (3 * (1000 * 60 * 60 * 24));
+    return Date.now() + (30 * (1000 * 60 * 60 * 24));
   },
 
   /**

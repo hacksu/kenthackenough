@@ -203,7 +203,6 @@ router.get('/stats/schools', User.auth('admin', 'staff'), function (req, res) {
       match: req.query,
       select: 'school'
     })
-    .limit(req.query.limit || 10)
     .exec(function (err, users) {
       if (err) return res.internalError();
       var apps = users.filter(function (user) {
@@ -225,6 +224,7 @@ router.get('/stats/schools', User.auth('admin', 'staff'), function (req, res) {
           count: s[key]
         });
       }
+      schools = schools.slice(0, 10);
       return res.json({schools: schools});
     });
 });

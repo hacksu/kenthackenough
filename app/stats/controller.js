@@ -9,7 +9,7 @@ var Application = rootRequire('app/users/application/model');
 */
 router.get('/stats/registrations', User.auth('admin', 'staff'), function (req, res) {
   Application
-    .find()
+    .find(req.query)
     .select('created')
     .exec(function (err, apps) {
       if (err) return res.internalError();
@@ -46,7 +46,7 @@ router.get('/stats/registrations', User.auth('admin', 'staff'), function (req, r
 */
 router.get('/stats/shirts', User.auth('admin', 'staff'), function (req, res) {
   Application
-    .find()
+    .find(req.query)
     .select('shirt')
     .exec(function (err, apps) {
       if (err) return res.internalError();
@@ -84,9 +84,9 @@ router.get('/stats/shirts', User.auth('admin', 'staff'), function (req, res) {
 * GET /stats/dietary
 * Auth -> admin, staff
 */
-router.get('/stats/dietary', User.auth('admin', 'staff'), function (err, res) {
+router.get('/stats/dietary', User.auth('admin', 'staff'), function (req, res) {
   Application
-    .find()
+    .find(req.query)
     .exec(function (err, apps) {
       if (err) return res.internalError();
       var restrictions = {};
@@ -122,7 +122,7 @@ router.get('/stats/dietary', User.auth('admin', 'staff'), function (err, res) {
 */
 router.get('/stats/gender', User.auth('admin', 'staff'), function (req, res) {
   Application
-    .find()
+    .find(req.query)
     .exec(function (err, apps) {
       if (err) return res.internalError();
       var male = 0;
@@ -154,7 +154,8 @@ router.get('/stats/gender', User.auth('admin', 'staff'), function (req, res) {
 */
 router.get('/stats/schools', User.auth('admin', 'staff'), function (req, res) {
   Application
-    .find()
+    .find(req.query)
+    .limit(req.query.limit || 10)
     .exec(function (err, apps) {
       if (err) return res.internalError();
       var s = {};

@@ -61,7 +61,7 @@ router.get('/stats/shirts', User.auth('admin', 'staff'), function (req, res) {
     .populate({
       path: 'application',
       match: req.query,
-      select: 'created'
+      select: 'shirt'
     })
     .exec(function (err, users) {
       if (err) return res.internalError();
@@ -111,7 +111,7 @@ router.get('/stats/dietary', User.auth('admin', 'staff'), function (req, res) {
     .populate({
       path: 'application',
       match: req.query,
-      select: 'created'
+      select: 'dietary'
     })
     .exec(function (err, users) {
       if (err) return res.internalError();
@@ -158,7 +158,7 @@ router.get('/stats/gender', User.auth('admin', 'staff'), function (req, res) {
     .populate({
       path: 'application',
       match: req.query,
-      select: 'created'
+      select: 'gender'
     })
     .exec(function (err, users) {
       if (err) return res.internalError();
@@ -201,7 +201,7 @@ router.get('/stats/schools', User.auth('admin', 'staff'), function (req, res) {
     .populate({
       path: 'application',
       match: req.query,
-      select: 'created'
+      select: 'school'
     })
     .limit(req.query.limit || 10)
     .exec(function (err, users) {

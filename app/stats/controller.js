@@ -8,11 +8,21 @@ var Application = rootRequire('app/users/application/model');
 * Auth -> admin, staff
 */
 router.get('/stats/registrations', User.auth('admin', 'staff'), function (req, res) {
-  Application
-    .find(req.query)
-    .select('created')
-    .exec(function (err, apps) {
+  User
+    .find()
+    .select('application')
+    .populate({
+      path: 'application',
+      match: req.query,
+      select: 'created'
+    })
+    .exec(function (err, users) {
       if (err) return res.internalError();
+      var apps = users.filter(function (user) {
+        return user.application;
+      }).map(function (user) {
+        return user.application;
+      });
       var months = [
         {name: 'January', count: 0},
         {name: 'February', count: 0},
@@ -28,7 +38,7 @@ router.get('/stats/registrations', User.auth('admin', 'staff'), function (req, r
         {name: 'December', count: 0}
       ];
       for (var i = 0; i < apps.length; ++i) {
-        var index = apps[i].created.getMonth();
+        var index = apps[i].created.getMonth(); // int value of the month, ex 7
         months[index].count++;
       }
       return res.json({
@@ -45,11 +55,21 @@ router.get('/stats/registrations', User.auth('admin', 'staff'), function (req, r
 * Auth -> admin, staff
 */
 router.get('/stats/shirts', User.auth('admin', 'staff'), function (req, res) {
-  Application
-    .find(req.query)
-    .select('shirt')
-    .exec(function (err, apps) {
+  User
+    .find()
+    .select('application')
+    .populate({
+      path: 'application',
+      match: req.query,
+      select: 'created'
+    })
+    .exec(function (err, users) {
       if (err) return res.internalError();
+      var apps = users.filter(function (user) {
+        return user.application;
+      }).map(function (user) {
+        return user.application;
+      });
       var small = 0;
       var medium = 0;
       var large = 0;
@@ -85,10 +105,21 @@ router.get('/stats/shirts', User.auth('admin', 'staff'), function (req, res) {
 * Auth -> admin, staff
 */
 router.get('/stats/dietary', User.auth('admin', 'staff'), function (req, res) {
-  Application
-    .find(req.query)
-    .exec(function (err, apps) {
+  User
+    .find()
+    .select('application')
+    .populate({
+      path: 'application',
+      match: req.query,
+      select: 'created'
+    })
+    .exec(function (err, users) {
       if (err) return res.internalError();
+      var apps = users.filter(function (user) {
+        return user.application;
+      }).map(function (user) {
+        return user.application;
+      });
       var restrictions = {};
       for (var i = 0; i < apps.length; ++i) {
         if (apps[i].dietary) {
@@ -121,10 +152,21 @@ router.get('/stats/dietary', User.auth('admin', 'staff'), function (req, res) {
 * Auth -> admin, staff
 */
 router.get('/stats/gender', User.auth('admin', 'staff'), function (req, res) {
-  Application
-    .find(req.query)
-    .exec(function (err, apps) {
+  User
+    .find()
+    .select('application')
+    .populate({
+      path: 'application',
+      match: req.query,
+      select: 'created'
+    })
+    .exec(function (err, users) {
       if (err) return res.internalError();
+      var apps = users.filter(function (user) {
+        return user.application;
+      }).map(function (user) {
+        return user.application;
+      });
       var male = 0;
       var female = 0;
       var other = 0;
@@ -153,11 +195,22 @@ router.get('/stats/gender', User.auth('admin', 'staff'), function (req, res) {
 * Auth -> admin, staff
 */
 router.get('/stats/schools', User.auth('admin', 'staff'), function (req, res) {
-  Application
-    .find(req.query)
+  User
+    .find()
+    .select('application')
+    .populate({
+      path: 'application',
+      match: req.query,
+      select: 'created'
+    })
     .limit(req.query.limit || 10)
-    .exec(function (err, apps) {
+    .exec(function (err, users) {
       if (err) return res.internalError();
+      var apps = users.filter(function (user) {
+        return user.application;
+      }).map(function (user) {
+        return user.application;
+      });
       var s = {};
       for (var i = 0; i < apps.length; ++i) {
         if (apps[i].school) {

@@ -301,11 +301,29 @@ router.get('/users/application/resume/:filename', function (req, res) {
 * Search for applications
 * GET /users/application/search?q=String
 */
-router.get('/users/application/search', function (req, res) {
+router.get('/users/application/search', User.auth('admin', 'staff'), function (req, res) {
   Application
-    .find({$text: {$search: req.query.q}})
-    .exec(function (err, applications) {
+    .find(
+      {$text: {$search: req.query.q}},
+      {score: {$meta: 'textScore'}}
+    )
+    .sort({score: {$meta: 'textScore'}})
+    .select('_id')
+    .exec(function (err, apps) {
       if (err) return res.internalError();
-      return res.json(applications);
+      if (apps.length < 1) return res.json({results: []});
+
+      // We have some results, let's get the right users
+      var ids = apps.map(function (a) { return a._id; });
+
+      // Find the owners of the applications
+      User
+        .find({'application': {$in: ids}})
+        .select('email role application created')
+        .populate('application')
+        .exec(function (err, users) {
+          if (err) return res.internalError();
+          return res.json({results: users});
+        });
     });
 });

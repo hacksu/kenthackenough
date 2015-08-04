@@ -6,7 +6,7 @@ var _APPROVED = 'approved',
     _WAITLISTED = 'waitlisted',
     _PENDING = 'pending';
 
-var Application = mongoose.model('Application', {
+var applicationSchema = mongoose.Schema({
   status: {type: String, enum: [_APPROVED, _DENIED, _WAITLISTED, _PENDING]},
   going: Boolean,         // rsvp status
   checked: Boolean,       // check-in status
@@ -31,6 +31,20 @@ var Application = mongoose.model('Application', {
   resume: String,         // the file name of their resume
   link: String            // a link to github/linkedin/personal
 });
+
+applicationSchema.index({
+  name: 'text',
+  school: 'text',
+  phone: 'text',
+  shirt: 'text',
+  dietary: 'text',
+  year: 'text',
+  gender: 'text',
+  major: 'text',
+  link: 'text'
+});
+
+var Application = mongoose.model('Application', applicationSchema);
 
 var Helpers = {
 

@@ -296,3 +296,16 @@ router.get('/users/application/resume/:filename', function (req, res) {
   var file = path.join(__dirname, '../../../uploads', req.params.filename);
   res.download(file);
 });
+
+/**
+* Search for applications
+* GET /users/application/search?q=String
+*/
+router.get('/users/application/search', function (req, res) {
+  Application
+    .find({$text: {$search: req.query.q}})
+    .exec(function (err, applications) {
+      if (err) return res.internalError();
+      return res.json(applications);
+    });
+});

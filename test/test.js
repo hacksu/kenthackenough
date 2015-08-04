@@ -488,6 +488,22 @@ describe('API v1.0', function () {
       });
 
       /**
+      * Search for applications
+      */
+      it('should return at least one search result', function (done) {
+        request(app)
+          .get('/v1.0/users/application/search?q=state')
+          .auth(adminKey, adminToken)
+          .expect(200)
+          .end(function (err, res) {
+            if (err) throw err;
+            res.body.should.have.property('results');
+            res.body.results.length.should.be.above(0);
+            done();
+          });
+      });
+
+      /**
       * Delete the logged in user's application
       */
       it('should delete the logged in user\'s application', function (done) {

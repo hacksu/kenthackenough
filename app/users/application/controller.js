@@ -302,19 +302,18 @@ router.get('/users/application/resume/:filename', function (req, res) {
 * GET /users/application/search?q=String
 */
 router.get('/users/application/search', User.auth('admin', 'staff'), function (req, res) {
-  Application
-    .find(
-      {$text: {$search: req.query.q}},
-      {score: {$meta: 'textScore'}}
-    )
-    .sort({score: {$meta: 'textScore'}})
-    .select('_id')
-    .exec(function (err, apps) {
-      if (err) return res.internalError();
-      if (apps.length < 1) return res.json({results: []});
+  if (!req.query.q) return res.singleError('You must provide a search query');
 
-      // We have some results, let's get the right users
-      var ids = apps.map(function (a) { return a._id; });
+  // Search for applications
+  Application
+    .search(
+      req.query.q,
+      {limit: 10},
+    function (err, data) {
+      if (err) return res.internalError();
+
+      // Get the ids of the results
+      var ids = data.results.map(function (r) { return r._id; });
 
       // Find the owners of the applications
       User
@@ -326,4 +325,5 @@ router.get('/users/application/search', User.auth('admin', 'staff'), function (r
           return res.json({results: users});
         });
     });
+
 });

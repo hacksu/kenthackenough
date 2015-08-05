@@ -10,11 +10,11 @@ n 0.12.0
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
 echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
 apt-get update
-apt-get install -y mongodb-org
+apt-get install -y mongodb-org=2.6.9 mongodb-org-server=2.6.9 mongodb-org-shell=2.6.9 mongodb-org-mongos=2.6.9 mongodb-org-tools=2.6.9
 service mongod start
 
 # redis
-apt-get install -y redis-server
+apt-get install -y redis-server=2.8.4
 service redis-server start
 
 # nginx config

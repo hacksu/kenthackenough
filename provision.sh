@@ -14,7 +14,7 @@ apt-get install -y mongodb-org=2.6.10 mongodb-org-server=2.6.10 mongodb-org-shel
 service mongod start
 
 # redis
-apt-get install -y redis-server=2.8.4
+apt-get install -y redis-server
 service redis-server start
 
 # nginx config

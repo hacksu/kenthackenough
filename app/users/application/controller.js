@@ -166,7 +166,7 @@ router.patch('/users/:id/application', User.auth('admin', 'staff'), function (re
               // Send acceptance email
               new Email({
                 subject: 'You\'ve been accepted to KHE!',
-                body: 'Congratulations,\n\nYou have been accepted to Kent Hack Enough. Please RSVP by logging in here: [https://khe.io](https://khe.io). \n\n\n\nRegards,\n\nKent Hack Enough Team',
+                body: '# You\'re invited\n\n\nCongratulations, you have been accepted to Kent Hack Enough. Please RSVP here: [https://khe.io/rsvp](khe.io/rsvp).\n\n\nUntil then, a few things to note:\n\n\n**What you should bring:**\n- Deodorant\n- Laptop and charger\n- Valid school ID\n- Phone/charger\n- Change of clothes\n- Deodorant\n- Basic toiletries\n- Pillow and blanket\n- Deodorant\n\n\n**Hackers looking for travel reimbursements:** Please submit a request on the contact form of [https://khe.io](our website) and we\'ll get back to you. Hackers may receive up to $150 towards travel on a first come first serve basis.\n\n\n**Hackers under the age of 18:** Please have a parent/guardian sign our minor waiver [https://go.khe.io/waiver](go.khe.io/waiver) and return that to us at staff@khe.io before the event.\n\n\n**Make sure your resume is attached to your application if you\'re looking for full time jobs or internships.** You can edit your application by logging in at [https://khe.io](khe.io)\n\n\nWe\'re looking forward to seeing you on October 9th!\n\n\n\nRegards,\n\nKent Hack Enough Team',
                 recipients: {
                   emails: [user.email]
                 }
@@ -174,7 +174,7 @@ router.patch('/users/:id/application', User.auth('admin', 'staff'), function (re
             } else if (req.body.status == Application.Status.WAITLISTED) {
               // Send waitlist email
               new Email({
-                subject: 'KHE Status: Waitlisted',
+                subject: 'You have been waitlisted',
                 body: 'Hello,\n\nYou have been added to the Kent Hack Enough waitlist. Please standby for further emails, as we will try to accomodate as many hackers from the waitlist as we can. \n\n\n\nRegards,\n\nKent Hack Enough Team',
                 recipients: {
                   emails: [user.email]

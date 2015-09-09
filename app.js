@@ -26,6 +26,7 @@ var compress = require('compression');
 var error = require('./app/helpers/error');
 var config = require('./config/config');
 var initConfig = require('./app/helpers/initconfig');
+var zip = require('express-zip');
 
 // Start up server
 var app = express();
@@ -37,7 +38,6 @@ winston.add(winston.transports.File, {
   json: false,
   handleExceptions: true
 });
-winston.remove(winston.transports.Console);
 winston.exitOnError = false;
 
 // Configure app
@@ -78,6 +78,7 @@ GLOBAL.getIo = function () {
 [
   'emails',
   'events',
+  'exports',
   'messages',
   'news',
   'tickets',

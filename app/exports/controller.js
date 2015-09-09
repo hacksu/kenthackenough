@@ -47,7 +47,7 @@ router.get('/exports/attendees', User.auth('admin, staff'), function (req, res) 
 * GET /exports/resumes
 * Auth -> admin, staff
 */
-router.get('/exports/resumes', function (req, res) {
+router.get('/exports/resumes', User.auth('admin', 'staff'), function (req, res) {
   User
     .find()
     .select('application')

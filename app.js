@@ -78,6 +78,7 @@ GLOBAL.getIo = function () {
 [
   'emails',
   'events',
+  'exports',
   'messages',
   'news',
   'tickets',

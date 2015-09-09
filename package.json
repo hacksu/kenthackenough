@@ -31,6 +31,7 @@
     "cors": "2.5.x",
     "csv": "0.4.x",
     "express": "4.11.x",
+    "express-zip": "^2.0.0",
     "extend": "2.0.x",
     "flow": "0.2.x",
     "hiredis": "0.2.x",

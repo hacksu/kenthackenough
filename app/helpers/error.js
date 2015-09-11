@@ -14,6 +14,11 @@ module.exports = function (req, res, next) {
       .status(500)
       .send({errors: ['An internal error has ocurred.']});
   };
+  res.clientError = function () {
+    res
+      .status(400)
+      .send({errors: ['Malformed request']});
+  };
   res.singleError = function (message) {
     res
       .status(500)

@@ -76,6 +76,7 @@ GLOBAL.getIo = function () {
 
 // Include modules
 [
+  'devices',
   'emails',
   'events',
   'exports',

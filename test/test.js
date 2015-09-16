@@ -1549,6 +1549,45 @@ describe('API v1.0', function () {
 
   }); // end Statistics
 
+  describe('About', function () {
+
+    /**
+    * create/update the about page
+    */
+    it('should create/update the about page', function (done) {
+      request(app)
+        .put('/about')
+        .send({
+          text: '# Hello World'
+        })
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('text');
+          res.body.should.have.property('updated');
+          res.body.text.should.equal('# Hello World');
+          done();
+        });
+    });
+
+    /**
+    * get the about page
+    */
+    it('should get the about page', function (done) {
+      request(app)
+        .get('/about')
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('text');
+          res.body.should.have.property('updated');
+          res.body.text.should.equal('# Hello World');
+          done();
+        });
+    });
+
+  }); // end About
+
   // Remove the admin user
   after(function (done) {
     User.remove({email: 'admin@test.com'}, function (err) {

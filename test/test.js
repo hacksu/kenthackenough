@@ -1556,7 +1556,8 @@ describe('API v1.0', function () {
     */
     it('should create/update the about page', function (done) {
       request(app)
-        .put('/about')
+        .put('/v1.0/about')
+        .auth(adminKey, adminToken)
         .send({
           text: '# Hello World'
         })
@@ -1575,7 +1576,7 @@ describe('API v1.0', function () {
     */
     it('should get the about page', function (done) {
       request(app)
-        .get('/about')
+        .get('/v1.0/about')
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;

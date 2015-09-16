@@ -3,6 +3,7 @@ var socket = rootRequire('app/helpers/socket');
 var io = socket('/messages');
 var Message = require('./model');
 var User = require('../users/model');
+var Device = require('../devices/model');
 
 /**
 * Create a new message
@@ -16,6 +17,7 @@ router.post('/messages', User.auth('admin', 'staff'), function (req, res) {
   message.save(function (err, message) {
     if (err) return res.internalError();
     io.emit('create', message);
+    Device.push('Kent Hack Enough', message.text);
     return res.json(message);
   });
 });

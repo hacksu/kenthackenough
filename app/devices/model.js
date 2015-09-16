@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var schema = require('validate');
 var gcm = require('node-gcm');
+var config = rootRequire('config/config');
 
 /**
 * The Device model
@@ -41,38 +42,20 @@ var push = function (title, body) {
     .find()
     .exec(function (err, devices) {
       if (err) return;
-      devices.forEach(function (device) {
-        var android = [];
-        var ios = [];
-        var chrome = [];
-
-        if (device.type == 'ios') {
-          ios.push(device.id);
-        } else if (device.type == 'android') {
-          android.push(device.id);
-        } else if (device.type == 'chrome') {
-          chrome.push(device.id);
-        }
-
-        dispatchAndroid(title, body, android);
+      var ids = devices.map(function (device) {
+        return device.id;
       });
+      dispatch(title, body, ids);
     });
 };
 
 /**
-
-*/
-function dispatchIos(id) {
-
-}
-
-/**
-* Dispatch a notification to all android devices
+* Dispatch a notification to all devices
 * @param title: String
 * @param body: String
 * @param ids: [String]
 */
-function dispatchAndroid(title, body, ids) {
+function dispatch(title, body, ids) {
 
   // Extend array with chunk function
   Array.prototype.chunk = function(chunkSize) {
@@ -80,7 +63,7 @@ function dispatchAndroid(title, body, ids) {
     return [].concat.apply([],
       array.map(function(elem,i) {
         return i%chunkSize ? [] : [array.slice(i,i+chunkSize)];
-      });
+      })
     );
   };
 
@@ -90,22 +73,18 @@ function dispatchAndroid(title, body, ids) {
   // Set up the actual notification
   var message = new gcm.Message({
     notification: {
-      title,
-      body
+      title: title,
+      body: body
     }
   });
 
   // Send the message to each group
-  var sender = new gcm.Sender('AIzaSyDYo5zcYvzLdidxYxO4sG1DdLsWelhJqS4');
+  var sender = new gcm.Sender(config.gcm.apiKey);
   regIdSets.forEach(function (regIds) {
     sender.send(message, {registrationIds: regIds}, 10, function (err, result) {
       if (err) return;
     });
   });
-
-}
-
-function dispatchChrome(id) {
 
 }
 

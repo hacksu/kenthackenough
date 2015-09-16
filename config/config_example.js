@@ -38,6 +38,11 @@ module.exports = {
   clients: [
     'mocha', // You should leave this one here if you want to run `npm test`
     'abc123'
-  ]
+  ],
+
+  // Google Cloud Messaging info
+  gcm: {
+    apiKey: 'YOUR_GOOGLE_API_KEY'
+  }
 
 };

@@ -1604,9 +1604,7 @@ describe('API v1.0', function () {
         })
         .end(function (err, res) {
           if (err) throw err;
-          res.body.should.have.property('type');
           res.body.should.have.property('id');
-          res.body.type.should.equal('android');
           res.body.id.should.equal('abcdef');
           done();
         });

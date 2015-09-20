@@ -7,7 +7,6 @@ var config = rootRequire('config/config');
 * The Device model
 */
 var Device = mongoose.model('Device', {
-  type: {type: String, enum: ['android', 'ios', 'chrome']},
   id: String
 });
 
@@ -18,11 +17,6 @@ var Device = mongoose.model('Device', {
 */
 var validate = function (device) {
   var test = schema({
-    type: {
-      type: 'string',
-      required: true,
-      message: 'You must provide a device type'
-    },
     id: {
       type: 'string',
       required: true,
@@ -83,9 +77,39 @@ function dispatch(title, body, ids) {
   regIdSets.forEach(function (regIds) {
     sender.send(message, {registrationIds: regIds}, 10, function (err, result) {
       if (err) return;
+      cleanup(regIds, result);
     });
   });
 
+}
+
+/**
+* Clean up bad registrations from the database
+* @param regIds
+* @param result
+*/
+function cleanup(regIds, result) {
+  console.log(result);
+
+  if (result.failure > 0) {
+    // we have some errors
+    // populate a list with bad registration ids
+    var toRemove = [];
+    for (var i = 0; i < result.results.length; i++) {
+      var resObj = result.results[i];
+      if ('error' in resObj) {
+        toRemove.push(regIds[i]);
+      }
+    }
+
+    console.log(toRemove);
+
+    // delete the bad ids from the database
+    Device
+      .find({id: {$in: toRemove}})
+      .remove()
+      .exec();
+  }
 }
 
 module.exports = Device;

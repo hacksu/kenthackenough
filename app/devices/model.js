@@ -102,8 +102,6 @@ function cleanup(regIds, result) {
       }
     }
 
-    console.log(toRemove);
-
     // delete the bad ids from the database
     Device
       .find({id: {$in: toRemove}})

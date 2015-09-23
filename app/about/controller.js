@@ -23,12 +23,14 @@ router.put('/about', User.auth('admin', 'staff'), function (req, res) {
           .findByIdAndUpdate(about._id, req.body)
           .exec(function (err, about) {
             if (err) return res.internalError();
+            io.emit('update', about);
             return res.json(about);
           });
       } else {
         // insert
         new About(req.body).save(function (err, about) {
           if (err) return res.internalError();
+          io.emit('create', about);
           return res.json(about);
         });
       }

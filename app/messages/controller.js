@@ -29,6 +29,7 @@ router.post('/messages', User.auth('admin', 'staff'), function (req, res) {
 router.get('/messages', function (req, res) {
   Message
     .find()
+    .sort({created: -1})
     .exec(function (err, messages) {
       if (err) return res.internalError();
       return res.json({messages: messages});

@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
 var schema = require('validate');
+var scheduler = rootRequire('app/helpers/scheduler');
 
-var Event = mongoose.model('Event', {
+var eventSchema = new mongoose.Schema({
   title: String,
   description: String,
   start: Date,
@@ -12,6 +13,20 @@ var Event = mongoose.model('Event', {
   group: {type: String, enum: ['attendee', 'staff', 'admin'], default: 'attendee'},
   notify: {type: Boolean, default: true}
 });
+
+/**
+* Schedule a job to notify users of this event if applicable
+*/
+eventSchema.post('save', function (event) {
+  if (event.notify) {
+    scheduler.schedule(event.start, 'push notification', {
+      title: event.title,
+      body: event.description
+    });
+  }
+});
+
+var Event = mongoose.model('Event', eventSchema);
 
 var validate = function (event) {
   var test = schema({

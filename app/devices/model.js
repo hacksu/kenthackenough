@@ -7,7 +7,7 @@ var config = rootRequire('config/config');
 * The Device model
 */
 var Device = mongoose.model('Device', {
-  id: String
+  id: {type: String, unique: true}
 });
 
 /**

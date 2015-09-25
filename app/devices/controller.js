@@ -10,7 +10,7 @@ router.post('/devices', function (req, res) {
   if (errors.length) return res.multiError(errors);
   var device = new Device(req.body);
   device.save(function (err, device) {
-    if (err) return res.internalError();
+    if (err) return res.singleError('Duplicate device ID');
     return res.json(device);
   });
 });

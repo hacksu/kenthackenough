@@ -37,7 +37,7 @@
     "flow": "0.2.x",
     "hiredis": "0.2.x",
     "marked": "0.3.x",
-    "mongodb": "2.0.x",
+    "mongodb": "1.4.x",
     "mongoose": "3.8.x",
     "mongoose-search-plugin": "0.1.x",
     "multiparty": "4.1.x",

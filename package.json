@@ -25,6 +25,7 @@
     "supertest": "0.15.x"
   },
   "dependencies": {
+    "agenda": "0.6.x",
     "bcrypt": "0.8.x",
     "body-parser": "1.11.x",
     "compression": "1.4.x",
@@ -36,6 +37,7 @@
     "flow": "0.2.x",
     "hiredis": "0.2.x",
     "marked": "0.3.x",
+    "mongodb": "2.0.x",
     "mongoose": "3.8.x",
     "mongoose-search-plugin": "0.1.x",
     "multiparty": "4.1.x",

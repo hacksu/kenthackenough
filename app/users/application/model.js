@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var schema = require('validate');
-var search = require('mongoose-search-plugin');
 
 var _APPROVED = 'approved',
     _DENIED = 'denied',
@@ -33,15 +32,7 @@ var applicationSchema = mongoose.Schema({
   link: String            // a link to github/linkedin/personal
 });
 
-// Set up search fields
-applicationSchema.plugin(search, {
-  fields: ['name', 'school', 'phone', 'shirt', 'dietary', 'year', 'gender', 'major', 'link']
-});
-
 var Application = mongoose.model('Application', applicationSchema);
-
-// Initalize on existing database
-Application.setKeywords(function (err) {});
 
 var Helpers = {
 

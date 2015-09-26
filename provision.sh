@@ -4,7 +4,7 @@ apt-get upgrade -y
 apt-get install -y nginx node nodejs npm
 npm install -g npm
 npm install -g n mocha
-n 0.12.0
+n 4.0.0
 
 # mongodb
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10

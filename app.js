@@ -1,3 +1,5 @@
+'use strict';
+
 /*
 
 Kent Hack Enough

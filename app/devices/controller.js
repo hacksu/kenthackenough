@@ -1,3 +1,5 @@
+'use strict';
+
 var router = getRouter();
 var Device = require('./model');
 

@@ -1,3 +1,5 @@
+'use strict';
+
 var router = getRouter();
 var User = rootRequire('app/users/model');
 var Application = rootRequire('app/users/application/model');

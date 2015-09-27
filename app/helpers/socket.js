@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * Wraps a socket.io namespace in some authentication logic
 * @author Paul Dilyard

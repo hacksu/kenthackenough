@@ -1,3 +1,5 @@
+'use strict';
+
 var config = rootRequire('config/config');
 var winston = require('winston');
 var User = rootRequire('app/users/model');

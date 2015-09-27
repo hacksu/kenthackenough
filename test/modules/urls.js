@@ -1,4 +1,5 @@
 'use strict';
+
 /**
 * Test the url shortener module
 */

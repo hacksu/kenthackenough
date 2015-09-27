@@ -1,3 +1,5 @@
+'use strict';
+
 /**
 * A few simple error handlers placed in the response object when used
 * as a middleware.

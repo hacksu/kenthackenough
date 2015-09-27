@@ -1,4 +1,5 @@
 'use strict';
+
 /**
 * Test the news list module
 */

@@ -1,3 +1,5 @@
+'use strict';
+
 var router = getRouter();
 var socket = rootRequire('app/helpers/socket');
 var io = socket('/users/application', ['admin', 'staff']);

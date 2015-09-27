@@ -1,4 +1,5 @@
 'use strict';
+
 /**
 * Test the users and application modules
 */

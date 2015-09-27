@@ -336,7 +336,7 @@ router.patch('/users', User.auth(), function (req, res) {
 router.patch('/users/:id', User.auth('admin'), function (req, res) {
   if (req.body.email) req.body.email = req.body.email.toLowerCase();
   User
-    .findByIdAndUpdate(req.params.id, req.body)
+    .findByIdAndUpdate(req.params.id, req.body, {new: true})
     .exec(function (err, user) {
       if (err) return res.internalError();
       var response = {

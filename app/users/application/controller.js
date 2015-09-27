@@ -130,7 +130,7 @@ router.patch('/users/me/application', User.auth(), function (req, res) {
     .exec(function (err, user) {
       if (err) return res.internalError();
       Application
-        .findByIdAndUpdate(user.application, req.body)
+        .findByIdAndUpdate(user.application, req.body, {new: true})
         .exec(function (err, application) {
           var response = {
             _id: user._id,
@@ -159,7 +159,7 @@ router.patch('/users/:id/application', User.auth('admin', 'staff'), function (re
       if (err) return res.internalError();
       if (user.application) {
         Application
-          .findByIdAndUpdate(user.application, req.body)
+          .findByIdAndUpdate(user.application, req.body, {new: true})
           .exec(function (err, application) {
             if (err) return res.internalError();
             if (req.body.status == Application.Status.APPROVED) {

@@ -54,7 +54,7 @@ router.get('/events', function (req, res) {
 */
 router.patch('/events/:id', User.auth('admin', 'staff'), function (req, res) {
   Event
-    .findByIdAndUpdate(req.params.id, req.body)
+    .findByIdAndUpdate(req.params.id, req.body, {new: true})
     .exec(function (err, event) {
       if (err) return res.internalError();
       io.emit('update', event);

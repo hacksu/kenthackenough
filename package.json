@@ -35,7 +35,7 @@
     "extend": "2.0.x",
     "flow": "0.2.x",
     "marked": "0.3.x",
-    "mongoose": "3.8.x",
+    "mongoose": "4.1.x",
     "multiparty": "4.1.x",
     "node-gcm": "0.12.x",
     "redis": "0.12.x",

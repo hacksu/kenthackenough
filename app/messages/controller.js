@@ -58,7 +58,7 @@ router.patch('/messages/:id', User.auth('admin', 'staff'), function (req, res) {
   var errors = Message.validate(req.body);
   if (errors.length) return res.multiError(errors);
   Message
-    .findByIdAndUpdate(req.params.id, req.body)
+    .findByIdAndUpdate(req.params.id, req.body, {new: true})
     .exec(function (err, message) {
       if (err) return res.internalError();
       io.emit('update', message);

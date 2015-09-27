@@ -55,7 +55,7 @@ router.get('/tickets/:id', User.auth('admin', 'staff'), function (req, res) {
 router.patch('/tickets/:id', User.auth('admin', 'staff'), function (req, res) {
   if (req.user && req.user.email) req.body.worker = req.user.email;
   Ticket
-    .findByIdAndUpdate(req.params.id, req.body)
+    .findByIdAndUpdate(req.params.id, req.body, {new: true})
     .exec(function (err, ticket) {
       if (err) return res.internalError();
       io.emit('update', ticket);

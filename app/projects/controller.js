@@ -101,7 +101,7 @@ router.patch('/projects/:id', function (req, res) {
   if (errors.length) return res.multiError(errors);
 
   Project
-    .findByIdAndUpdate(req.params.id, req.body)
+    .findByIdAndUpdate(req.params.id, req.body, {new: true})
     .exec(function (err, project) {
       if (err) return res.singleError('That project already exists');
       io.emit('update', project);

@@ -17,7 +17,7 @@ module.exports = {
     new News(req.body).save((err, news) => {
       if (err) return res.singleError('That email is already on the list', 409);
       io.emit('create', news);
-      return res.json(news);
+      return res.status(201).json(news);
     });
   },
 
@@ -31,7 +31,7 @@ module.exports = {
       .findById(req.params.id)
       .exec((err, item) => {
         if (err) return res.internalError();
-        return res.json(item);
+        return res.status(200).json(item);
       });
   },
 
@@ -45,7 +45,7 @@ module.exports = {
       .find()
       .exec((err, items) => {
         if (err) return res.internalError();
-        return res.json({news: items});
+        return res.status(200).json({news: items});
       });
   },
 
@@ -61,7 +61,7 @@ module.exports = {
       .exec((err, item) => {
         if (err) return res.internalError();
         io.emit('delete', item);
-        return res.json(item);
+        return res.status(200).json(item);
       });
   }
 

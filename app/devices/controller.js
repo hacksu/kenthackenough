@@ -15,7 +15,7 @@ module.exports = {
     let device = new Device(req.body);
     device.save((err, device) => {
       if (err) return res.singleError('Duplicate device ID', 409);
-      return res.json(device);
+      return res.status(201).json(device);
     });
   },
 
@@ -28,7 +28,7 @@ module.exports = {
       .findOneAndRemove({id: req.params.deviceId})
       .exec((err, device) => {
         if (err || !device) return res.internalError();
-        return res.json({_id: device._id});
+        return res.status(200).json({_id: device._id});
       });
   }
 

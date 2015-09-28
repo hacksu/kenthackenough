@@ -48,7 +48,7 @@ module.exports = {
         email: user.email
       });
 
-      return res.json({
+      return res.status(201).json({
         role: user.role,
         key: user._id,
         token: token,
@@ -113,7 +113,7 @@ module.exports = {
           application: app
         };
         io.emit('create', response);
-        return res.json(response);
+        return res.status(201).json(response);
       });
 
     });
@@ -152,7 +152,7 @@ module.exports = {
             user.save((err, user) => {
               if (err) return res.internalError();
               User.Helpers.cache(user, t.token, new Date(t.expires).getTime());
-              return res.json({
+              return res.status(201).json({
                 role: user.role,
                 key: user._id,
                 token: t.token,
@@ -176,7 +176,7 @@ module.exports = {
               user.save((err, user) => {
                 if (err) return res.internalError();
                 User.Helpers.cache(user, token, expires);
-                return res.json({
+                return res.status(201).json({
                   role: user.role,
                   key: user._id,
                   token: token,
@@ -231,7 +231,7 @@ module.exports = {
         user.save((err, user) => {
           if (err) return res.internalError();
           User.Helpers.cache(user, token, expires);
-          return res.json({
+          return res.status(200).json({
             role: user.role,
             key: user._id,
             token: token,
@@ -263,7 +263,7 @@ module.exports = {
         user.save((err, user) => {
           if (err) return res.internalError();
           User.Helpers.uncache(user, req.user.token, () => {
-            return res.json({});
+            return res.status(200).json({});
           });
         });
       });
@@ -280,7 +280,7 @@ module.exports = {
       .select('email role permissions created')
       .exec((err, users) => {
         if (err) return res.internalError();
-        return res.json({
+        return res.status(200).json({
           users: users
         });
       });
@@ -297,7 +297,7 @@ module.exports = {
       .select('email role created')
       .exec((err, user) => {
         if (err) return res.internalError();
-        return res.json(user);
+        return res.status(200).json(user);
       });
   },
 
@@ -325,7 +325,7 @@ module.exports = {
             email: user.email
           };
           io.emit('update', response);
-          return res.json(response);
+          return res.status(200).json(response);
         });
       });
   },
@@ -348,7 +348,7 @@ module.exports = {
           created: user.created
         };
         io.emit('update', response);
-        return res.json(response);
+        return res.status(200).json(response);
       });
   },
 
@@ -367,7 +367,7 @@ module.exports = {
           _id: req.params.id
         };
         io.emit('delete', response);
-        return res.json(response);
+        return res.status(200).json(response);
       });
   },
 
@@ -395,7 +395,7 @@ module.exports = {
             }
           });
           email.send(false);
-          return res.json({});
+          return res.status(200).json({});
         });
       });
   }

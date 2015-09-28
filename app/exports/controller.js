@@ -40,7 +40,7 @@ module.exports = {
         });
         res.setHeader('Content-disposition', 'attachment; filename=attendees.csv');
         res.setHeader('Content-type', 'text/csv');
-        return res.send(csv(list));
+        return res.status(200).send(csv(list));
       });
   },
 

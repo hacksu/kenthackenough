@@ -19,7 +19,7 @@ module.exports = {
     email.send(true, (err, email) => {
       if (err) return res.internalError();
       io.emit('create', email);
-      return res.json(email);
+      return res.status(201).json(email);
     });
   },
 
@@ -33,7 +33,7 @@ module.exports = {
       .find()
       .exec((err, emails) => {
         if (err) return res.internalError();
-        return res.json({emails: emails});
+        return res.status(200).json({emails: emails});
       });
   },
 
@@ -51,7 +51,7 @@ module.exports = {
           _id: email._id
         };
         io.emit('delete', response);
-        return res.json(response);
+        return res.status(200).json(response);
       });
   }
 

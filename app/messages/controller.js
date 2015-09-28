@@ -20,7 +20,7 @@ module.exports = {
       if (err) return res.internalError();
       io.emit('create', message);
       Device.push('Kent Hack Enough', message.text);
-      return res.json(message);
+      return res.status(201).json(message);
     });
   },
 
@@ -33,7 +33,7 @@ module.exports = {
       .findById(req.params.id)
       .exec((err, message) => {
         if (err) return res.internalError();
-        return res.json(message);
+        return res.status(200).json(message);
       });
   },
 
@@ -47,7 +47,7 @@ module.exports = {
       .sort({created: -1})
       .exec((err, messages) => {
         if (err) return res.internalError();
-        return res.json({messages: messages});
+        return res.status(200).json({messages: messages});
       });
   },
 
@@ -65,7 +65,7 @@ module.exports = {
       .exec((err, message) => {
         if (err) return res.internalError();
         io.emit('update', message);
-        return res.json(message);
+        return res.status(200).json(message);
       });
   },
 
@@ -83,7 +83,7 @@ module.exports = {
           _id: message._id
         };
         io.emit('delete', response);
-        return res.json(response);
+        return res.status(200).json(response);
       });
   }
 

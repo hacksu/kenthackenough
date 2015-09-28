@@ -2,7 +2,7 @@
 apt-get update
 apt-get upgrade -y
 apt-get install -y nginx node nodejs npm
-npm install -g npm
+npm install -g npm@3.3.x
 npm install -g n mocha
 n 4.0.0
 

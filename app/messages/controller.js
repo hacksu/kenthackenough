@@ -1,9 +1,8 @@
 'use strict';
 
 let Message = require('./model');
-let Device = require('../devices/model');
-let socket = rootRequire('app/helpers/socket');
-let io = socket('/messages');
+let io = rootRequire('app/helpers/socket')('/messages');
+let push = rootRequire('app/helpers/push')('/messages');
 
 module.exports = {
 
@@ -19,7 +18,7 @@ module.exports = {
     new Message(req.body).save((err, message) => {
       if (err) return res.internalError();
       io.emit('create', message);
-      Device.push('Kent Hack Enough', message.text);
+      push.send('create', message);
       return res.status(201).json(message);
     });
   },
@@ -65,6 +64,7 @@ module.exports = {
       .exec((err, message) => {
         if (err) return res.internalError();
         io.emit('update', message);
+        push.send('update', message);
         return res.status(200).json(message);
       });
   },
@@ -83,6 +83,7 @@ module.exports = {
           _id: message._id
         };
         io.emit('delete', response);
+        push.send('delete', response);
         return res.status(200).json(response);
       });
   }

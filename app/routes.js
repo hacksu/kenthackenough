@@ -15,7 +15,6 @@ module.exports = function (router) {
   ------------------------------------------------------------------------------
   */
   let about = require('./about/controller');
-  let devices = require('./devices/controller');
   let emails = require('./emails/controller');
   let events = require('./events/controller');
   let xports = require('./exports/controller');
@@ -36,10 +35,6 @@ module.exports = function (router) {
   // about
   router.put('/about', auth('admin', 'staff'), about.put);
   router.get('/about', about.get);
-
-  // devices
-  router.post('/devices', devices.post);
-  router.delete('/devices/:deviceId', devices.delete);
 
   // emails
   router.post('/emails', auth('admin'), emails.post);

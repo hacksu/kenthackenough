@@ -14,7 +14,6 @@ var news = require('./modules/news');
 var events = require('./modules/events');
 var statistics = require('./modules/statistics');
 var about = require('./modules/about');
-var devices = require('./modules/devices');
 
 
 users((admin) => {
@@ -27,6 +26,5 @@ users((admin) => {
   events(admin.key, admin.token);
   statistics(admin.key, admin.token);
   about(admin.key, admin.token);
-  devices();
 
 });

@@ -1,10 +1,11 @@
 'use strict';
 
 let bunyan = require('bunyan');
+let logger;
 
 if (process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'test') {
 
-  module.exports = bunyan.createLogger({
+  logger = bunyan.createLogger({
     name: 'khe',
     streams: [
       {
@@ -16,7 +17,7 @@ if (process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'test') {
 
 } else {
 
-  module.exports = bunyan.createLogger({
+  logger = bunyan.createLogger({
     name: 'khe',
     streams: [
       {
@@ -31,3 +32,11 @@ if (process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'test') {
   });
 
 }
+
+// Catch any uncaught exceptions, log them, and then continue to exit
+process.on('uncaughtException', (err) => {
+  logger.fatal(err);
+  process.exit(1);
+});
+
+module.exports = logger;

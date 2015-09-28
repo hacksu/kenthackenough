@@ -6,7 +6,7 @@
     "test": "vagrant ssh -c 'cd /var/www/kenthackenough && mocha test/test.js'",
     "start": "vagrant ssh -c 'cd /var/www/kenthackenough && pm2 startOrRestart processes.json'",
     "build": "vagrant ssh -c 'cd /var/www/kenthackenough && npm rebuild'",
-    "debug": "vagrant ssh -c 'cd /var/www/kenthackenough && node app.js'",
+    "server": "vagrant ssh -c 'cd /var/www/kenthackenough && node app.js | bunyan'",
     "stop": "vagrant ssh -c 'cd /var/www/kenthackenough && pm2 delete api'"
   },
   "repository": {
@@ -27,6 +27,7 @@
   "dependencies": {
     "bcrypt": "0.8.x",
     "body-parser": "1.11.x",
+    "bunyan": "^1.5.1",
     "compression": "1.4.x",
     "cors": "2.5.x",
     "csv": "0.4.x",
@@ -43,7 +44,6 @@
     "socket.io": "1.3.x",
     "to-csv": "0.1.x",
     "uuid": "2.0.x",
-    "validate": "2.1.x",
-    "winston": "0.9.x"
+    "validate": "2.1.x"
   }
 }

@@ -13,22 +13,16 @@ GLOBAL.rootRequire = function(name) {
 let express = require('express');
 let socketio = require('socket.io');
 let mongoose = require('mongoose');
-let winston = require('winston');
 let config = require('./config/config');
 let configure = require('./app/helpers/configure');
 let routes = require('./app/routes');
+let log = require('./app/helpers/logger');
+
+log.info('🔥  Firing up the KHE API');
 
 // Make the app
 let app = express();
 let router = express.Router();
-
-// Tell winston to use a log file
-winston.add(winston.transports.File, {
-  filename: config.log,
-  json: false,
-  handleExceptions: true
-});
-winston.exitOnError = false;
 
 // Connect to database
 let mongo = process.env.MONGO_URI || config.mongo.uri;
@@ -43,6 +37,8 @@ let port = process.env.PORT || config.port;
 let server = app.listen(port);
 let io = socketio(server);
 
+log.info(`👂  Listening on port ${port}`);
+
 // Export some useful objects
 module.exports.app = app;
 module.exports.router = router;
@@ -50,3 +46,5 @@ module.exports.io = io;
 
 // Include routes
 routes(router);
+
+log.info('😎  We are ready to go! Hack away.');

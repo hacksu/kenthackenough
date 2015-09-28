@@ -6,6 +6,7 @@ let compress = require('compression');
 let bodyParser = require('body-parser');
 let error = require('./error');
 let config = rootRequire('config/config');
+let log = require('./logger');
 
 module.exports = {
 
@@ -17,6 +18,10 @@ module.exports = {
     app.use(error);
     app.use(config.prefix, router);
     app.set('json spaces', 2);
+    router.use((req, res, next) => {
+      log.info(`[${req.method}] ${req.path}`);
+      next();
+    });
   },
 
   seed: () => {

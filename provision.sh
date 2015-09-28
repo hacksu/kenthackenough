@@ -35,6 +35,9 @@ npm install
 # pm2
 npm install -g pm2
 
+# bunyan logger
+npm install -g bunyan
+
 echo "Next steps:"
 echo "----------------------------------------"
 echo "| rebuild node_modules:  npm run build |"

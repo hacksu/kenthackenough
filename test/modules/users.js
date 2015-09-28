@@ -78,7 +78,7 @@ module.exports = function (callback/*admin*/) {
           email: 'user@test.com',
           password: 'pass'
         })
-        .expect(200)
+        .expect(201)
         .end(function (err, res) {
           if (err) throw err;
           res.body.should.have.property('key');
@@ -104,7 +104,7 @@ module.exports = function (callback/*admin*/) {
           email: 'person@test.com',
           password: 'pass'
         })
-        .expect(200)
+        .expect(201)
         .end(function (err, res) {
           if (err) throw err;
           res.body.should.have.property('key');
@@ -129,7 +129,7 @@ module.exports = function (callback/*admin*/) {
           email: 'admin@test.com',
           password: 'pass'
         })
-        .expect(200)
+        .expect(201)
         .end(function (err, res) {
           if (err) throw err;
           res.body.should.have.property('key');
@@ -156,7 +156,7 @@ module.exports = function (callback/*admin*/) {
           email: 'jdoe@test.com',
           phone: '5555555555'
         })
-        .expect(200)
+        .expect(201)
         .end(function (err, res) {
           if (err) throw err;
           res.body.should.have.property('_id');
@@ -394,7 +394,7 @@ module.exports = function (callback/*admin*/) {
             conduct: true,
             travel: false
           })
-          .expect(200)
+          .expect(201)
           .end(function (err, res) {
             if (err) throw err;
             assertApplication(res.body);

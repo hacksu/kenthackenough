@@ -17,7 +17,7 @@ module.exports = function () {
     it('should register a new device', function (done) {
       request(app)
         .post('/v1.0/devices')
-        .expect(200)
+        .expect(201)
         .send({
           type: 'android',
           id: 'abcdef'

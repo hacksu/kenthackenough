@@ -23,7 +23,7 @@ module.exports = function (adminKey, adminToken) {
         .send({
           text: 'Test message'
         })
-        .expect(200)
+        .expect(201)
         .end(function (err, res) {
           if (err) throw err;
           res.body.should.have.property('_id');

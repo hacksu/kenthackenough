@@ -34,7 +34,7 @@ module.exports = {
           new About(req.body).save((err, about) => {
             if (err) return res.internalError();
             io.emit('create', about);
-            return res.status(201).json(about);
+            return res.status(200).json(about);
           });
         }
       });

@@ -18,13 +18,15 @@ let log = require('./logger');
 module.exports = function (topic) {
 
   return {
-    send: (action, data) => {
-      let message = new gcm.Message({action, data});
+    send: (action, doc) => {
+      let message = new gcm.Message({action, data: {document: doc}});
       let sender = new gcm.Sender(config.gcm.apiKey);
       sender.send(message, {topic: `/topics${topic}`}, 10, (err, result) => {
         if (err) {
+          log.error(`[GCM error]`);
           log.error(err);
         } else {
+          log.info(`[GCM result]`);
           log.info(result);
         }
       });

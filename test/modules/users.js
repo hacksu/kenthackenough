@@ -6,6 +6,7 @@
 var app = require('../../app').app;
 var should = require('should');
 var request = require('supertest');
+var User = require('../../app/users/model');
 
 module.exports = function (callback/*admin*/) {
 
@@ -19,6 +20,52 @@ module.exports = function (callback/*admin*/) {
   var jdoeId;
 
   describe('Users', function () {
+
+    // Create an admin user
+    before(function (done) {
+      var salt = User.Helpers.salt();
+      var admin = new User({
+        email: 'admin@test.com',
+        role: 'admin',
+        password: User.Helpers.hash('pass', salt),
+        salt: salt
+      });
+      admin.save(function (err, user) {
+        if (err) throw err;
+        done();
+      });
+    });
+
+    // Create test user
+    before(function (done) {
+      var salt = User.Helpers.salt();
+      var person = new User({
+        email: 'person@test.com',
+        role: 'attendee',
+        password: User.Helpers.hash('pass', salt),
+        salt: salt
+      });
+      person.save(function (err, user) {
+        if (err) throw err;
+        done();
+      });
+    });
+
+    // Remove the admin user
+    after(function (done) {
+      User.remove({email: 'admin@test.com'}, function (err) {
+        if (err) throw err;
+        done();
+      });
+    });
+
+    // Remove the test user
+    after(function (done) {
+      User.remove({email: 'myperson@test.com'}, function (err) {
+        if (err) throw err;
+        done();
+      });
+    });
 
     /**
     * Create a new user

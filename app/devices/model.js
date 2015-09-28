@@ -1,14 +1,14 @@
 'use strict';
 
-var mongoose = require('mongoose');
-var schema = require('validate');
-var gcm = require('node-gcm');
-var config = rootRequire('config/config');
+let mongoose = require('mongoose');
+let schema = require('validate');
+let gcm = require('node-gcm');
+let config = rootRequire('config/config');
 
 /**
 * The Device model
 */
-var Device = mongoose.model('Device', {
+let Device = mongoose.model('Device', {
   id: {type: String, unique: true}
 });
 
@@ -17,8 +17,8 @@ var Device = mongoose.model('Device', {
 * @param Device {type: String, id: String}
 * @return An array of error messages
 */
-var validate = function (device) {
-  var test = schema({
+function validate(device) {
+  let test = schema({
     id: {
       type: 'string',
       required: true,
@@ -33,12 +33,12 @@ var validate = function (device) {
 * @param title: String
 * @param body: String
 */
-var push = function (title, body) {
+function push(title, body) {
   Device
     .find()
-    .exec(function (err, devices) {
+    .exec((err, devices) => {
       if (err) return;
-      var ids = devices.map(function (device) {
+      let ids = devices.map((device) => {
         return device.id;
       });
       dispatch(title, body, ids);
@@ -54,20 +54,20 @@ var push = function (title, body) {
 function dispatch(title, body, ids) {
 
   // Extend array with chunk function
-  Array.prototype.chunk = function(chunkSize) {
-    var array=this;
+  Array.prototype.chunk = function (chunkSize) {
+    let array=this;
     return [].concat.apply([],
-      array.map(function(elem,i) {
+      array.map((elem,i) => {
         return i%chunkSize ? [] : [array.slice(i,i+chunkSize)];
       })
     );
   };
 
   // Split into groups of 1000
-  var regIdSets = ids.chunk(1000);
+  let regIdSets = ids.chunk(1000);
 
   // Set up the actual notification
-  var message = new gcm.Message({
+  let message = new gcm.Message({
     notification: {
       title: title,
       body: body
@@ -75,13 +75,13 @@ function dispatch(title, body, ids) {
   });
 
   // Send the message to each group
-  var sender = new gcm.Sender(config.gcm.apiKey);
-  regIdSets.forEach(function (regIds) {
-    sender.send(message, {registrationIds: regIds}, 10, function (err, result) {
+  let sender = new gcm.Sender(config.gcm.apiKey);
+  for (regIds of regIdSets) {
+    sender.send(message, {registrationIds: regIds}, 10, (err, result) => {
       if (err) return;
       cleanup(regIds, result);
     });
-  });
+  }
 
 }
 
@@ -91,14 +91,11 @@ function dispatch(title, body, ids) {
 * @param result
 */
 function cleanup(regIds, result) {
-  console.log(result);
-
   if (result.failure > 0) {
     // we have some errors
     // populate a list with bad registration ids
-    var toRemove = [];
-    for (var i = 0; i < result.results.length; i++) {
-      var resObj = result.results[i];
+    let toRemove = [];
+    for (resObj of result.results) {
       if ('error' in resObj) {
         toRemove.push(regIds[i]);
       }

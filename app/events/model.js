@@ -1,10 +1,10 @@
 'use strict';
 
-var mongoose = require('mongoose');
-var schema = require('validate');
-var Device = require('../devices/model');
+let mongoose = require('mongoose');
+let schema = require('validate');
+let Device = require('../devices/model');
 
-var eventSchema = new mongoose.Schema({
+let Event = mongoose.model('Event', {
   title: String,
   description: String,
   start: Date,
@@ -17,10 +17,8 @@ var eventSchema = new mongoose.Schema({
   notified: {type: Boolean, default: false} // have we notified users?
 });
 
-var Event = mongoose.model('Event', eventSchema);
-
-var validate = function (event) {
-  var test = schema({
+function validate(event) {
+  let test = schema({
     title: {
       type: 'string',
       required: true,
@@ -72,10 +70,10 @@ var validate = function (event) {
 * but it works for now and I can't seem to find a good persistent job scheduler
 * for node (lesson: don't use Agenda).
 */
-setInterval(function () {
-  var later = new Date();
+setInterval(() => {
+  let later = new Date();
   later.setMinutes(later.getMinutes() + 1);
-  var earlier = new Date();
+  let earlier = new Date();
   earlier.setMinutes(earlier.getMinutes() - 1);
   Event
     .find({
@@ -85,8 +83,8 @@ setInterval(function () {
         "$lt": later
       }
     })
-    .exec(function (err, events) {
-      for (var event of events) {
+    .exec((err, events) => {
+      for (let event of events) {
         if (!event.notified) {
           Device.push(event.title, event.description);
           event.notified = true;

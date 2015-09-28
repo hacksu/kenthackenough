@@ -1,31 +1,35 @@
 'use strict';
 
-var router = getRouter();
-var Device = require('./model');
+let Device = require('./model');
 
-/**
-* Subscribe a device to push notifications
-* POST /devices
-*/
-router.post('/devices', function (req, res) {
-  var errors = Device.validate(req.body);
-  if (errors.length) return res.multiError(errors);
-  var device = new Device(req.body);
-  device.save(function (err, device) {
-    if (err) return res.singleError('Duplicate device ID');
-    return res.json(device);
-  });
-});
+module.exports = {
 
-/**
-* Unregister a device
-* DELETE /devices/:id
-*/
-router.delete('/devices/:deviceId', function (req, res) {
-  Device
-    .findOneAndRemove({id: req.params.deviceId})
-    .exec(function (err, device) {
-      if (err || !device) return res.internalError();
-      return res.json({_id: device._id});
+  /**
+  * Subscribe a device to push notifications
+  * POST /devices
+  */
+  post: (req, res) => {
+    let errors = Device.validate(req.body);
+    if (errors.length) return res.multiError(errors);
+
+    let device = new Device(req.body);
+    device.save((err, device) => {
+      if (err) return res.singleError('Duplicate device ID');
+      return res.json(device);
     });
-});
+  },
+
+  /**
+  * Unregister a device
+  * DELETE /devices/:id
+  */
+  delete: (req, res) => {
+    Device
+      .findOneAndRemove({id: req.params.deviceId})
+      .exec((err, device) => {
+        if (err || !device) return res.internalError();
+        return res.json({_id: device._id});
+      });
+  }
+
+};

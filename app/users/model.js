@@ -9,10 +9,10 @@ User Model
   mongoose, bcrypt, auth, validate
 
 @usage:
-  var User = require('./model');
+  let User = require('./model');
 
   // Create a new user
-  var user = new User({
+  let user = new User({
     email: ...,
     password: ...,
     ...
@@ -26,13 +26,13 @@ User Model
 
 */
 
-var mongoose = require('mongoose');
-var redis = require('redis').createClient();
-var bcrypt = require('bcrypt');
-var uuid = require('uuid');
-var schema = require('validate');
+let mongoose = require('mongoose');
+let redis = require('redis').createClient();
+let bcrypt = require('bcrypt');
+let uuid = require('uuid');
+let schema = require('validate');
 
-var User = mongoose.model('User', {
+let User = mongoose.model('User', {
   email: {type: String, unique: true},
   role: {type: String, enum: ['attendee', 'staff', 'admin'], default: 'attendee'},
 
@@ -50,13 +50,13 @@ var User = mongoose.model('User', {
   }]
 });
 
-var Helpers = {
+let Helpers = {
 
   /**
   * Generate a random salt
   * @return A salt of length 10
   */
-  salt: function () {
+  salt: () => {
     return bcrypt.genSaltSync(10);
   },
 
@@ -66,7 +66,7 @@ var Helpers = {
   * @param salt A salt for the algorithm
   * @return The hashed password
   */
-  hash: function(password, salt) {
+  hash: (password, salt) => {
     return bcrypt.hashSync(password, salt);
   },
 
@@ -74,14 +74,14 @@ var Helpers = {
   * Generate a token
   * @return A new token
   */
-  token: function () {
+  token: () => {
     return uuid.v4();
   },
 
   /**
   * Generate an expiration date for a token (30 days from now)
   */
-  expires: function () {
+  expires: () => {
     return Date.now() + (30 * (1000 * 60 * 60 * 24));
   },
 
@@ -92,7 +92,7 @@ var Helpers = {
   * @param hash The user's salt
   * @return true if password matches, else false
   */
-  checkPassword: function(password, attempt, salt) {
+  checkPassword: (password, attempt, salt) => {
     if (Helpers.hash(attempt, salt) == password) {
       return true;
     }
@@ -103,7 +103,7 @@ var Helpers = {
   * End a response with an HTTPAuth error
   * @param res A response object
   */
-  authError: function (res) {
+  authError: (res) => {
     res
       .status(401)
       .send({errors: ['You must be logged in to access this area']});
@@ -114,12 +114,12 @@ var Helpers = {
   * @param headers The request headers (req.headers)
   * @return {key: String, token: String} || null
   */
-  parseAuthHeader: function (headers) {
-    var header = headers['Authorization'] || headers['authorization'] || false;
+  parseAuthHeader: (headers) => {
+    let header = headers['Authorization'] || headers['authorization'] || false;
     if (!header) return null;
-    var encoded = header.split(/\s+/).pop() || '';
-    var full = new Buffer(encoded, 'base64').toString();
-    var parts = full.split(/:/);
+    let encoded = header.split(/\s+/).pop() || '';
+    let full = new Buffer(encoded, 'base64').toString();
+    let parts = full.split(/:/);
     return {key: parts[0], token: parts[1]};
   },
 
@@ -128,8 +128,8 @@ var Helpers = {
   * @param user An object representing the potential user
   * @return An array of error messages
   */
-  validate: function (user) {
-    var test = schema({
+  validate: (user) => {
+    let test = schema({
       email: {
         type: 'string',
         required: true,
@@ -156,13 +156,13 @@ var Helpers = {
   * @param token A user's token
   * @param callback (Optional) Called when caching is complete
   */
-  cache: function (user, token, expires, callback) {
+  cache: (user, token, expires, callback) => {
     redis.hmset('users:id:'+user._id+':'+token, {
       _id: user._id,
       email: user.email,
       role: user.role,
       expires: expires
-    }, function (err, status) {
+    }, (err, status) => {
       callback && callback();
     });
   },
@@ -174,7 +174,7 @@ var Helpers = {
   * @param callback(err, Object) A callback that takes a user object:
   *                      {_id: String, email: String, role: String, expires: Number}
   */
-  retrieve: function (key, token, callback) {
+  retrieve: (key, token, callback) => {
     redis.hgetall('users:id:'+key+':'+token, callback);
   },
 
@@ -183,8 +183,8 @@ var Helpers = {
   * @param user The user document
   * @param callback (Optional) Called when the operation is complete
   */
-  uncache: function (user, token, callback) {
-    redis.del('users:id:'+user._id+':'+token, function (err) {
+  uncache: (user, token, callback) => {
+    redis.del('users:id:'+user._id+':'+token, (err) => {
       callback && callback();
     });
   }
@@ -195,26 +195,26 @@ var Helpers = {
 * Authenticate a user (protect a route)
 * @param ...roles A list of roles that are allowed into the route
 */
-var auth = function () {
-  var roles = Array.prototype.slice.call(arguments);
+function auth() {
+  let roles = Array.prototype.slice.call(arguments);
   if (!roles.length) roles = ['admin', 'staff', 'attendee'];
 
-  return function (req, res, next) {
+  return (req, res, next) => {
 
-    var access = Helpers.parseAuthHeader(req.headers);
+    let access = Helpers.parseAuthHeader(req.headers);
     if (!access) return Helpers.authError(res);
 
-    Helpers.retrieve(access.key, access.token, function (err, user) {
+    Helpers.retrieve(access.key, access.token, (err, user) => {
       if (err || !user) {
         // User is not cached, fall back on mongoose
         User
           .findById(access.key)
           .select('email role tokens')
-          .exec(function (err, user) {
+          .exec((err, user) => {
             if (err || !user.tokens.length) return Helpers.authError(res);
 
-            var t;
-            for (var i = 0; i < user.tokens.length; ++i) {
+            let t;
+            for (let i = 0; i < user.tokens.length; ++i) {
               if (user.tokens[i].token == access.token) {
                 t = user.tokens[i];
                 break;

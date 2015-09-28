@@ -4,6 +4,7 @@ module.exports = {
 
   // API Port
   port: 3000,
+  prefix: '/v1.0',
 
   // Log file (check for errors here)
   log: 'app.log',

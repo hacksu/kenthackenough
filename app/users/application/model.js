@@ -1,14 +1,14 @@
 'use strict';
 
-var mongoose = require('mongoose');
-var schema = require('validate');
+let mongoose = require('mongoose');
+let schema = require('validate');
 
-var _APPROVED = 'approved',
+let _APPROVED = 'approved',
     _DENIED = 'denied',
     _WAITLISTED = 'waitlisted',
     _PENDING = 'pending';
 
-var applicationSchema = mongoose.Schema({
+let Application = mongoose.model('Application', {
   status: {type: String, enum: [_APPROVED, _DENIED, _WAITLISTED, _PENDING]},
   going: Boolean,         // rsvp status
   checked: Boolean,       // check-in status
@@ -34,16 +34,14 @@ var applicationSchema = mongoose.Schema({
   link: String            // a link to github/linkedin/personal
 });
 
-var Application = mongoose.model('Application', applicationSchema);
-
-var Helpers = {
+let Helpers = {
 
   /**
   * Validate an application
   * @param app An object representing the submitted application attempt
   */
   validate: function (app) {
-    var test = schema({
+    let test = schema({
       name: {
         required: true,
         type: 'string',

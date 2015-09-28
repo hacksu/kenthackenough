@@ -19,7 +19,12 @@ module.exports = function (topic) {
 
   return {
     send: (action, doc) => {
-      let message = new gcm.Message({action, data: {document: doc}});
+      let message = new gcm.Message({
+        data: {
+          action,
+          document: doc
+        }
+      });
       let sender = new gcm.Sender(config.gcm.apiKey);
       sender.send(message, {topic: `/topics${topic}`}, 10, (err, result) => {
         if (err) {

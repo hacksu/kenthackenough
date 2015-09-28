@@ -12,10 +12,10 @@ module.exports = {
   */
   post: (req, res) => {
     let errors = News.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
 
     new News(req.body).save((err, news) => {
-      if (err) return res.singleError('That email is already on the list');
+      if (err) return res.singleError('That email is already on the list', 409);
       io.emit('create', news);
       return res.json(news);
     });

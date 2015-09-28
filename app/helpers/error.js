@@ -9,27 +9,38 @@
 *   res.singleError('My error message');
 *   res.multiError(['One', 'Two', 'Three']);
 */
+let log = require('./logger');
 
 module.exports = function (req, res, next) {
-  res.internalError = function () {
+
+  res.internalError = function (status=500) {
+    log.error(`[${req.method}] ${req.path} | ${status} Internal error`);
     res
-      .status(500)
-      .send({errors: ['An internal error has ocurred.']});
+      .status(status)
+      .send({errors: ['An internal error has occurred.']});
   };
-  res.clientError = function () {
+
+  res.clientError = function (message='Malformed request', status=400) {
+    log.error(`[${req.method}] ${req.path} | ${status} Error: "${message}"`);
     res
-      .status(400)
-      .send({errors: ['Malformed request']});
-  };
-  res.singleError = function (message) {
-    res
-      .status(500)
+      .status(status)
       .send({errors: [message]});
   };
-  res.multiError = function (messages) {
+
+  res.singleError = function (message, status=500) {
+    log.error(`[${req.method}] ${req.path} | ${status} Error: "${message}"`);
     res
-      .status(500)
+      .status(status)
+      .send({errors: [message]});
+  };
+
+  res.multiError = function (messages, status=500) {
+    log.error(`[${req.method}] ${req.path} | ${status} Error: "${messages}"`);
+    res
+      .status(status)
       .send({errors: messages});
   };
+
   next();
+
 };

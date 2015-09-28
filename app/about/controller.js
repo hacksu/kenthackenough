@@ -13,7 +13,7 @@ module.exports = {
   */
   put: (req, res) => {
     let errors = About.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
     req.body.updated = Date.now();
 
     About

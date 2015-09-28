@@ -24,9 +24,9 @@ module.exports = {
       .select('email application role created')
       .exec((err, user) => {
         if (err) return res.internalError();
-        if (user.application) return res.singleError('You have already submitted an application');
+        if (user.application) return res.clientError('You have already submitted an application', 409);
         let errors = Application.validate(req.body);
-        if (errors.length) return res.multiError(errors);
+        if (errors.length) return res.multiError(errors, 400);
         extend(req.body, {
           status: Application.Status.PENDING,
           going: false,
@@ -121,7 +121,7 @@ module.exports = {
   */
   patch: (req, res) => {
     let errors = Application.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
     if (req.body.dietary) {
       req.body.dietary = req.body.dietary.split('|');
     } else {
@@ -275,7 +275,7 @@ module.exports = {
   uploadResume: (req, res) => {
     let form = new multiparty.Form();
     form.parse(req, (err, fields, files) => {
-      if (err || !files.resume) return res.internalError();
+      if (err || !files.resume) return res.singleError('Resume file required', 400);
       fs.readFile(files.resume[0].path, (err, data) => {
         if (err) return res.internalError();
         let ext = path.extname(files.resume[0].path);

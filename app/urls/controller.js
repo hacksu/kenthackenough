@@ -13,10 +13,10 @@ module.exports = {
   */
   post: (req, res) => {
     let errors = Url.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
 
     new Url(req.body).save((err, url) => {
-      if (err) return res.singleError('The URL must be unique');
+      if (err) return res.singleError('The URL must be unique', 409);
       io.emit('create', url);
       return res.json(url);
     });

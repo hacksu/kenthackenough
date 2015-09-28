@@ -14,7 +14,7 @@ module.exports = {
   */
   post: (req, res) => {
     let errors = Message.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
 
     new Message(req.body).save((err, message) => {
       if (err) return res.internalError();
@@ -58,7 +58,7 @@ module.exports = {
   */
   patch: (req, res) => {
     let errors = Message.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
 
     Message
       .findByIdAndUpdate(req.params.id, req.body, {new: true})

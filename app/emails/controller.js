@@ -13,7 +13,7 @@ module.exports = {
   */
   post: (req, res) => {
     let errors = Email.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
     let email = new Email(req.body);
 
     email.send(true, (err, email) => {

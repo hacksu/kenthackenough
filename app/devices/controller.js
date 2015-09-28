@@ -10,11 +10,11 @@ module.exports = {
   */
   post: (req, res) => {
     let errors = Device.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
 
     let device = new Device(req.body);
     device.save((err, device) => {
-      if (err) return res.singleError('Duplicate device ID');
+      if (err) return res.singleError('Duplicate device ID', 409);
       return res.json(device);
     });
   },

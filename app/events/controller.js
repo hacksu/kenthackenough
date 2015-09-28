@@ -13,7 +13,7 @@ module.exports = {
   */
   post: (req, res) => {
     let errors = Event.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
 
     let event = new Event(req.body);
     event.save((err, event) => {

@@ -17,8 +17,8 @@ module.exports = {
   */
   create: (req, res) => {
     let errors = User.validate(req.body);
-    if (errors.length) return res.multiError(errors);
-    if (config.clients.indexOf(req.body.client) < 0) return res.singleError('Invalid client ID');
+    if (errors.length) return res.multiError(errors, 400);
+    if (config.clients.indexOf(req.body.client) < 0) return res.singleError('Invalid client ID', 400);
 
     let salt = User.Helpers.salt();
     let token = User.Helpers.token();
@@ -39,7 +39,7 @@ module.exports = {
     });
 
     user.save((err, user) => {
-      if (err) return res.singleError('That email is already in use');
+      if (err) return res.singleError('That email is already in use', 409);
 
       User.Helpers.cache(user, token, expires);
 
@@ -79,7 +79,7 @@ module.exports = {
       }
     });
     let errors = test.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
     let application = new Application({
       name: req.body.name,
       phone: req.body.phone,
@@ -103,7 +103,7 @@ module.exports = {
         role: 'attendee'
       });
       user.save((err, user) => {
-        if (err) return res.singleError('That email is already in use');
+        if (err) return res.singleError('That email is already in use', 409);
 
         let response = {
           _id: user._id,
@@ -125,15 +125,15 @@ module.exports = {
   */
   token: (req, res) => {
     let errors = User.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
 
-    if (config.clients.indexOf(req.body.client) < 0) return res.singleError('Invalid client ID');
+    if (config.clients.indexOf(req.body.client) < 0) return res.singleError('Invalid client ID', 400);
 
     User
       .findOne()
       .where({email: req.body.email.toLowerCase()})
       .exec((err, user) => {
-        if (err || !user) return res.singleError('Email or password incorrect');
+        if (err || !user) return res.singleError('Email or password incorrect', 400);
 
         if (User.Helpers.checkPassword(user.password, req.body.password, user.salt)) {
 
@@ -186,13 +186,13 @@ module.exports = {
               });
             } else {
               // not a valid client
-              return res.singleError('Invalid client ID');
+              return res.singleError('Invalid client ID', 400);
             }
 
           }
 
         } else {
-          return res.singleError('Email or password incorrect');
+          return res.singleError('Email or password incorrect', 400);
         }
       });
   },
@@ -203,7 +203,7 @@ module.exports = {
   * Auth
   */
   refresh: (req, res) => {
-    if (config.clients.indexOf(req.body.client) < 0) return res.singleError('Invalid client ID');
+    if (config.clients.indexOf(req.body.client) < 0) return res.singleError('Invalid client ID', 400);
 
     User
       .findById(req.body.key)
@@ -214,7 +214,7 @@ module.exports = {
         let refresh = User.Helpers.token();
         let expires = User.Helpers.expires();
 
-        if (!user.tokens.length) return res.singleError('Invalid refresh token');
+        if (!user.tokens.length) return res.singleError('Invalid refresh token', 400);
 
         for (let i = 0; i < user.tokens.length; ++i) {
           if (user.tokens[i].client == req.body.client) {
@@ -223,7 +223,7 @@ module.exports = {
               user.tokens[i].refresh = refresh;
               user.tokens[i].expires = expires;
             } else {
-              return res.singleError('Invalid refresh token');
+              return res.singleError('Invalid refresh token', 400);
             }
             break;
           }
@@ -319,7 +319,7 @@ module.exports = {
           user.password = User.Helpers.hash(req.body.password, user.salt);
         }
         user.save((err) => {
-          if (err) return res.singleError('That email is already taken');
+          if (err) return res.singleError('That email is already taken', 409);
           let response = {
             _id: user._id,
             email: user.email

@@ -12,7 +12,7 @@ module.exports = {
   */
   post: (req, res) => {
     let errors = Ticket.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
 
     new Ticket(req.body).save((err, ticket) => {
       if (err) return res.internalError();

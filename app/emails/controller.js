@@ -1,53 +1,58 @@
-var router = getRouter();
-var socket = rootRequire('app/helpers/socket');
-var io = socket('/emails', ['admin', 'staff']);
-var Email = require('./model');
-var User = require('../users/model');
+'use strict';
 
-/**
-* Send an email
-* POST /emails
-* Auth -> admin
-*/
-router.post('/emails', User.auth('admin'), function (req, res) {
-  var errors = Email.validate(req.body);
-  if (errors.length) return res.multiError(errors);
-  var email = new Email(req.body);
-  email.send(true, function (err, email) {
-    if (err) return res.internalError();
-    io.emit('create', email);
-    return res.json(email);
-  });
-});
+let Email = require('./model');
+let socket = rootRequire('app/helpers/socket');
+let io = socket('/emails', ['admin', 'staff']);
 
-/**
-* Get a list of sent emails
-* GET /emails
-* Auth -> admin, staff
-*/
-router.get('/emails', User.auth('admin', 'staff'), function (req, res) {
-  Email
-    .find()
-    .exec(function (err, emails) {
+module.exports = {
+
+  /**
+  * Send an email
+  * POST /emails
+  * Auth -> admin
+  */
+  post: (req, res) => {
+    let errors = Email.validate(req.body);
+    if (errors.length) return res.multiError(errors);
+    let email = new Email(req.body);
+
+    email.send(true, (err, email) => {
       if (err) return res.internalError();
-      return res.json({emails: emails});
+      io.emit('create', email);
+      return res.json(email);
     });
-});
+  },
 
-/**
-* Delete a sent email
-* DELETE /emails/:id
-* Auth -> admin
-*/
-router.delete('/emails/:id', User.auth('admin'), function (req, res) {
-  Email
-    .findByIdAndRemove(req.params.id)
-    .exec(function (err, email) {
-      if (err) res.internalError();
-      var response = {
-        _id: email._id
-      };
-      io.emit('delete', response);
-      return res.json(response);
-    });
-});
+  /**
+  * Get a list of sent emails
+  * GET /emails
+  * Auth -> admin, staff
+  */
+  get: (req, res) => {
+    Email
+      .find()
+      .exec((err, emails) => {
+        if (err) return res.internalError();
+        return res.json({emails: emails});
+      });
+  },
+
+  /**
+  * Delete a sent email
+  * DELETE /emails/:id
+  * Auth -> admin
+  */
+  delete: (req, res) => {
+    Email
+      .findByIdAndRemove(req.params.id)
+      .exec((err, email) => {
+        if (err) res.internalError();
+        let response = {
+          _id: email._id
+        };
+        io.emit('delete', response);
+        return res.json(response);
+      });
+  }
+
+};

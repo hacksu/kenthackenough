@@ -1,13 +1,15 @@
-var mongoose = require('mongoose');
-var schema = require('validate');
+'use strict';
 
-var Message = mongoose.model('Message', {
+let mongoose = require('mongoose');
+let schema = require('validate');
+
+let Message = mongoose.model('Message', {
   created: {type: Date, default: Date.now},
   text: String
 });
 
-var validate = function (message) {
-  var test = schema({
+function validate(message) {
+  let test = schema({
     text: {
       type: 'string',
       required: true,

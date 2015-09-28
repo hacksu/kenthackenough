@@ -1,10 +1,12 @@
-var mongoose = require('mongoose');
-var schema = require('validate');
+'use strict';
+
+let mongoose = require('mongoose');
+let schema = require('validate');
 
 /**
 * The News List model
 */
-var News = mongoose.model('News', {
+let News = mongoose.model('News', {
   email: {type: String, unique: true},
   created: {type: Date, default: Date.now}
 });
@@ -12,8 +14,8 @@ var News = mongoose.model('News', {
 /**
 * Validate a new News object
 */
-var validate = function (n) {
-  var test = schema({
+function validate(n) {
+  let test = schema({
     email: {
       type: 'string',
       required: true,

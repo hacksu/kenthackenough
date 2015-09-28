@@ -1,14 +1,15 @@
-var mongoose = require('mongoose');
-var schema = require('validate');
-var config = rootRequire('config/config');
-var User = rootRequire('app/users/model');
-var sendgrid = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
-var marked = require('marked');
+'use strict';
+
+let mongoose = require('mongoose');
+let schema = require('validate');
+let config = rootRequire('config/config');
+let sendgrid = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
+let marked = require('marked');
 
 /**
 * Schema
 */
-var EmailSchema = mongoose.Schema({
+let EmailSchema = mongoose.Schema({
   subject: String,
   body: String, // stored as markdown
   sent: {type: Date, default: Date.now},
@@ -25,36 +26,42 @@ var EmailSchema = mongoose.Schema({
 */
 EmailSchema.methods.send = function (save, callback) {
   if (process.env.NODE_ENV == 'production') {
-    var message = new sendgrid.Email({
+
+    let message = new sendgrid.Email({
       from: config.sendgrid.from,
       fromname: config.sendgrid.fromname,
       subject: this.subject,
       text: this.body,
       html: marked(this.body)
     });
-    this.recipients.emails.forEach(function (address) {
+
+    for (address of this.recipients.emails) {
       message.addTo(address);
-    });
+    }
+
     sendgrid.send(message);
+
   }
+
   if (save) {
     this.sent = Date.now();
-    this.save(function (err, email) {
+    this.save((err, email) => {
       callback && callback(err, email);
     });
   } else {
     callback && callback(err);
   }
+
 };
 
-var Email = mongoose.model('Email', EmailSchema);
+let Email = mongoose.model('Email', EmailSchema);
 
 /**
 * Validate a message
 */
-var validate = function (email) {
+function validate(email) {
 
-  var test = schema({
+  let test = schema({
     subject: {
       type: 'string',
       required: true,

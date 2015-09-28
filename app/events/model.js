@@ -1,8 +1,10 @@
-var mongoose = require('mongoose');
-var schema = require('validate');
-var scheduler = rootRequire('app/helpers/scheduler');
+'use strict';
 
-var eventSchema = new mongoose.Schema({
+let mongoose = require('mongoose');
+let schema = require('validate');
+let Device = require('../devices/model');
+
+let Event = mongoose.model('Event', {
   title: String,
   description: String,
   start: Date,
@@ -11,25 +13,12 @@ var eventSchema = new mongoose.Schema({
   icon: String,
   location: String,
   group: {type: String, enum: ['attendee', 'staff', 'admin'], default: 'attendee'},
-  notify: {type: Boolean, default: true}
+  notify: {type: Boolean, default: true}, // should we notify users
+  notified: {type: Boolean, default: false} // have we notified users?
 });
 
-/**
-* Schedule a job to notify users of this event if applicable
-*/
-eventSchema.post('save', function (event) {
-  if (event.notify) {
-    scheduler.schedule(event.start, 'push notification', {
-      title: event.title,
-      body: event.description
-    });
-  }
-});
-
-var Event = mongoose.model('Event', eventSchema);
-
-var validate = function (event) {
-  var test = schema({
+function validate(event) {
+  let test = schema({
     title: {
       type: 'string',
       required: true,
@@ -72,6 +61,38 @@ var validate = function (event) {
   }, {typecast: true});
   return test.validate(event);
 };
+
+/**
+* Check for events we should notify people about
+* We are checking once per minute
+*
+* This definitely isn't the best or most reliably way to solve this problem,
+* but it works for now and I can't seem to find a good persistent job scheduler
+* for node (lesson: don't use Agenda).
+*/
+setInterval(() => {
+  let later = new Date();
+  later.setMinutes(later.getMinutes() + 1);
+  let earlier = new Date();
+  earlier.setMinutes(earlier.getMinutes() - 1);
+  Event
+    .find({
+      notify: true,
+      start: {
+        "$gt": earlier,
+        "$lt": later
+      }
+    })
+    .exec((err, events) => {
+      for (let event of events) {
+        if (!event.notified) {
+          Device.push(event.title, event.description);
+          event.notified = true;
+          event.save();
+        }
+      }
+    });
+}, 60 * 1000);
 
 module.exports = Event;
 module.exports.validate = validate;

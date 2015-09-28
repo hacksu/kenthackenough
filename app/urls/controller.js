@@ -1,80 +1,84 @@
-var router = getRouter();
-var socket = rootRequire('app/helpers/socket');
-var io = socket('/urls', ['admin', 'staff']);
-var User = require('../users/model');
-var Url = require('./model');
+'use strict';
 
-/**
-* Create a new shortened URL
-* POST /urls
-* Auth -> admin, staff
-*/
-router.post('/urls', User.auth('admin', 'staff'), function (req, res) {
-  var errors = Url.validate(req.body);
-  if (errors.length) return res.multiError(errors);
-  var url = new Url(req.body);
-  url.save(function (err, url) {
-    if (err) return res.singleError('The URL must be unique');
-    io.emit('create', url);
-    return res.json(url);
-  });
-});
+let Url = require('./model');
+let socket = rootRequire('app/helpers/socket');
+let io = socket('/urls', ['admin', 'staff']);
 
-/**
-* Resolve a shortened URL
-* GET /urls/go/:short
-*/
-router.get('/urls/go/:url', function (req, res) {
-  Url
-    .findOne({short: req.params.url})
-    .exec(function (err, url) {
-      if (err) return res.status(404).send();
-      return res.redirect(url.full);
-    });
-});
+module.exports = {
 
-/**
-* Get a single URL
-* GET /urls/:id
-* Auth -> admin, staff
-*/
-router.get('/urls/:id', function (req, res) {
-  Url
-    .findById(req.params.id)
-    .exec(function (err, url) {
-      if (err) return res.internalError();
+  /**
+  * Create a new shortened URL
+  * POST /urls
+  * Auth -> admin, staff
+  */
+  post: (req, res) => {
+    let errors = Url.validate(req.body);
+    if (errors.length) return res.multiError(errors);
+
+    new Url(req.body).save((err, url) => {
+      if (err) return res.singleError('The URL must be unique');
+      io.emit('create', url);
       return res.json(url);
     });
-});
+  },
 
-/**
-* Get a list of URLs
-* GET /urls
-* Auth -> admin, staff
-*/
-router.get('/urls', User.auth('admin', 'staff'), function (req, res) {
-  Url
-    .find()
-    .exec(function (err, urls) {
-      if (err) return res.internalError();
-      return res.json({urls: urls});
-    });
-});
+  /**
+  * Resolve a shortened URL
+  * GET /urls/go/:short
+  */
+  resolve: (req, res) => {
+    Url
+      .findOne({short: req.params.url})
+      .exec((err, url) => {
+        if (err) return res.status(404).send();
+        return res.redirect(url.full);
+      });
+  },
 
-/**
-* Delete a URL
-* DELETE /urls/:id
-* Auth -> admin, staff
-*/
-router.delete('/urls/:id', User.auth('admin', 'staff'), function (req, res) {
-  Url
-    .findByIdAndRemove(req.params.id)
-    .exec(function (err, url) {
-      if (err) return res.internalError();
-      var response = {
-        _id: url._id
-      };
-      io.emit('delete', response);
-      return res.json(response);
-    });
-});
+  /**
+  * Get a single URL
+  * GET /urls/:id
+  * Auth -> admin, staff
+  */
+  find: (req, res) => {
+    Url
+      .findById(req.params.id)
+      .exec((err, url) => {
+        if (err) return res.internalError();
+        return res.json(url);
+      });
+  },
+
+  /**
+  * Get a list of URLs
+  * GET /urls
+  * Auth -> admin, staff
+  */
+  get: (req, res) => {
+    Url
+      .find()
+      .exec((err, urls) => {
+        if (err) return res.internalError();
+        return res.json({urls: urls});
+      });
+  },
+
+  /**
+  * Delete a URL
+  * DELETE /urls/:id
+  * Auth -> admin, staff
+  */
+  delete: (req, res) => {
+    Url
+      .findByIdAndRemove(req.params.id)
+      .exec((err, url) => {
+        if (err) return res.internalError();
+        let response = {
+          _id: url._id
+        };
+        io.emit('delete', response);
+        return res.json(response);
+      });
+  }
+
+};

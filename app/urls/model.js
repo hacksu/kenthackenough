@@ -1,10 +1,12 @@
-var mongoose = require('mongoose');
-var schema = require('validate');
+'use strict';
+
+let mongoose = require('mongoose');
+let schema = require('validate');
 
 /**
 * The Url model
 */
-var Url = mongoose.model('Url', {
+let Url = mongoose.model('Url', {
   full: String,
   short: {type: String, unique: true}
 });
@@ -14,8 +16,8 @@ var Url = mongoose.model('Url', {
 * @param url {full: String, short: String}
 * @return An array of error messages
 */
-var validate = function (url) {
-  var test = schema({
+function validate(url) {
+  let test = schema({
     full: {
       type: 'string',
       required: true,

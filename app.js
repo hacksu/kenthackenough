@@ -1,94 +1,50 @@
-/*
+'use strict';
 
+/*
 Kent Hack Enough
 
 Let's try to organize organizing.
 @author Paul Dilyard
-
-To get the app instance, just call getApp() from anywhere
-To get the router, call getRouter() from anywhere
-To get a db connection, require('mongoose')
-To get the socket.io connection, call getIo()
-
 */
 GLOBAL.rootRequire = function(name) {
     return require(__dirname + '/' + name);
 };
 
-var express = require('express');
-var http = require('http');
-var socketio = require('socket.io');
-var cors = require('cors');
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
-var winston = require('winston');
-var compress = require('compression');
-var error = require('./app/helpers/error');
-var config = require('./config/config');
-var initConfig = require('./app/helpers/initconfig');
-var zip = require('express-zip');
+let express = require('express');
+let socketio = require('socket.io');
+let mongoose = require('mongoose');
+let config = require('./config/config');
+let configure = require('./app/helpers/configure');
+let routes = require('./app/routes');
+let log = require('./app/helpers/logger');
 
-// Start up server
-var app = express();
-var router = express.Router();
+log.info('🔥  Firing up the KHE API');
 
-// Tell winston to use a log file
-winston.add(winston.transports.File, {
-  filename: config.log,
-  json: false,
-  handleExceptions: true
-});
-winston.exitOnError = false;
-
-// Configure app
-app.use(cors());
-app.use(compress());
-app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(error);
-app.use('/v1.0', router);
-app.set('json spaces', 2);
-var port = process.env.PORT || config.port;
-var server = app.listen(port);
-var io = socketio(server);
+// Make the app
+let app = express();
+let router = express.Router();
 
 // Connect to database
-var mongo = process.env.MONGO_URI || config.mongo.uri;
+let mongo = process.env.MONGO_URI || config.mongo.uri;
 mongoose.connect(mongo);
 
 // Initialize configuration
-initConfig();
+configure.app(app, router);
+configure.seed();
+
+// Start server
+let port = process.env.PORT || config.port;
+let server = app.listen(port);
+let io = socketio(server);
+
+log.info(`👂  Listening on port ${port}`);
 
 // Export some useful objects
-module.exports.router = router;
 module.exports.app = app;
+module.exports.router = router;
 module.exports.io = io;
-GLOBAL.getApp = function () {
-  return app;
-};
-GLOBAL.getRouter = function () {
-  return router;
-};
-GLOBAL.getIo = function () {
-  return io;
-};
 
-// Include modules
-[
-  'about',
-  'devices',
-  'emails',
-  'events',
-  'exports',
-  'messages',
-  'news',
-  'tickets',
-  'urls',
-  'users/application',
-  'users',
-  'projects',
-  'stats'
-].forEach(function (module) {
-  require('./app/' + module + '/controller');
-});
+// Include routes
+routes(router);
+
+log.info('😎  We are ready to go! Hack away.');

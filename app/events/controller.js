@@ -1,79 +1,83 @@
-var router = getRouter();
-var socket = rootRequire('app/helpers/socket');
-var io = socket('/events');
-var Event = require('./model');
-var User = rootRequire('app/users/model');
+'use strict';
 
-/**
-* Add a new event
-* POST /events
-* Auth -> admin, staff
-*/
-router.post('/events', User.auth('admin', 'staff'), function (req, res) {
-  var errors = Event.validate(req.body);
-  if (errors.length) return res.multiError(errors);
+let Event = require('./model');
+let socket = rootRequire('app/helpers/socket');
+let io = socket('/events');
 
-  var event = new Event(req.body);
-  event.save(function (err, event) {
-    if (err) return res.internalError();
-    io.emit('create', event);
-    return res.json(event);
-  });
-});
+module.exports = {
 
-/**
-* Get an event by ID
-* GET /events/:id
-*/
-router.get('/events/:id', function (req, res) {
-  Event
-    .findById(req.params.id)
-    .exec(function (err, event) {
+  /**
+  * Add a new event
+  * POST /events
+  * Auth -> admin, staff
+  */
+  post: (req, res) => {
+    let errors = Event.validate(req.body);
+    if (errors.length) return res.multiError(errors);
+
+    let event = new Event(req.body);
+    event.save((err, event) => {
       if (err) return res.internalError();
+      io.emit('create', event);
       return res.json(event);
     });
-});
+  },
 
-/**
-* Get a list of events
-* GET /events
-*/
-router.get('/events', function (req, res) {
-  Event
-    .find()
-    .exec(function (err, events) {
-      if (err) return res.internalError();
-      return res.json({events: events});
-    });
-});
+  /**
+  * Get an event by ID
+  * GET /events/:id
+  */
+  find: (req, res) => {
+    Event
+      .findById(req.params.id)
+      .exec((err, event) => {
+        if (err) return res.internalError();
+        return res.json(event);
+      });
+  },
 
-/**
-* Partially update an event
-* PATCH /events/:id
-* Auth -> admin, staff
-*/
-router.patch('/events/:id', User.auth('admin', 'staff'), function (req, res) {
-  Event
-    .findByIdAndUpdate(req.params.id, req.body)
-    .exec(function (err, event) {
-      if (err) return res.internalError();
-      io.emit('update', event);
-      return res.json(event);
-    });
-});
+  /**
+  * Get a list of events
+  * GET /events
+  */
+  get: (req, res) => {
+    Event
+      .find()
+      .exec((err, events) => {
+        if (err) return res.internalError();
+        return res.json({events: events});
+      });
+  },
 
-/**
-* Delete an event
-* DELETE /events/:id
-* Auth -> admin, staff
-*/
-router.delete('/events/:id', User.auth('admin', 'staff'), function (req, res) {
-  Event
-    .findByIdAndRemove(req.params.id)
-    .exec(function (err, event) {
-      if (err) return res.internalError();
-      var response = {_id: event._id};
-      io.emit('delete', response);
-      return res.json(response);
-    });
-});
+  /**
+  * Partially update an event
+  * PATCH /events/:id
+  * Auth -> admin, staff
+  */
+  patch: (req, res) => {
+    Event
+      .findByIdAndUpdate(req.params.id, req.body, {new: true})
+      .exec((err, event) => {
+        if (err) return res.internalError();
+        io.emit('update', event);
+        return res.json(event);
+      });
+  },
+
+  /**
+  * Delete an event
+  * DELETE /events/:id
+  * Auth -> admin, staff
+  */
+  delete: (req, res) => {
+    Event
+      .findByIdAndRemove(req.params.id)
+      .exec((err, event) => {
+        if (err) return res.internalError();
+        let response = {_id: event._id};
+        io.emit('delete', response);
+        return res.json(response);
+      });
+  }
+
+};

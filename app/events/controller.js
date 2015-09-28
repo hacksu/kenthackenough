@@ -13,13 +13,13 @@ module.exports = {
   */
   post: (req, res) => {
     let errors = Event.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
 
     let event = new Event(req.body);
     event.save((err, event) => {
       if (err) return res.internalError();
       io.emit('create', event);
-      return res.json(event);
+      return res.status(201).json(event);
     });
   },
 
@@ -32,7 +32,7 @@ module.exports = {
       .findById(req.params.id)
       .exec((err, event) => {
         if (err) return res.internalError();
-        return res.json(event);
+        return res.status(200).json(event);
       });
   },
 
@@ -45,7 +45,7 @@ module.exports = {
       .find()
       .exec((err, events) => {
         if (err) return res.internalError();
-        return res.json({events: events});
+        return res.status(200).json({events: events});
       });
   },
 
@@ -60,7 +60,7 @@ module.exports = {
       .exec((err, event) => {
         if (err) return res.internalError();
         io.emit('update', event);
-        return res.json(event);
+        return res.status(200).json(event);
       });
   },
 
@@ -76,7 +76,7 @@ module.exports = {
         if (err) return res.internalError();
         let response = {_id: event._id};
         io.emit('delete', response);
-        return res.json(response);
+        return res.status(200).json(response);
       });
   }
 

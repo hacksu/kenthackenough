@@ -44,7 +44,7 @@ module.exports = {
           let index = apps[i].created.getMonth(); // int value of the month, ex 7
           months[index].count++;
         }
-        return res.json({
+        return res.status(200).json({
           months: months.filter((month) => {
             return month.count;
           })
@@ -93,7 +93,7 @@ module.exports = {
               break;
           }
         }
-        return res.json({
+        return res.status(200).json({
           small: small,
           medium: medium,
           large: large,
@@ -145,7 +145,7 @@ module.exports = {
             });
           }
         }
-        return res.json({restrictions: dietary});
+        return res.status(200).json({restrictions: dietary});
       });
   },
 
@@ -184,7 +184,7 @@ module.exports = {
             }
           }
         }
-        return res.json({
+        return res.status(200).json({
           male: male,
           female: female,
           other: other
@@ -228,7 +228,7 @@ module.exports = {
           });
         }
         schools = schools.slice(0, 10);
-        return res.json({schools: schools});
+        return res.status(200).json({schools: schools});
       });
   }
 

@@ -13,12 +13,12 @@ module.exports = {
   */
   post: (req, res) => {
     let errors = Url.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
 
     new Url(req.body).save((err, url) => {
-      if (err) return res.singleError('The URL must be unique');
+      if (err) return res.singleError('The URL must be unique', 409);
       io.emit('create', url);
-      return res.json(url);
+      return res.status(201).json(url);
     });
   },
 
@@ -45,7 +45,7 @@ module.exports = {
       .findById(req.params.id)
       .exec((err, url) => {
         if (err) return res.internalError();
-        return res.json(url);
+        return res.status(200).json(url);
       });
   },
 
@@ -59,7 +59,7 @@ module.exports = {
       .find()
       .exec((err, urls) => {
         if (err) return res.internalError();
-        return res.json({urls: urls});
+        return res.status(200).json({urls: urls});
       });
   },
 
@@ -77,7 +77,7 @@ module.exports = {
           _id: url._id
         };
         io.emit('delete', response);
-        return res.json(response);
+        return res.status(200).json(response);
       });
   }
 

@@ -25,7 +25,7 @@ module.exports = function (adminKey, adminToken) {
           replyTo: 'test@test.com',
           name: 'Test Person'
         })
-        .expect(200)
+        .expect(201)
         .end(function (err, res) {
           if (err) throw err;
           res.body.should.have.property('_id');

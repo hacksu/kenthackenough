@@ -12,12 +12,12 @@ module.exports = {
   */
   post: (req, res) => {
     let errors = Ticket.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
 
     new Ticket(req.body).save((err, ticket) => {
       if (err) return res.internalError();
       io.emit('create', ticket);
-      return res.json(ticket);
+      return res.status(201).json(ticket);
     });
   },
 
@@ -31,7 +31,7 @@ module.exports = {
       .findById(req.params.id)
       .exec((err, ticket) => {
         if (err) return res.internalError();
-        return res.json(ticket);
+        return res.status(200).json(ticket);
       });
   },
 
@@ -45,7 +45,7 @@ module.exports = {
       .find()
       .exec((err, tickets) => {
         if (err) return res.internalError();
-        return res.json({tickets: tickets});
+        return res.status(200).json({tickets: tickets});
       });
   },
 
@@ -61,7 +61,7 @@ module.exports = {
       .exec((err, ticket) => {
         if (err) return res.internalError();
         io.emit('update', ticket);
-        return res.json(ticket);
+        return res.status(200).json(ticket);
       });
   },
 
@@ -78,7 +78,7 @@ module.exports = {
           _id: ticket._id
         };
         io.emit('delete', response);
-        return res.json(response);
+        return res.status(200).json(response);
       });
   }
 

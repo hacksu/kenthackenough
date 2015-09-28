@@ -24,9 +24,9 @@ module.exports = {
       .select('email application role created')
       .exec((err, user) => {
         if (err) return res.internalError();
-        if (user.application) return res.singleError('You have already submitted an application');
+        if (user.application) return res.clientError('You have already submitted an application', 409);
         let errors = Application.validate(req.body);
-        if (errors.length) return res.multiError(errors);
+        if (errors.length) return res.multiError(errors, 400);
         extend(req.body, {
           status: Application.Status.PENDING,
           going: false,
@@ -60,7 +60,7 @@ module.exports = {
               application: application
             };
             io.emit('create', response);
-            return res.json(response);
+            return res.status(201).json(response);
           });
         });
       });
@@ -78,7 +78,7 @@ module.exports = {
       .populate('application')
       .exec((err, user) => {
         if (err) return res.internalError();
-        return res.json(user);
+        return res.status(200).json(user);
       });
   },
 
@@ -94,7 +94,7 @@ module.exports = {
       .populate('application')
       .exec((err, users) => {
         if (err) return res.internalError();
-        return res.json({users: users});
+        return res.status(200).json({users: users});
       });
   },
 
@@ -110,7 +110,7 @@ module.exports = {
       .populate('application')
       .exec((err, user) => {
         if (err) return res.internalError();
-        return res.json(user);
+        return res.status(200).json(user);
       });
   },
 
@@ -121,7 +121,7 @@ module.exports = {
   */
   patch: (req, res) => {
     let errors = Application.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
     if (req.body.dietary) {
       req.body.dietary = req.body.dietary.split('|');
     } else {
@@ -143,7 +143,7 @@ module.exports = {
               application: application
             };
             io.emit('update', response);
-            return res.json(response);
+            return res.status(200).json(response);
           });
       });
   },
@@ -201,7 +201,7 @@ module.exports = {
                 application: application
               };
               io.emit('update', response);
-              return res.json(response);
+              return res.status(200).json(response);
             });
         } else {
           let application = new Application(req.body);
@@ -217,7 +217,7 @@ module.exports = {
                 application: application
               };
               io.emit('update', response);
-              return res.json(response);
+              return res.status(200).json(response);
             });
           });
         }
@@ -241,7 +241,7 @@ module.exports = {
             if (err) return res.internalError();
             let response = {_id: req.user._id};
             io.emit('delete', response);
-            return res.json(response);
+            return res.status(200).json(response);
           });
       });
   },
@@ -263,7 +263,7 @@ module.exports = {
             if (err) return res.internalError();
             let response = {_id: req.params.id};
             io.emit('delete', response);
-            return res.json(response);
+            return res.status(200).json(response);
           });
       });
   },
@@ -275,7 +275,7 @@ module.exports = {
   uploadResume: (req, res) => {
     let form = new multiparty.Form();
     form.parse(req, (err, fields, files) => {
-      if (err || !files.resume) return res.internalError();
+      if (err || !files.resume) return res.singleError('Resume file required', 400);
       fs.readFile(files.resume[0].path, (err, data) => {
         if (err) return res.internalError();
         let ext = path.extname(files.resume[0].path);
@@ -283,7 +283,7 @@ module.exports = {
         let dest = path.join(__dirname, '../../../uploads/' + name + ext);
         fs.writeFile(dest, data, (err) => {
           if (err) return res.internalError();
-          return res.json({
+          return res.status(200).json({
             filename: name + ext
           });
         });

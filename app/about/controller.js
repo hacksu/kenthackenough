@@ -13,7 +13,7 @@ module.exports = {
   */
   put: (req, res) => {
     let errors = About.validate(req.body);
-    if (errors.length) return res.multiError(errors);
+    if (errors.length) return res.multiError(errors, 400);
     req.body.updated = Date.now();
 
     About
@@ -27,14 +27,14 @@ module.exports = {
             .exec((err, about) => {
               if (err) return res.internalError();
               io.emit('update', about);
-              return res.json(about);
+              return res.status(200).json(about);
             });
         } else {
           // insert
           new About(req.body).save((err, about) => {
             if (err) return res.internalError();
             io.emit('create', about);
-            return res.json(about);
+            return res.status(200).json(about);
           });
         }
       });
@@ -50,7 +50,7 @@ module.exports = {
       .findOne()
       .exec((err, about) => {
         if (err) return res.internalError();
-        return res.json(about);
+        return res.status(200).json(about);
       });
   }
 

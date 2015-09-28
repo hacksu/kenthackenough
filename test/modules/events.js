@@ -31,7 +31,7 @@ module.exports = function (adminKey, adminToken) {
           group: 'staff',
           notify: true
         })
-        .expect(200)
+        .expect(201)
         .end(function (err, res) {
           if (err) throw err;
           res.body.should.have.property('_id');

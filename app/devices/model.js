@@ -76,7 +76,7 @@ function dispatch(title, body, ids) {
 
   // Send the message to each group
   let sender = new gcm.Sender(config.gcm.apiKey);
-  for (regIds of regIdSets) {
+  for (let regIds of regIdSets) {
     sender.send(message, {registrationIds: regIds}, 10, (err, result) => {
       if (err) return;
       cleanup(regIds, result);
@@ -95,7 +95,7 @@ function cleanup(regIds, result) {
     // we have some errors
     // populate a list with bad registration ids
     let toRemove = [];
-    for (resObj of result.results) {
+    for (let resObj of result.results) {
       if ('error' in resObj) {
         toRemove.push(regIds[i]);
       }

@@ -35,7 +35,7 @@ EmailSchema.methods.send = function (save, callback) {
       html: marked(this.body)
     });
 
-    for (address of this.recipients.emails) {
+    for (let address of this.recipients.emails) {
       message.addTo(address);
     }
 

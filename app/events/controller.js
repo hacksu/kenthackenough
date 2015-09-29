@@ -1,8 +1,8 @@
 'use strict';
 
 let Event = require('./model');
-let socket = rootRequire('app/helpers/socket');
-let io = socket('/events');
+let push = rootRequire('app/helpers/push')('/events');
+let io = rootRequire('app/helpers/socket')('/events');
 
 module.exports = {
 
@@ -19,6 +19,7 @@ module.exports = {
     event.save((err, event) => {
       if (err) return res.internalError();
       io.emit('create', event);
+      push.send('create', event);
       return res.status(201).json(event);
     });
   },
@@ -60,6 +61,7 @@ module.exports = {
       .exec((err, event) => {
         if (err) return res.internalError();
         io.emit('update', event);
+        push.send('update', event);
         return res.status(200).json(event);
       });
   },
@@ -76,6 +78,7 @@ module.exports = {
         if (err) return res.internalError();
         let response = {_id: event._id};
         io.emit('delete', response);
+        push.send('delete', response);
         return res.status(200).json(response);
       });
   }

@@ -3,6 +3,7 @@
 let mongoose = require('mongoose');
 let schema = require('validate');
 let push = rootRequire('app/helpers/push')('/events');
+let io = rootRequire('app/helpers/socket')('/events');
 
 let Event = mongoose.model('Event', {
   title: String,
@@ -87,6 +88,7 @@ setInterval(() => {
       for (let event of events) {
         if (!event.notified) {
           // send the notification and mark it as sent
+          io.emit('notify', event);
           push.send('notify', event);
           event.notified = true;
           event.save();

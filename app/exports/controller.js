@@ -1,5 +1,6 @@
 'use strict';
 
+let User = rootRequire('app/users/model');
 let csv = require('to-csv');
 let help = rootRequire('app/helpers/functions');
 let path = require('path');

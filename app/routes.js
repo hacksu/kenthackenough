@@ -20,6 +20,7 @@ module.exports = function (router) {
   let xports = require('./exports/controller');
   let messages = require('./messages/controller');
   let news = require('./news/controller');
+  let resources = require('./resources/controller');
   let stats = require('./stats/controller');
   let tickets = require('./tickets/controller');
   let urls = require('./urls/controller');
@@ -64,6 +65,9 @@ module.exports = function (router) {
   router.get('/news/:id', auth('admin', 'staff'), news.find);
   router.get('/news', auth('admin', 'staff'), news.get);
   router.delete('/news/:id', auth('admin', 'staff'), news.delete);
+
+  // resources
+  router.get('/resources/icon', resources.icon);
 
   // stats
   router.get('/stats/registrations', auth('admin', 'staff'), stats.registrations);

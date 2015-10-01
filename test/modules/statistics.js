@@ -203,6 +203,21 @@ module.exports = function (adminKey, adminToken) {
         });
     });
 
+    /**
+    * get the number of applications that are marked probable
+    */
+    it('should get the number of applications that are marked probable', function (done) {
+      request(app)
+        .get('/v1.0/stats/count?probable=true')
+        .auth(adminKey, adminToken)
+        .expect(200)
+        .end(function (err, res) {
+          if (err) throw err;
+          res.body.should.have.property('count');
+          done();
+        });
+    });
+
   });
 
 };

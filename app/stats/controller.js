@@ -2,6 +2,7 @@
 
 let Application = rootRequire('app/users/application/model');
 let User = rootRequire('app/users/model');
+let log = rootRequire('app/helpers/logger');
 
 module.exports = {
 
@@ -229,6 +230,20 @@ module.exports = {
         }
         schools = schools.slice(0, 10);
         return res.status(200).json({schools: schools});
+      });
+  },
+
+  /**
+  * Query for numbers of applications
+  * GET /stats/count?param=value
+  * Auth -> admin, staff
+  */
+  count: (req, res) => {
+    Application
+      .count(req.query)
+      .exec((err, count) => {
+        if (err) return res.internalError();
+        return res.status(200).json({count});
       });
   }
 

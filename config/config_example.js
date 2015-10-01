@@ -2,8 +2,13 @@
 
 module.exports = {
 
-  // API Port
+  // The world-accessible base URL
+  base: 'http://localhost:3000',
+
+  // The port we want the app to run on (override with env.PORT)
   port: 3000,
+
+  // The prefix for our router
   prefix: '/v1.0',
 
   // Log file (check for errors here)

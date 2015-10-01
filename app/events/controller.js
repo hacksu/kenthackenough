@@ -3,6 +3,9 @@
 let Event = require('./model');
 let push = rootRequire('app/helpers/push')('/events');
 let io = rootRequire('app/helpers/socket')('/events');
+let config = rootRequire('config/config');
+let url = require('url');
+let log = rootRequire('app/helpers/logger');
 
 module.exports = {
 
@@ -46,7 +49,8 @@ module.exports = {
       .find()
       .exec((err, events) => {
         if (err) return res.internalError();
-        return res.status(200).json({events: events});
+        if (req.query && req.query.icons) events = bootstrapIcons(events);
+        return res.status(200).json({events});
       });
   },
 
@@ -84,3 +88,32 @@ module.exports = {
   }
 
 };
+
+/**
+* Generate full URLs for event icons to use
+* @param events: [Event]
+*/
+function bootstrapIcons(events) {
+  let base = url.resolve(config.base, config.prefix + '/resources/icon');
+  return events.map((event) => {
+    if (!event.icon) return event;
+    event._doc.iconUrls = {
+      small: {
+        white: `${base}?color=white&format=png&size=32&name=${event.icon}`,
+        black: `${base}?color=black&format=png&size=32&name=${event.icon}`,
+        red: `${base}?color=red&format=png&size=32&name=${event.icon}`
+      },
+      medium: {
+        white: `${base}?color=white&format=png&size=64&name=${event.icon}`,
+        black: `${base}?color=black&format=png&size=64&name=${event.icon}`,
+        red: `${base}?color=red&format=png&size=64&name=${event.icon}`
+      },
+      large: {
+        white: `${base}?color=white&format=png&size=128&name=${event.icon}`,
+        black: `${base}?color=black&format=png&size=128&name=${event.icon}`,
+        red: `${base}?color=red&format=png&size=128&name=${event.icon}`
+      }
+    };
+    return event;
+  });
+}

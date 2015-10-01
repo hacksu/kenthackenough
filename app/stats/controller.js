@@ -2,6 +2,7 @@
 
 let Application = rootRequire('app/users/application/model');
 let User = rootRequire('app/users/model');
+let log = rootRequire('app/helpers/logger');
 
 module.exports = {
 
@@ -238,16 +239,13 @@ module.exports = {
   * Auth -> admin, staff
   */
   count: (req, res) => {
-    User
-      .find()
-      .select('application')
-      .populate({
-        path: 'application',
-        match: req.query,
-        select: '_id'
-      })
-      .count()
+    Application
+      .count(req.query)
       .exec((err, count) => {
+        log.info('error:');
+        log.info(err);
+        log.info('count:');
+        log.info(count);
         if (err) return res.internalError();
         return res.status(200).json({count});
       });

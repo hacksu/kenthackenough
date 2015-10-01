@@ -242,10 +242,6 @@ module.exports = {
     Application
       .count(req.query)
       .exec((err, count) => {
-        log.info('error:');
-        log.info(err);
-        log.info('count:');
-        log.info(count);
         if (err) return res.internalError();
         return res.status(200).json({count});
       });

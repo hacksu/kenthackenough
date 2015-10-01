@@ -71,6 +71,7 @@ module.exports = function (router) {
   router.get('/stats/dietary', auth('admin', 'staff'), stats.dietary);
   router.get('/stats/gender', auth('admin', 'staff'), stats.gender);
   router.get('/stats/schools', auth('admin', 'staff'), stats.schools);
+  router.get('/stats/count', auth('admin', 'staff'), stats.count);
 
   // tickets
   router.post('/tickets', tickets.post);

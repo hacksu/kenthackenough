@@ -230,6 +230,27 @@ module.exports = {
         schools = schools.slice(0, 10);
         return res.status(200).json({schools: schools});
       });
+  },
+
+  /**
+  * Query for numbers of applications
+  * GET /stats/count?param=value
+  * Auth -> admin, staff
+  */
+  count: (req, res) => {
+    User
+      .find()
+      .select('application')
+      .populate({
+        path: 'application',
+        match: req.query,
+        select: '_id'
+      })
+      .count()
+      .exec((err, count) => {
+        if (err) return res.internalError();
+        return res.status(200).json({count});
+      });
   }
 
 };

@@ -221,7 +221,7 @@ function auth() {
               }
             }
 
-            if (t.token == access.token && roles.indexOf(user.role) > -1 && Date.now() < new Date(t.expires).getTime()) {
+            if (t && t.token == access.token && roles.indexOf(user.role) > -1 && Date.now() < new Date(t.expires).getTime()) {
               // Token matches, role has acccess, and token is not expired
               req.user = {
                 _id: user._id,

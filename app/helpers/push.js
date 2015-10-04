@@ -22,7 +22,7 @@ module.exports = function (topic) {
     /**
     * Send a push notification to all services
     */
-    send: (action, doc) => {
+    send: function (action, doc) {
       this._gcm(action, doc);
       this._mpns(action, doc);
     },
@@ -30,7 +30,7 @@ module.exports = function (topic) {
     /**
     * Send a push notification via GCM
     */
-    _gcm: (action, doc) => {
+    _gcm: function (action, doc) {
       if (!config.gcm || !config.gcm.apiKey) return log.error('GCM not configured');
 
       let message = new gcm.Message({
@@ -55,11 +55,14 @@ module.exports = function (topic) {
     /**
     * Send a push notification via MPNS
     */
-    _mpns: (action, doc) => {
+    _mpns: function (action, doc) {
       if (!config.mpns || !config.mpns.connectionString) return log.error('MPNS not configured');
 
       let nhs = azure.createNotificationHubService('khe', config.mpns.connectionString);
-      nhs.mpns.sendToast(null, {action, doc}, (err) => {
+      nhs.mpns.sendToast(null, {
+        text1: action,
+        text2: JSON.stringify(doc)
+      }, (err) => {
         if (err) {
           log.error('[MPNS error]');
           log.error(err);

@@ -59,7 +59,7 @@ module.exports = function (topic) {
       if (!config.mpns || !config.mpns.connectionString) return log.error('MPNS not configured');
 
       let nhs = azure.createNotificationHubService('khe', config.mpns.connectionString);
-      nhs.mpns.sendToast(null, {
+      nhs.mpns.sendToast(config.mpns.tag, {
         text1: action,
         text2: JSON.stringify(doc)
       }, (err) => {

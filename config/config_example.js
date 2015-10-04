@@ -55,6 +55,7 @@ module.exports = {
 
   // Microsoft Azure push notifications
   mpns: {
+    tag: 'NOTIFICATION_HUB_TAG',
     connectionString: 'NOTIFICATION_HUB_CONNECTION_STRING'
   }
 

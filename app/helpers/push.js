@@ -31,6 +31,8 @@ module.exports = function (topic) {
     * Send a push notification via GCM
     */
     _gcm: (action, doc) => {
+      if (!config.gcm || !config.gcm.apiKey) return log.error('GCM not configured');
+
       let message = new gcm.Message({
         data: {
           action,
@@ -54,6 +56,8 @@ module.exports = function (topic) {
     * Send a push notification via MPNS
     */
     _mpns: (action, doc) => {
+      if (!config.mpns || !config.mpns.connectionString) return log.error('MPNS not configured');
+
       let nhs = azure.createNotificationHubService('khe', config.mpns.connectionString);
       nhs.mpns.sendToast(null, {action, doc}, (err) => {
         if (err) {

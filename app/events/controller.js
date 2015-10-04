@@ -47,6 +47,7 @@ module.exports = {
   get: (req, res) => {
     Event
       .find()
+      .sort({start: 1})
       .exec((err, events) => {
         if (err) return res.internalError();
         if (req.query && req.query.icons) events = bootstrapIcons(events);

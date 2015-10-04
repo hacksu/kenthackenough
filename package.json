@@ -25,6 +25,7 @@
     "supertest": "1.1.x"
   },
   "dependencies": {
+    "azure": "0.10.x",
     "bcrypt": "0.8.x",
     "body-parser": "1.14.x",
     "bunyan": "1.5.x",

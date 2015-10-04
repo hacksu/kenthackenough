@@ -51,6 +51,11 @@ module.exports = {
   // Google Cloud Messaging info
   gcm: {
     apiKey: 'YOUR_GOOGLE_API_KEY'
+  },
+
+  // Microsoft Azure push notifications
+  mpns: {
+    connectionString: 'NOTIFICATION_HUB_CONNECTION_STRING'
   }
 
 };

@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - "4.0.0"
+
+install:
+  - sudo ./provision.sh
+  - npm install
+
+services:
+  - mongodb
+  - redis-server

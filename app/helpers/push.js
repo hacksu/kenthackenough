@@ -12,7 +12,6 @@ push.send('create', message);
 */
 
 let gcm = require('node-gcm');
-let azure = require('azure');
 let config = rootRequire('config/config');
 let log = require('./logger');
 
@@ -24,7 +23,6 @@ module.exports = function (topic) {
     */
     send: function (action, doc) {
       this._gcm(action, doc);
-      this._mpns(action, doc);
     },
 
     /**
@@ -48,26 +46,6 @@ module.exports = function (topic) {
         } else {
           log.info(`[GCM result]`);
           log.info(result);
-        }
-      });
-    },
-
-    /**
-    * Send a push notification via MPNS
-    */
-    _mpns: function (action, doc) {
-      if (!config.mpns || !config.mpns.connectionString) return log.error('MPNS not configured');
-
-      let nhs = azure.createNotificationHubService('khe', config.mpns.connectionString);
-      nhs.mpns.sendToast(config.mpns.tag, {
-        text1: action,
-        text2: JSON.stringify(doc)
-      }, (err) => {
-        if (err) {
-          log.error('[MPNS error]');
-          log.error(err);
-        } else {
-          log.info('[MPNS success]');
         }
       });
     }

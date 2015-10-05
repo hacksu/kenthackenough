@@ -38,8 +38,7 @@ npm install -g pm2
 npm install -g bunyan
 
 echo "Next steps:"
-echo "----------------------------------------"
-echo "| rebuild node_modules:  npm run build |"
-echo "| run tests:             npm test      |"
-echo "| start the app:         npm start     |"
-echo "----------------------------------------"
+echo "-------------------------------------------------"
+echo "| run tests:             make vagrant-test      |"
+echo "| start the app:         make vagrant-server    |"
+echo "-------------------------------------------------"

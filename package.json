@@ -21,7 +21,7 @@
     "supertest": "1.1.x"
   },
   "dependencies": {
-    "bcrypt": "0.8.x",
+    "bcryptjs": "2.3.x",
     "body-parser": "1.14.x",
     "bunyan": "1.5.x",
     "compression": "1.5.x",

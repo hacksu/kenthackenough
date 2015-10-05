@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - "4.0.0"
+
+sudo: false
+
+before_install:
+  - cp config/config_travis-ci.js config/config.js
+
+install:
+  - npm install
+
+services:
+  - mongodb
+  - redis-server

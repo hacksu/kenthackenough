@@ -24,3 +24,5 @@ vagrant-stop:
 
 vagrant-rebuild:
 	vagrant ssh -c 'cd /var/www/kenthackenough && npm rebuild'
+
+.PHONY: test server

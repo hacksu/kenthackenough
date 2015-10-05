@@ -16,4 +16,8 @@ services:
 
 notifications:
   email: false
-  slack: khe:tfhhTbfsGC5sNlqxUbmU9OZF
+  slack:
+    rooms:
+      - 'khe:tfhhTbfsGC5sNlqxUbmU9OZF#development'
+    on_success: change
+    on_failure: change

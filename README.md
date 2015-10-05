@@ -2,6 +2,8 @@
 ---
 The world's best hackathon website.
 
+[![Travis](https://img.shields.io/travis/rust-lang/rust.svg)]()
+
 ## About
 This API was made in an effort to ease the organization of Kent Hack Enough as we continue to grow in size. This project was built and is maintained by Paul Dilyard (@pdilyard). Feel free to contact me with any questions.
 

@@ -13,3 +13,7 @@ install:
 services:
   - mongodb
   - redis-server
+
+notifications:
+  email: false
+  slack: khe:tfhhTbfsGC5sNlqxUbmU9OZF

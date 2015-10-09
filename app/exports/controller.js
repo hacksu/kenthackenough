@@ -11,7 +11,6 @@ module.exports = {
   /**
   * Download a CSV of all attendees
   * GET /exports/attendees
-  * Auth -> admin, staff
   */
   attendees: (req, res) => {
     User
@@ -25,7 +24,7 @@ module.exports = {
       })
       .exec((err, users) => {
         if (err) return res.internalError();
-        if (!users) return res.clientError('No attendees match that query');
+        if (!users || !users.length) return res.clientError('No attendees match that query');
         let list = users.map((user) => {
           return {
             'Name': user.application.name || '',
@@ -52,7 +51,6 @@ module.exports = {
   /**
   * Download a resume book
   * GET /exports/resumes
-  * Auth -> admin, staff
   */
   resumes: (req, res) => {
     User

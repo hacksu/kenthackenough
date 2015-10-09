@@ -25,6 +25,7 @@ module.exports = {
       })
       .exec((err, users) => {
         if (err) return res.internalError();
+        if (!users) return res.clientError('No attendees match that query');
         let list = users.map((user) => {
           return {
             'Name': user.application.name || '',

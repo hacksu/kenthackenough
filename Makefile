@@ -10,19 +10,19 @@ start:
 stop:
 	pm2 delete api
 
-vagrant-test:
+vm\:test:
 	vagrant ssh -c 'cd /var/www/kenthackenough && env NODE_ENV='test' mocha test/test.js'
 
-vagrant-server:
+vm\:server:
 	vagrant ssh -c 'cd /var/www/kenthackenough && env NODE_ENV='development' node app.js | bunyan'
 
-vagrant-start:
+vm\:start:
 	vagrant ssh -c 'cd /var/www/kenthackenough && pm2 startOrRestart processes.json'
 
-vagrant-stop:
+vm\:stop:
 	vagrant ssh -c 'cd /var/www/kenthackenough && pm2 delete api'
 
-vagrant-rebuild:
+vm\:rebuild:
 	vagrant ssh -c 'cd /var/www/kenthackenough && npm rebuild'
 
 .PHONY: test server

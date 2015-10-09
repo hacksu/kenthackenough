@@ -19,7 +19,10 @@ module.exports = {
       .select('email application')
       .where({application: {$exists: true}})
       .sort('-created')
-      .populate('application')
+      .populate({
+        path: 'application',
+        match: req.query
+      })
       .exec((err, users) => {
         if (err) return res.internalError();
         let list = users.map((user) => {

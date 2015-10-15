@@ -19,7 +19,6 @@ let redis = require('redis').createClient({
   port: config.redis.port
 });
 let User = rootRequire('app/users/model');
-let config = rootRequire('config/config');
 
 module.exports = function (namespace, roles) {
 

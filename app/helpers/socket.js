@@ -13,7 +13,10 @@
 */
 
 let io = require('../../app').io;
-let redis = require('redis').createClient();
+let redis = require('redis').createClient({
+  host: config.redis.host,
+  port: config.redis.port
+});
 let User = rootRequire('app/users/model');
 let config = rootRequire('config/config');
 

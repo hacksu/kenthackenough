@@ -27,7 +27,11 @@ User Model
 */
 
 let mongoose = require('mongoose');
-let redis = require('redis').createClient();
+let config = rootRequire('config/config');
+let redis = require('redis').createClient({
+  host: config.redis.host,
+  port: config.redis.port
+});
 let bcrypt = require('bcryptjs');
 let uuid = require('uuid');
 let schema = require('validate');

@@ -14,10 +14,7 @@
 
 let io = require('../../app').io;
 let config = rootRequire('config/config');
-let redis = require('redis').createClient({
-  host: config.redis.host,
-  port: config.redis.port
-});
+let redis = require('redis').createClient(config.redis.port, config.redis.host);
 let User = rootRequire('app/users/model');
 
 module.exports = function (namespace, roles) {

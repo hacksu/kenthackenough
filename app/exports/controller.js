@@ -1,6 +1,7 @@
 'use strict';
 
 let User = rootRequire('app/users/model');
+let Application = rootRequire('app/users/application/model');
 let csv = require('to-csv');
 let help = rootRequire('app/helpers/functions');
 let path = require('path');
@@ -53,24 +54,20 @@ module.exports = {
   * GET /exports/resumes
   */
   resumes: (req, res) => {
-    User
-      .find()
-      .select('application')
-      .populate({
-        path: 'application',
-        select: 'resume name'
-      })
-      .exec((err, users) => {
+    Application
+      .find(req.query)
+      .select('resume name')
+      .exec((err, applications) => {
         if (err) return res.internalError();
 
-        let files = users.filter((user) => {
-          return user.application && user.application.resume;
-        }).map((user) => {
+        let files = applications.filter((application) => {
+          return application.resume;
+        }).map((application) => {
 
-          let newName = user.application.name.replace(/\s/g, '').toLowerCase();
-          let newExt = path.extname(user.application.resume);
+          let newName = application.name.replace(/\s/g, '').toLowerCase();
+          let newExt = path.extname(application.resume);
           return {
-            path: path.join(__dirname, '../../uploads/', user.application.resume),
+            path: path.join(__dirname, '../../uploads/', application.resume),
             name: newName + newExt
           };
 

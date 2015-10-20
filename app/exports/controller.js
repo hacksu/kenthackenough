@@ -64,7 +64,8 @@ module.exports = {
           return application.resume;
         }).map((application) => {
 
-          let newName = application.name.replace(/\s/g, '').toLowerCase();
+          // normalize file names
+          let newName = titleCase(application.name).replace(/\s/g, '');
           let newExt = path.extname(application.resume);
           return {
             path: path.join(__dirname, '../../uploads/', application.resume),
@@ -79,3 +80,7 @@ module.exports = {
   }
 
 };
+
+function titleCase(str) {
+  return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}

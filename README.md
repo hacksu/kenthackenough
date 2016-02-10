@@ -10,4 +10,4 @@ This API was made in an effort to ease the organization of Kent Hack Enough as w
 To get familiar with this repository, please check out the documentation in the sidebar on the right. If you're interested in contributing, check out the [Contributing](Contributing) guide. If you're building a client for the API, you can get started by checking out the [API](API) guides.
 
 ## Documentation
-See the repository's [Wiki](wiki) for detailed documentation.
+See the repository's [Wiki](https://github.com/hacksu/kenthackenough/wiki) for detailed documentation.

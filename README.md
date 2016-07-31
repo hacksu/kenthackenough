@@ -1,4 +1,4 @@
-![Kent Hack Enough](http://khe.io/img/logo.png "Kent Hack Enough")
+![Kent Hack Enough](http://2015.khe.io/img/logo.png "Kent Hack Enough")
 ---
 The world's best hackathon website.
 

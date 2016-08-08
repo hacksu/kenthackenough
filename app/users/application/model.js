@@ -20,7 +20,7 @@ let Application = mongoose.model('Application', {
   name: String,           // full name
   school: String,         // name of school
   phone: String,          // phone number
-  shirt: {type: String, enum: ['S', 'M', 'L', 'XL']}, // t-shirt size
+  shirt: {type: String, enum: ['S', 'M', 'L', 'XL', 'XXL']}, // t-shirt size
   demographic: Boolean,   // allowed to use demographic info?
   first: Boolean,         // is this your first hackathon?
   dietary: [String],      // an array of dietary restrictions
@@ -63,7 +63,7 @@ let Helpers = {
       shirt: {
         required: true,
         type: 'string',
-        match: /[XL|L|M|S]+/,
+        match: /[XXL|XL|L|M|S]+/,
         message: 'You must provide your t-shirt size'
       },
       demographic: {

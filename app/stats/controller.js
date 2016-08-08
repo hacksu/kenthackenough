@@ -78,6 +78,7 @@ module.exports = {
         let medium = 0;
         let large = 0;
         let xlarge = 0;
+        let xxlarge = 0;
         for (let i = 0; i < apps.length; ++i) {
           switch (apps[i].shirt) {
             case 'S':
@@ -92,13 +93,17 @@ module.exports = {
             case 'XL':
               xlarge++;
               break;
+            case 'XXL':
+              xxlarge++;
+              break;
           }
         }
         return res.status(200).json({
           small: small,
           medium: medium,
           large: large,
-          xlarge: xlarge
+          xlarge: xlarge,
+          xxlarge: xxlarge
         });
       });
   },

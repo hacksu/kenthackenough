@@ -177,7 +177,7 @@ module.exports = {
                 // Send acceptance email
                 new Email({
                   subject: 'You\'ve been accepted to KHE!',
-                  body: '',//acceptedTemplate,
+                  body: acceptedTemplate,
                   recipients: {
                     emails: [user.email]
                   }

@@ -11,6 +11,9 @@ let fs = require('fs');
 let path = require('path');
 let uuid = require('uuid');
 
+//Templates
+let acceptedTemplate = require('./templates/acceptedTemplate.html');
+
 module.exports = {
 
   /**
@@ -169,7 +172,7 @@ module.exports = {
                 // Send acceptance email
                 new Email({
                   subject: 'You\'ve been accepted to KHE!',
-                  body: '## You\'re invited!\n\n\nCongratulations, you have been accepted to Kent Hack Enough. Please RSVP here: [khe.io/rsvp](https://khe.io/rsvp).\n\n\nUntil then, a few things to note:\n\n\n**What you should bring:**\n- Deodorant\n- Laptop and charger\n- Valid school ID\n- Phone/charger\n- Change of clothes\n- Deodorant\n- Basic toiletries\n- Pillow and blanket\n- Deodorant\n\n\n**Hackers looking for travel reimbursements:** Please submit a request on the contact form of [our website](https://khe.io) and we\'ll get back to you. Hackers may receive travel reimbursement on a first come first serve basis.\n\n\n**Hackers under the age of 18:** Please have a parent/guardian sign our minor waiver [go.khe.io/waiver](http://go.khe.io/waiver) and return that to us at [staff@khe.io](mailto:staff@khe.io) before the event.\n\n\n**Make sure your resume is attached to your application if you\'re looking for full time jobs or internships.** You can edit your application by logging in at [khe.io](https://khe.io)\n\n\nWe\'re looking forward to seeing you on October 9th!\n\n\n\nRegards,\n\nKent Hack Enough Team',
+                  body: acceptedTemplate,
                   recipients: {
                     emails: [user.email]
                   }

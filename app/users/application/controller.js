@@ -13,6 +13,7 @@ let uuid = require('uuid');
 
 //Templates
 let acceptedTemplate = require('./templates/acceptedTemplate.html');
+let waitlistTemplate = require('./templates/waitlistTemplate.html');
 
 module.exports = {
 
@@ -181,7 +182,8 @@ module.exports = {
                 // Send waitlist email
                 new Email({
                   subject: 'You have been waitlisted',
-                  body: 'Hello,\n\nYou have been added to the Kent Hack Enough waitlist. Please standby for further emails, as we will try to accomodate as many hackers from the waitlist as we can. \n\n\n\nRegards,\n\nKent Hack Enough Team',
+                  body: waitlistTemplate,
+                  //'Hello,\n\nYou have been added to the Kent Hack Enough waitlist. Please standby for further emails, as we will try to accomodate as many hackers from the waitlist as we can. \n\n\n\nRegards,\n\nKent Hack Enough Team',
                   recipients: {
                     emails: [user.email]
                   }

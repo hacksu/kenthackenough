@@ -12,8 +12,8 @@ let path = require('path');
 let uuid = require('uuid');
 
 //Templates
-let acceptedTemplate = require('./templates/acceptedTemplate.html');
-let waitlistTemplate = require('./templates/waitlistTemplate.html');
+let acceptedTemplate = fs.readFile('users/application/templates/acceptedTemplate.html', function(req, res){ });
+let waitlistTemplate = fs.readFile('users/application/templates/waitlistTemplate.html', function(req, res){ });
 
 module.exports = {
 

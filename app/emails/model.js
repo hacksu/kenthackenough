@@ -31,7 +31,7 @@ EmailSchema.methods.send = function (save, callback) {
       from: config.sendgrid.from,
       fromname: config.sendgrid.fromname,
       subject: this.subject,
-      //text: this.body,
+      text: this.body,
       html: this.body
     });
 

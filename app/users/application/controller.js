@@ -11,9 +11,6 @@ let fs = require('fs');
 let path = require('path');
 let uuid = require('uuid');
 
-//Templates
-let acceptedTemplate = require('./templates/acceptedTemplate.html');
-
 module.exports = {
 
   /**
@@ -169,6 +166,8 @@ module.exports = {
             .exec((err, application) => {
               if (err) return res.internalError();
               if (req.body.status == Application.Status.APPROVED) {
+                var acceptedTemplate = fs.readFileSync('templates/acceptedTemplate.html', 'utf8');
+
                 // Send acceptance email
                 new Email({
                   subject: 'You\'ve been accepted to KHE!',

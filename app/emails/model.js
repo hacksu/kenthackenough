@@ -39,7 +39,10 @@ EmailSchema.methods.send = function (save, callback) {
       message.addTo(address);
     }
 
-    sendgrid.send(message);
+    console.log(message.body);
+    console.log(message.text);
+
+    console.log(sendgrid.send(message));
 
   }
 

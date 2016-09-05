@@ -10,7 +10,6 @@ let multiparty = require('multiparty');
 let fs = require('fs');
 let path = require('path');
 let uuid = require('uuid');
-let log = require('./app/helpers/logger');
 
 module.exports = {
 
@@ -167,21 +166,23 @@ module.exports = {
             .exec((err, application) => {
               if (err) return res.internalError();
               if (req.body.status == Application.Status.APPROVED) {
-                var acceptedTemplate = fs.readFileSync('app/users/application/templates/acceptedTemplate.html', 'utf8');
+                var template = fs.readFileSync('app/users/application/templates/acceptedTemplate.html', 'utf8');
 
                 // Send acceptance email
                 new Email({
                   subject: 'You\'ve been accepted to KHE!',
-                  body: acceptedTemplate,
+                  body: template,
                   recipients: {
                     emails: [user.email]
                   }
                 }).send();
               } else if (req.body.status == Application.Status.WAITLISTED) {
+                var template = fs.readFileSync('app/users/application/templates/waitlistTemplate.html', 'utf8');
+
                 // Send waitlist email
                 new Email({
                   subject: 'You have been waitlisted',
-                  body: 'Hello,\n\nYou have been added to the Kent Hack Enough waitlist. Please standby for further emails, as we will try to accomodate as many hackers from the waitlist as we can. \n\n\n\nRegards,\n\nKent Hack Enough Team',
+                  body: template, //'Hello,\n\nYou have been added to the Kent Hack Enough waitlist. Please standby for further emails, as we will try to accomodate as many hackers from the waitlist as we can. \n\n\n\nRegards,\n\nKent Hack Enough Team',
                   recipients: {
                     emails: [user.email]
                   }

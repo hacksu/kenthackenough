@@ -16,8 +16,6 @@ let Application = mongoose.model('Application', {
   door: Boolean,          // was this person registered during check-in?
   probable: {type: Boolean, default: false}, // is this person a probable attendee?
 
-  extra: {type: mongoose.Schema.Types.Mixed, default: {}}, // wild card field for year specific data
-
   // Actual application form
   name: String,           // full name
   school: String,         // name of school
@@ -122,7 +120,7 @@ let Helpers = {
         type: 'boolean',
         message: 'Specify RSVP status'
       }
-    }, {typecast: true, strip: false});
+    }, {typecast: true});
     return test.validate(app);
   }
 

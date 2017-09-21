@@ -370,6 +370,7 @@ module.exports = function (callback/*admin*/) {
         user.application.should.have.property('created');
         user.application.should.have.property('door');
         user.application.should.have.property('probable');
+        user.application.should.have.property('extra');
       }
 
       /**
@@ -390,6 +391,8 @@ module.exports = function (callback/*admin*/) {
             year: 'Senior',
             age: 21,
             gender: 'Male',
+            extra: {'test': true},
+            shouldnt: true,
             major: 'Basket Weaving',
             conduct: true,
             travel: false
@@ -403,6 +406,8 @@ module.exports = function (callback/*admin*/) {
             res.body.application.phone.should.equal('5555555555');
             res.body.application.shirt.should.equal('XL');
             res.body.application.demographic.should.equal(true);
+            res.body.application.extra.test.should.equal(true);
+            res.body.application.extra.test.should.not.have.property('shouldnt');
             res.body.application.status.should.equal('pending');
             res.body.application.going.should.equal(false);
             done();

@@ -16,7 +16,7 @@ module.exports = {
   addPoints: (req, res) => {    
 
     let points = {
-      userID: User._id,
+      userID: req.user._id,
       points: req.params.points,
       sponsorerID: req.params.src,
       reason: req.params.reason,

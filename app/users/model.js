@@ -212,7 +212,7 @@ function auth() {
           .findById(access.key)
           .select('email role tokens')
           .exec((err, user) => {
-            if (err || !user.tokens.length) return Helpers.authError(res);
+            if (err || !user || !user.tokens || !user.tokens.length) return Helpers.authError(res);
 
             let t;
             for (let i = 0; i < user.tokens.length; ++i) {

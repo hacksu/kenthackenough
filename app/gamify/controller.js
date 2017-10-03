@@ -2,15 +2,17 @@
 
 let Gamify = require('./model');
 let User = require('../users/model');
+let Application = require('../users/application/model');
 
 module.exports = {
 
   leaderboard: (req, res) => {
     Gamify.find()
+    .populate('userID')
     .exec((err, leaderboard) =>
     {
       res.send(leaderboard);
-    });
+    });    
   },
 
   addPoints: (req, res) => {    

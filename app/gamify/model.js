@@ -6,7 +6,7 @@ let schema = require('validate');
 let GAMIFY_COLLECTION = 'collection';
 
 let Gamify = mongoose.model('gamify', {
-    userID: String,
+    userID: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } ,
     points: Number,
     sponsorerID: String,
     reason: String,

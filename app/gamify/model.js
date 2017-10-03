@@ -17,19 +17,29 @@ function validate(gamify)
 {
     let test = schema({
         userID: {
-            
+            type: 'string',
+            required: true,
+            message: 'Must specify a user.'
         },
         points: {
-
+            type: 'int',
+            required: true,
+            message: 'Must specify points.'
         },
         sponsorerID: {
-        
+            type: 'string',
+            required: true,
+            message: 'Must specify a source.'
         },
         reason: {
-        
+            type: 'string',
+            required: true,
+            message: 'Must specify a reason.'
         },
         pointID: {
-            
+            type: 'string',
+            required: true,
+            message: 'Must specify a pointID.'
         }
     });
     return test.validate(gamify);

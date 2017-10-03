@@ -27,11 +27,25 @@ module.exports = {
 
     if (!Gamify.validate(points))
     {
+      console.log('invalid input');
       res.send('invalid input');
       return;
     }
-    new Gamify(points).save((err, p) => {
-      res.send('ok');
+
+    Gamify
+    .find({ 
+      userID: points.userID,
+      pointID: points.pointID
+    })
+    .count()
+    .exec((err, cnt) => {
+        console.log(cnt);
+        if (cnt <= 0)
+        {
+          Gamify(points).save((err, p) => {
+            res.send('ok');
+          });
+        }
     });
   },
 };

@@ -10,7 +10,8 @@ let Gamify = mongoose.model('gamify', {
     points: Number,
     sponsorerID: String,
     reason: String,
-    pointID: Number
+    pointID: Number,
+    email: String
 });
 
 function validate(gamify)
@@ -40,6 +41,10 @@ function validate(gamify)
             type: 'string',
             required: true,
             message: 'Must specify a pointID.'
+        },
+        email: {
+            type: 'string',
+            required: false,
         }
     });
     return test.validate(gamify);

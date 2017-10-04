@@ -23,9 +23,13 @@ module.exports = {
       {$group: {
         _id: '$_id' , // This is the userID
         email: { $first: '$email'},
-        points: {$sum: '$pointsItems.points'}
-      }
-    }])
+        points: {$sum: '$pointsItems.points'}}
+      },
+      // 5. Sort in from highest score to lowest score.
+      {$sort: {
+          points: -1
+        }
+      }])
     .exec((err, leaderboard) =>
     {
       if (err)

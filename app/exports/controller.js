@@ -61,7 +61,7 @@ module.exports = {
         if (err) return res.internalError();
 
         let files = applications.filter((application) => {
-          return application.resume;
+          return application.resume && application.resume.length > 0;
         }).map((application) => {
 
           // normalize file names

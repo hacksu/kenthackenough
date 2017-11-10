@@ -1,18 +1,18 @@
 'use strict';
 
-let Sponsorer = require('./model');
+let Sponsor = require('./model');
 
 module.exports = {
   
-  allSponsorers: (req, res) => {
-    Sponsorer.find()
+  allSponsors: (req, res) => {
+    Sponsor.find()
     .exec((err, spons) => {
         res.send(spons);
     });
   },
   
-  getSponsorer: (req, res) => {
-    Sponsorer.findById(req.params.id)
+  getSponsor: (req, res) => {
+    Sponsor.findById(req.params.id)
     .exec((err, spons) => {
         res.send(spons);
     });

@@ -26,7 +26,7 @@ module.exports = function (router) {
   let urls = require('./urls/controller');
   let users = require('./users/controller');
   let application = require('./users/application/controller');
-  let sponsorers = require('./sponsorers/controller');
+  let sponsors = require('./sponsors/controller');
 
   /*
   ------------------------------------------------------------------------------
@@ -117,9 +117,9 @@ module.exports = function (router) {
   router.delete('/users/:id', auth('admin'), users.delete);
   router.post('/users/reset', users.resetPassword);
 
-  // sponsorers
-  router.get('/sponsorers', sponsorers.allSponsorers);
-  router.get('/sponsorers/:id', sponsorers.getSponsorer);
-  router.get('/sponsorers/:id/logo', sponsorers.getLogo);
-  router.post('/sponsorers/:id/logo', auth('admin'), sponsorers.putLogo);
+  // sponsors
+  router.get('/sponsors', sponsors.allSponsors);
+  router.get('/sponsors/:id', sponsors.getSponsor);
+  router.get('/sponsors/:id/logo', sponsors.getLogo);
+  router.post('/sponsors/:id/logo', auth('admin'), sponsors.putLogo);
 };

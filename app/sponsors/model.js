@@ -3,34 +3,34 @@
 let mongoose = require('mongoose');
 let schena = require('validate');
 
-let Sponsorer = mongoose.model('Sponsorer', {
+let Sponsor = mongoose.model('Sponsor', {
     name: {type: String, unique: true },
     link: String,
     logo: String,
 });
 
-function validate(sponsorer)
+function validate(sponsor)
 {
     let test = schema({
         name: {
             type: 'string',
             required: true,
-            message: 'You must provide a sponsorer name.'
+            message: 'You must provide a sponsor name.'
         },
         link: {
             type: 'string',
             require: true,
-            message: 'You must provide a sponsorer link.'
+            message: 'You must provide a sponsor link.'
         },
         logo: {
             
             type: 'string',
             require: true,
-            message: 'You must provide a sponsorer logo.'
+            message: 'You must provide a sponsor logo.'
         }
     });
-    return test.validate(sponsorer);
+    return test.validate(sponsor);
 }
 
-module.exports = Sponsorer;
+module.exports = Sponsor;
 module.exports.validate = validate;

@@ -27,7 +27,6 @@ module.exports = function (router) {
   let users = require('./users/controller');
   let application = require('./users/application/controller');
   let sponsorers = require('./sponsorers/controller');
-  let gamify = require('./gamify/controller');
 
   /*
   ------------------------------------------------------------------------------
@@ -123,8 +122,4 @@ module.exports = function (router) {
   router.get('/sponsorers/:id', sponsorers.getSponsorer);
   router.get('/sponsorers/:id/logo', sponsorers.getLogo);
   router.post('/sponsorers/:id/logo', auth('admin'), sponsorers.putLogo);
-
-  // gamify
-  router.get('/gamify/scoreboard', gamify.leaderboard);
-  router.get('/gamify/:pid/:points/:src/:reason', auth(), gamify.addPoints);
 };

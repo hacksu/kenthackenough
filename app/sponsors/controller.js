@@ -5,14 +5,14 @@ let Sponsor = require('./model');
 module.exports = {
   
   allSponsors: (req, res) => {
-    Sponsor.find()
+    Sponsor.find().sort({"amount": -1})
     .exec((err, spons) => {
         res.send(spons);
     });
   },
   
   getSponsor: (req, res) => {
-    Sponsor.findById(req.params.id)
+    Sponsor.find({amount: req.params.id})
     .exec((err, spons) => {
         res.send(spons);
     });

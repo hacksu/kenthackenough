@@ -1,6 +1,7 @@
 'use strict';
 
-let Sponsor = require('./model');
+let Sponsor = require('./model').Sponsor;
+let Benefits = require('./model').Benefits;
 
 module.exports = {
   
@@ -25,5 +26,19 @@ module.exports = {
   
   putLogo: (req, res) => {
     
+  },
+
+  newPurchase: (req, res) => {
+    new Benefits(req.body).save((err, benefit) => {
+      if (err) throw err;
+      else console.log("ok");
+    })
+  },
+
+  sponsorBenefits: (req, res) => {
+    Benefits.find()
+    .exec((err, benefits) => {
+      res.send(benefits);
+    });
   }
 };

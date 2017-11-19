@@ -9,6 +9,29 @@ let Sponsor = mongoose.model('Sponsor', {
     logo: String,
 });
 
+let Benefits = mongoose.model('Benefits', {
+    companyName: String,
+    contactEmail: String,
+    send_mentors: Boolean,
+    reserve_table: Boolean,
+    judge_final_hacks: Boolean,
+    speak_at_opening_ceremony: Boolean,
+    keynote_speaker: Boolean,
+    reserved_space: Boolean,
+    logo_on_website: Boolean,
+    logo_on_t: Boolean,
+    swag_in_swag_bags: Boolean,
+    send_recruiters: Boolean,
+    resume_book_after: Boolean,
+    resume_book_before: Boolean,
+    resume_book_before: Boolean,
+    hacksu_lesson: Boolean,
+    hacksu_logo_on_website: Boolean,
+    hacksu_name_on_website: Boolean,
+    hacksu_logo_on_t: Boolean,
+    hacksu_big_logo_on_t: Boolean,
+});
+
 function validate(sponsor)
 {
     let test = schema({
@@ -32,5 +55,6 @@ function validate(sponsor)
     return test.validate(sponsor);
 }
 
-module.exports = Sponsor;
+module.exports.Sponsor = Sponsor;
+module.exports.Benefits = Benefits;
 module.exports.validate = validate;

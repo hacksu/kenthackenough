@@ -122,4 +122,6 @@ module.exports = function (router) {
   router.get('/sponsors/:id', sponsors.getSponsor);
   router.get('/sponsors/:id/logo', sponsors.getLogo);
   router.post('/sponsors/:id/logo', auth('admin'), sponsors.putLogo);
+  router.post('/sponsors/cart', sponsors.newPurchase);
+  router.get('/sponsors/benefits',sponsors.sponsorBenefits);
 };

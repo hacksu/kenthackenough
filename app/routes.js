@@ -121,5 +121,5 @@ module.exports = function (router) {
   router.get('/sponsors', sponsors.allSponsors);
   router.get('/sponsors/:id', sponsors.getSponsor);
   router.get('/sponsors/:id/logo', sponsors.getLogo);
-  router.post('/sponsors/:id/logo', auth('admin'), sponsors.putLogo);
+  router.post('/sponsors/:id/logo', sponsors.putLogo);
 };

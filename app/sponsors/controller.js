@@ -6,7 +6,7 @@ let ObjectId = require('mongoose').Types.ObjectId;
 let multiparty = require('multiparty');
 
 module.exports = {
-  
+
   allSponsors: (req, res) => {
     Sponsor.find().sort({"amount": -1})
     .exec((err, spons) => {
@@ -35,6 +35,23 @@ module.exports = {
       if (err) throw err;
       console.log(files.img[0].path);
       fs.readFileSync(files.img[0].path);
-    }); 
+    });     
+  },
+
+  add: (req, res) => {
+    new Sponsor(req.body)
+    .save((err, data) => {
+      if (err) console.log(err);
+      else console.log('added');
+    });
+    res.send(req.body)
+  },
+
+  remove: (req, res) => {
+    console.log('remove: ' + req.params.id);
+  },
+
+  update: (req, res) => {
+    console.log('update: ' + req.params.id);
   }
 };

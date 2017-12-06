@@ -118,8 +118,20 @@ module.exports = function (router) {
   router.post('/users/reset', users.resetPassword);
 
   // sponsors
+  // GET Sponsor List
   router.get('/sponsors', sponsors.allSponsors);
-  router.get('/sponsors/:id', sponsors.getSponsor);
+  // GET Sponsor
+  router.get('/sponsors/:id', sponsors.getSponsor);  
+  // GET Logo
   router.get('/sponsors/:id/logo', sponsors.getLogo);
-  router.post('/sponsors/:id/logo', sponsors.putLogo);
+  
+  // POST-AUTH New Sponsor
+  router.post('/sponsors/', auth('admin', 'staff'), sponsors.add);
+  // POST-AUTH Update Sponsor
+  router.post('/sponsors/:id/update', auth('admin', 'staff'), sponsors.update);
+  // POST-AUTH Logo 
+  router.post('/sponsors/:id/logo', sponsors.putLogo);  
+
+  // DELETE-AUTH Remove
+  router.delete('/sponsors/:id', auth('admin', 'staff'), sponsors.remove);
 };

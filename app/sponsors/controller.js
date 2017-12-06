@@ -48,7 +48,15 @@ module.exports = {
   },
 
   remove: (req, res) => {
-    console.log('remove: ' + req.params.id);
+    Sponsor
+    .remove({_id: req.params.id}, (err, data) =>{
+      if (err)
+      {
+        console.log(err);
+        res.sendStatus(500);
+      } 
+      else res.sendStatus(200);
+    });
   },
 
   update: (req, res) => {

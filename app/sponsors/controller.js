@@ -60,6 +60,17 @@ module.exports = {
   },
 
   update: (req, res) => {
-    console.log('update: ' + req.params.id);
+    Sponsor
+    .update({_id: req.params.id }, {$set: {
+        name: req.body.name,
+        link: req.body.link,
+        amount: req.body.amount
+      }}, (err, data) => {
+        if (err) {
+          console.log(err);
+          res.sendStatus(500);
+        }
+        else res.sendStatus(200);
+      });
   }
 };

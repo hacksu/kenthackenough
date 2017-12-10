@@ -10,6 +10,9 @@ app/emails/general/content.md
 logs
 *.log
 
+# Default logo save location.
+logos/
+
 # Runtime data
 pids
 *.pid

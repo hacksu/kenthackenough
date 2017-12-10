@@ -51,6 +51,9 @@ module.exports = {
   // Google Cloud Messaging info
   gcm: {
     apiKey: 'YOUR_GOOGLE_API_KEY'
-  }
+  },
+  
+  // The location that sponsor logos are saved to.
+  logoDir: 'logos/'
 
 };

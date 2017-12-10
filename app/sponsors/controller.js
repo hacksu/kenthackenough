@@ -1,40 +1,100 @@
 'use strict';
 
 let Sponsor = require('./model');
-let fs = require('fs');
+let mv = require('mv');
 let ObjectId = require('mongoose').Types.ObjectId;
 let multiparty = require('multiparty');
+let config = require('../../config/config');
+let path = require('path');
+let projectRoot = require('../../app').projectRoot;
 
 module.exports = {
 
   allSponsors: (req, res) => {
-    Sponsor.find().sort({"amount": -1})
+    Sponsor
+    // Exclude the logo because it contains a server path.
+    .find({ }, { logo:0 })
+    .sort({"amount": -1})
     .exec((err, spons) => {
         res.send(spons);
     });
   },
   
   getSponsor: (req, res) => {
-    Sponsor.findOne({_id: ObjectId(req.params.id)})
+    Sponsor
+    // Exclude the logo because it contains a server path.
+    .findOne({_id: ObjectId(req.params.id)}, { logo:0 })
     .exec((err, spons) => {
         res.send(spons);
     });
   },
 
   getLogo: (req, res) => {
-    // TODO: get the image back from the database
     var id = req.params.id;      
-      res.send(id);
+    Sponsor
+    .findOne({_id: ObjectId(req.params.id)})
+    .select('logo -_id')
+    .exec((err, spons) => {
+
+      // Handle database errors.
+      if (err) {
+        res.sendStatus(500);
+        throw err;
+      }
+      else if (!spons){
+        res.sendStatus(404)
+        return;
+      }
+
+      // Try to send the image if it exists.
+      if (spons.logo) {
+        res.sendFile(spons.logo);
+      } else {
+        res.sendStatus(404);
+      }
+    });
   },
   
   putLogo: (req, res) => {
-    // TODO: figure out how to post this to the database
     let img = new multiparty.Form();
     img.parse(req, (err, fields, files) =>
     {
-      if (err) throw err;
-      console.log(files.img[0].path);
-      fs.readFileSync(files.img[0].path);
+      if (err) {
+        res.sendStatus(500);
+        throw err;
+      }
+
+      var logo = files.file[0];
+      // Create the logo file from the sponsor 
+      // name because that must be unique.
+      var logoPath = projectRoot + '/'
+                    + config.logoDir 
+                    + fields['sponsor[name]'][0]
+                    + path.extname(logo.originalFilename);
+
+      // Move the file out of /tmp/
+      mv(logo.path, logoPath, {
+        mkdirp: true,
+        clobber: true
+      }, (err) => {
+
+        if (err) {
+          res.sendStatus(500);
+          throw err;
+        }
+
+        // Save the updated file location in the database.
+        Sponsor.update({_id: req.params.id }, {$set: {
+          logo: logoPath
+        }}, (err, data) => {
+          if (err) {
+            res.sendStatus(500);
+            throw err;
+          }
+          res.sendStatus(200);
+        });
+
+      });
     });     
   },
 

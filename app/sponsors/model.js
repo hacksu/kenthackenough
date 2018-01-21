@@ -1,7 +1,7 @@
 'use strict';
 
 let mongoose = require('mongoose');
-let schena = require('validate');
+let schema = require('validate');
 
 let Sponsor = mongoose.model('Sponsor', {
     name: {type: String, unique: true },
@@ -20,13 +20,13 @@ function validate(sponsor)
         },
         link: {
             type: 'string',
-            require: true,
+            required: true,
             message: 'You must provide a sponsor link.'
         },
         logo: {
             
             type: 'string',
-            require: true,
+            required: true,
             message: 'You must provide a sponsor logo.'
         }
     });

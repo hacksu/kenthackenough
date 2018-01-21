@@ -99,6 +99,11 @@ module.exports = {
   },
 
   add: (req, res) => {
+
+    let errors = Sponsor.validate(req.body);
+
+    if (errors.length) return res.multiError(errors, 400);
+
     new Sponsor(req.body)
     .save((err, data) => {
       if (err) console.log(err);

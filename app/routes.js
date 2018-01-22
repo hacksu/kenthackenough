@@ -128,7 +128,7 @@ module.exports = function (router) {
   // POST-AUTH New Sponsor
   router.post('/sponsors/', auth('admin', 'staff'), sponsors.add);
   // POST-AUTH Update Sponsor
-  router.post('/sponsors/:id/update', auth('admin', 'staff'), sponsors.update);
+  router.post('/sponsors/:id', auth('admin', 'staff'), sponsors.update);
   // POST-AUTH Logo 
   router.post('/sponsors/:id/logo', sponsors.putLogo);  
 

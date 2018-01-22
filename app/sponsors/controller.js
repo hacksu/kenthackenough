@@ -7,13 +7,14 @@ let multiparty = require('multiparty');
 let config = require('../../config/config');
 let path = require('path');
 let projectRoot = require('../../app').projectRoot;
+let fs = require('fs');
 
 module.exports = {
 
   allSponsors: (req, res) => {
     Sponsor
     // Exclude the logo because it contains a server path.
-    .find({ }, { logo:0 })
+    .find({ }, { logoPath:0 })
     .sort({"amount": -1})
     .exec((err, spons) => {
         res.send(spons);
@@ -22,8 +23,8 @@ module.exports = {
   
   getSponsor: (req, res) => {
     Sponsor
-    // Exclude the logo because it contains a server path.
-    .findOne({_id: ObjectId(req.params.id)}, { logo:0 })
+    // Exclude the logoPath because it contains a server path.
+    .findOne({_id: ObjectId(req.params.id)}, { logoPath:0 })
     .exec((err, spons) => {
         res.send(spons);
     });
@@ -33,7 +34,6 @@ module.exports = {
     var id = req.params.id;      
     Sponsor
     .findOne({_id: ObjectId(req.params.id)})
-    .select('logo -_id')
     .exec((err, spons) => {
 
       // Handle database errors.
@@ -45,10 +45,10 @@ module.exports = {
         res.sendStatus(404)
         return;
       }
-
+     
       // Try to send the image if it exists.
-      if (spons.logo) {
-        res.sendFile(spons.logo);
+      if (spons.logoPath) {
+        res.sendFile(spons.logoPath);
       } else {
         res.sendStatus(404);
       }
@@ -56,44 +56,60 @@ module.exports = {
   },
   
   putLogo: (req, res) => {
-    let img = new multiparty.Form();
-    img.parse(req, (err, fields, files) =>
-    {
+    var id = req.params.id;      
+    Sponsor
+    .findOne({_id: ObjectId(req.params.id)})
+    .exec((err, spons) => {
+      
+      // Handle database errors.
       if (err) {
         res.sendStatus(500);
         throw err;
       }
+      else if (!spons){
+        res.sendStatus(404)
+        return;
+      }
 
-      var logo = files.file[0];
-      // Create the logo file from the sponsor 
-      // name because that must be unique.
-      var logoPath = projectRoot + '/'
-                    + config.logoDir 
-                    + fields['sponsor[name]'][0]
-                    + path.extname(logo.originalFilename);
-
-      // Move the file out of /tmp/
-      mv(logo.path, logoPath, {
-        mkdirp: true,
-        clobber: true
-      }, (err) => {
-
+      let img = new multiparty.Form();
+      img.parse(req, (err, fields, files) =>
+      {
         if (err) {
           res.sendStatus(500);
           throw err;
         }
 
-        // Save the updated file location in the database.
-        Sponsor.update({_id: req.params.id }, {$set: {
-          logo: logoPath
-        }}, (err, data) => {
+        var logo = files.file[0];
+        // Create the logo file from the sponsor 
+        // name because that must be unique.
+        var logoPath = projectRoot + '/'
+                      + config.logoDir 
+                      + spons._id.toString()
+                      + path.extname(logo.path);
+
+        // Move the file out of /tmp/
+        mv(logo.path, logoPath, {
+          mkdirp: true,
+          clobber: true
+        }, (err) => {
+
           if (err) {
             res.sendStatus(500);
             throw err;
           }
-          res.sendStatus(200);
-        });
 
+          // Save the updated file location in the database.
+          Sponsor.update({_id: req.params.id }, {$set: {
+            logoPath: logoPath
+          }}, (err, data) => {
+            if (err) {
+              res.sendStatus(500);
+              throw err;
+            }
+            res.sendStatus(200);
+          });
+
+        });
       });
     });     
   },
@@ -101,30 +117,49 @@ module.exports = {
   add: (req, res) => {
 
     let errors = Sponsor.validate(req.body);
-
     if (errors.length) return res.multiError(errors, 400);
 
     new Sponsor(req.body)
     .save((err, data) => {
       if (err) console.log(err);
-      else console.log('added');
+      else  res.send(data);
     });
-    res.send(req.body)
   },
 
   remove: (req, res) => {
+    var id = req.params.id;      
     Sponsor
-    .remove({_id: req.params.id}, (err, data) =>{
-      if (err)
-      {
-        console.log(err);
+    .findOne({_id: ObjectId(req.params.id)})
+    .exec((err, sponsor) => {
+      if (err) {
         res.sendStatus(500);
-      } 
-      else res.sendStatus(200);
+        throw err;
+      }
+      else if (!sponsor){
+        res.sendStatus(404)
+        return;
+      }
+      Sponsor
+      .remove({_id: req.params.id}, (err, data) =>{
+        if (err)
+        {
+          console.log(err);
+          res.sendStatus(500);
+        } 
+        else {
+          fs.unlink(sponsor.logoPath, (err) => {
+            if (err) throw err;
+            res.sendStatus(200);
+          })
+        }
+      });
     });
   },
 
   update: (req, res) => {
+    let errors = Sponsor.validate(req.body);
+    if (errors.length) return res.multiError(errors, 400);
+    
     Sponsor
     .update({_id: req.params.id }, {$set: {
         name: req.body.name,
@@ -135,7 +170,11 @@ module.exports = {
           console.log(err);
           res.sendStatus(500);
         }
-        else res.sendStatus(200);
+        else if (data.nModified == 1) {
+          res.sendStatus(200);
+        } else {
+          res.sendStatus(404);
+        }
       });
   }
 };

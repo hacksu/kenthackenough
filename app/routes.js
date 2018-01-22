@@ -130,7 +130,7 @@ module.exports = function (router) {
   // POST-AUTH Update Sponsor
   router.post('/sponsors/:id', auth('admin', 'staff'), sponsors.update);
   // POST-AUTH Logo 
-  router.post('/sponsors/:id/logo', sponsors.putLogo);  
+  router.post('/sponsors/:id/logo', auth('admin', 'staff'), sponsors.putLogo);  
 
   // DELETE-AUTH Remove
   router.delete('/sponsors/:id', auth('admin', 'staff'), sponsors.remove);

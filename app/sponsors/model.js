@@ -7,6 +7,7 @@ let Sponsor = mongoose.model('Sponsor', {
     name: {type: String, unique: true },
     link: String,
     logoPath: String,
+    amount: Number 
 });
 
 function validate(sponsor)
@@ -21,6 +22,11 @@ function validate(sponsor)
             type: 'string',
             required: true,
             message: 'You must provide a sponsor link.'
+        },
+        amount: {
+            type: 'number',
+            required: true,
+            message: 'You must provide a amount donated.'
         }
     });
     return test.validate(sponsor);

@@ -14,7 +14,7 @@ module.exports = {
   allSponsors: (req, res) => {
     Sponsor
     // Exclude the logo because it contains a server path.
-    .find({ }, { logoPath:0 })
+    .find({ }, { logoPath:0, amount:0 })
     .sort({"amount": -1})
     .exec((err, spons) => {
         res.send(spons);
@@ -147,10 +147,16 @@ module.exports = {
           res.sendStatus(500);
         } 
         else {
-          fs.unlink(sponsor.logoPath, (err) => {
-            if (err) throw err;
+          // If there is an image on disk remove it.
+          if (sponsor.logoPath) {
+            fs.unlink(sponsor.logoPath, (err) => {
+              if (err) throw err;
+              res.sendStatus(200);
+            })
+          } else{
+            // No image remove complete.
             res.sendStatus(200);
-          })
+          }
         }
       });
     });

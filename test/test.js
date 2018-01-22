@@ -14,6 +14,7 @@ var news = require('./modules/news');
 var events = require('./modules/events');
 var statistics = require('./modules/statistics');
 var about = require('./modules/about');
+var sponsors = require('./modules/sponsors');
 
 
 users((admin) => {
@@ -26,5 +27,6 @@ users((admin) => {
   events(admin.key, admin.token);
   statistics(admin.key, admin.token);
   about(admin.key, admin.token);
+  sponsors(admin.key, admin.token);
 
 });

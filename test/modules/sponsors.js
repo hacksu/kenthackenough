@@ -41,7 +41,7 @@ module.exports = function (adminKey, adminToken) {
       request(app)
         .post('/v1.0/sponsors')
         .auth(adminKey, adminToken)
-        .send({name: 'Hacksu industries', link: 'http://hacksu.cs.kent.edu/'})
+        .send({name: 'Hacksu industries', link: 'http://hacksu.cs.kent.edu/', amount: 100})
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;
@@ -85,7 +85,7 @@ module.exports = function (adminKey, adminToken) {
       request(app)
         .post('/v1.0/sponsors/5a641e500000000000000000')
         .auth(adminKey, adminToken)
-        .send({name: 'Hacksu industries', link: 'http://hacksu.cs.kent.edu/#test'})
+        .send({name: 'Hacksu industries', link: 'http://hacksu.cs.kent.edu/#test', amount: 100})
         .expect(404)
         .end(function (err, res) {
           if (err) throw err;
@@ -97,7 +97,7 @@ module.exports = function (adminKey, adminToken) {
       request(app)
         .post('/v1.0/sponsors/'+id)
         .auth(adminKey, adminToken)
-        .send({name: 'Hacksu industries', link: 'http://hacksu.cs.kent.edu/#test'})
+        .send({name: 'Hacksu industries', link: 'http://hacksu.cs.kent.edu/#test', amount: 100})
         .expect(200)
         .end(function (err, res) {
           if (err) throw err;

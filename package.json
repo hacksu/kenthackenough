@@ -34,6 +34,7 @@
     "marked": "0.3.x",
     "mongoose": "4.1.x",
     "multiparty": "4.1.x",
+    "mv": "^2.1.1",
     "node-gcm": "0.12.x",
     "redis": "2.0.x",
     "sendgrid": "1.9.x",

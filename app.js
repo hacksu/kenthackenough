@@ -43,6 +43,7 @@ log.info(`👂  Listening on port ${port}`);
 module.exports.app = app;
 module.exports.router = router;
 module.exports.io = io;
+module.exports.projectRoot = __dirname;
 
 // Include routes
 routes(router);

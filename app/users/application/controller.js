@@ -10,6 +10,10 @@ let multiparty = require('multiparty');
 let fs = require('fs');
 let path = require('path');
 let uuid = require('uuid');
+let projectRoot = require('../../../app').projectRoot;
+let config = require('../../../config/config');
+let mv = require('mv');
+
 
 module.exports = {
 
@@ -295,16 +299,20 @@ module.exports = {
     let form = new multiparty.Form();
     form.parse(req, (err, fields, files) => {
       if (err || !files.resume) return res.singleError('Resume file required', 400);
-      fs.readFile(files.resume[0].path, (err, data) => {
-        if (err) return res.internalError();
-        let ext = path.extname(files.resume[0].path);
-        let name = uuid.v4();
-        let dest = path.join(__dirname, '../../../uploads/' + name + ext);
-        fs.writeFile(dest, data, (err) => {
-          if (err) return res.internalError();
-          return res.status(200).json({
-            filename: name + ext
-          });
+      if (err) return res.internalError();
+      let ext = path.extname(files.resume[0].path);
+      let name = uuid.v4();
+      let dest = path.join(projectRoot, '/' + config.resumeDir + name + ext);
+      mv(files.resume[0].path, dest, {
+        mkdirp: true,
+        clobber: true
+      }, (err) => {
+        if (err) {
+          return res.status(500);
+          throw err;
+        }
+        return res.status(200).json({
+          filename: name + ext
         });
       });
     });

@@ -54,6 +54,9 @@ module.exports = {
   },
   
   // The location that sponsor logos are saved to.
-  logoDir: 'logos/'
+  logoDir: 'logos/',
+
+  // The location that resumes are saved to.
+  resumeDir: 'resumes/'
 
 };

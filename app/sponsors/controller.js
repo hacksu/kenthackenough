@@ -24,7 +24,7 @@ module.exports = {
   getSponsor: (req, res) => {
     Sponsor
     // Exclude the logoPath because it contains a server path.
-    .findOne({_id: ObjectId(req.params.id)}, { logoPath:0 })
+    .findOne({_id: ObjectId(req.params.id)}, { logoPath:0, amount:0 })
     .exec((err, spons) => {
         res.send(spons);
     });

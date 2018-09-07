@@ -1,7 +1,8 @@
 'use strict'
 
 let Points = require('./model');
-let Sponsor = require('../sponsors/model')
+let Sponsor = require('../sponsors/model');
+let ObjectId = require('mongoose').Types.ObjectId;
 
 module.exports = {
     scoreboard: (req, res) => {
@@ -21,12 +22,8 @@ module.exports = {
      * pVal = point value > 0
      */
     createSingleUse: (req, res) => {
-        console.log("createSingleUse");
         let sId = req.params.sId;
         let pVal = req.params.pVal;
-
-        console.log("sId", sId);
-        console.log("pVal", pVal);
 
         if (pVal < 0) {
             res.status(412);
@@ -64,8 +61,49 @@ module.exports = {
         res.send("createMultiUse");
     },
     redeem: (req, res) => {
-        console.log("redeem");
-        res.status(200);
-        res.send("redeem");
+        let uId = req.params.userId;
+        let pId = req.params.pointId;
+
+        Points
+        .findOne({
+            _id: ObjectId(pId)
+        }, (err, p) => {
+            if (err) {
+                return res.internalError();
+            }
+
+            // Verify the points exist.
+            if (!p) {
+                res.status(412);
+                res.send("Points not found.")
+                return
+            }
+
+            // Verify the points haven't been given.
+            if (p.redeemer) {
+                res.status(409)
+                res.send("Points already claimed.")
+                return
+            }
+
+            if (p.sponsor == null) {
+                // Multiuse point codes.
+                throw "Not implemented.";
+
+            } else {
+                // Single use point codes.
+                Points.
+                update(
+                    { _id: pId },
+                    { redeemer: ObjectId(uId) },
+                    (err, p) => {
+                        if (err) {
+                            return res.internalError();
+                        }
+                        res.status(200);
+                        res.send("Redeemed!");
+                    });
+            }
+        })
     }
 }

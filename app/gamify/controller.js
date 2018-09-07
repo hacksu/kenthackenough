@@ -11,9 +11,22 @@ module.exports = {
         res.send("scoreboard");
     },
     userPoints: (req, res) => {
-        console.log("userPoints");
-        res.status(200);
-        res.send("userPoints");
+        let uId = req.params.userId;
+        
+        Points
+        .aggregate([
+            { $match: { redeemer: ObjectId(uId) }},
+            { $group: {
+                _id: ObjectId(uId),
+                points: { $sum: '$pointValue'}
+            }}
+        ])
+        .exec((err, points) => {
+            if (err) throw res.internalError();
+
+            res.status(200);
+            res.json(points);
+        })
     },    
 
     /**

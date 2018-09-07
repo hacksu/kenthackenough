@@ -142,7 +142,7 @@ module.exports = function (router) {
   // GET points(user)
   router.get('/points/user/:userId', gamify.userPoints);
   // POST createSingleUse(sponsor)
-  router.post('points/singleuse', gamify.createSingleUse);
+  router.get('/points/singleuse/:sId/:pVal', gamify.createSingleUse);
   // POST createMultiUse() <-- AUTH
   router.post('/points/multiuse', auth('staff', 'admin'), gamify.createMultiUse);
   // GET redeem(userID, pointID)

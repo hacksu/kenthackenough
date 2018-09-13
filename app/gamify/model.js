@@ -1,4 +1,4 @@
-//  application: {type: mongoose.Schema.Types.ObjectId, ref: 'Application'},
+"use strict"
 
 let mongoose = require('mongoose');
 

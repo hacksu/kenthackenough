@@ -104,6 +104,7 @@ module.exports = function (router) {
   router.delete('/users/:id/application', auth('admin', 'staff'), application.deleteById);
   router.post('/users/application/resume', application.uploadResume);
   router.get('/users/application/resume/:filename', application.getResume);
+  router.get('/users/name/:uId', application.getName);
 
   // users
   router.post('/users', users.create);

@@ -325,6 +325,22 @@ module.exports = {
   getResume: (req, res) => {
     let file = path.join(__dirname, '../../../uploads', req.params.filename);
     res.download(file);
+  },
+
+  getName: (req, res) => {
+    let uId = req.params.uId;
+    
+    User
+    .findById(uId, (err, user) => {
+      if (err || !user)  return res.internalError();
+
+      Application
+      .findById(user.application, (err, app) => {
+        if (err || !app) return res.internalError();
+
+        res.send(app.name);
+      })
+    })
   }
 
 };

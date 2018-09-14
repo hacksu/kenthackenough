@@ -20,7 +20,7 @@ module.exports = {
             }}
         ])
         .exec((err, points) => {
-            if (err) throw err;
+            if (err) return res.internalError();
 
             res.status(200);
             res.json(points);
@@ -41,7 +41,7 @@ module.exports = {
             }}
         ])
         .exec((err, points) => {
-            if (err) throw res.internalError();
+            if (err) return res.internalError();
 
             res.status(200);
             res.json(points);

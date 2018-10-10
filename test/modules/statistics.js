@@ -86,6 +86,7 @@ module.exports = function (adminKey, adminToken) {
           res.body.should.have.property('large');
           res.body.should.have.property('xlarge');
           res.body.should.have.property('xxlarge');
+          res.body.should.have.property('xxxlarge');
 
           done();
         });
@@ -106,6 +107,7 @@ module.exports = function (adminKey, adminToken) {
           res.body.should.have.property('large');
           res.body.should.have.property('xlarge');
           res.body.should.have.property('xxlarge');
+          res.body.should.have.property('xxxlarge');
           done();
         });
     });

@@ -379,7 +379,7 @@ module.exports = {
     User
       .findOne({email: req.body.email})
       .exec((err, user) => {
-        if (err) return res.internalError();
+        if (err || user == null) return res.internalError();
         let random = uuid.v4().substr(0, 8);
         let newSalt = User.Helpers.salt();
         let newHash = User.Helpers.hash(random, newSalt);

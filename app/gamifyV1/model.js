@@ -1,4 +1,5 @@
 'use strict';
+
 let mongoose = require('mongoose');
 let schema = require('validate');
 let GAMIFY_COLLECTION = 'collection';
@@ -10,6 +11,7 @@ let Gamify = mongoose.model('gamify', {
     pointID: Number,
     email: String
 });
+
 function validate(gamify)
 {
     let test = schema({

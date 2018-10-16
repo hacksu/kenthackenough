@@ -65,6 +65,10 @@ module.exports = {
     })
     .count()
     .exec((err, cnt) => {
+        if (err) {
+            res.status(400);
+            res.send(err.message);
+        }
         if (cnt <= 0)
         {
           Gamify(points).save((err, p) => {

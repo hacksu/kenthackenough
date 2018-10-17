@@ -4,6 +4,15 @@ let Gamify = require('./model');
 let User = require('../users/model');
 let Application = require('../users/application/model');
 
+let codeDict = {
+  test: {
+    userID: 432,
+    points: 50,
+    sponsorID: 'things',
+    reason: 'stuff'
+  }
+}
+
 module.exports = {
   leaderboard: (req, res) => {
     Gamify
@@ -44,14 +53,17 @@ module.exports = {
   },
   addPoints: (req, res) => {    
     let test = /^[^@]*/;
-    let points = {
-      userID: req.user._id,
-      points: req.params.points,
-      sponsorerID: req.params.src,
-      reason: req.params.reason,
-      pointID: req.params.pid,
-      email: test.exec(req.user.email)[0]
-    };
+
+    if (!(req.params.pid in codeDict)) {
+      res.status(400);
+      res.send('Invalid point id.')
+      return;
+    }
+
+    let points = codeDict[req.params.pid];
+    points.userID = req.user._id,
+    points.email = test.exec(req.user.email)[0]
+    
     if (!Gamify.validate(points))
     {
       console.log('invalid input');

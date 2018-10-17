@@ -75,6 +75,11 @@ module.exports = {
             res.send('ok');
           });
         }
+        else
+        {
+          res.status(409);
+          res.send('You\'ve already redeemed the points.')
+        }
     });
   },
 }; 

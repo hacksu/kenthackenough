@@ -4,14 +4,7 @@ let Gamify = require('./model');
 let User = require('../users/model');
 let Application = require('../users/application/model');
 
-let codeDict = {
-  test: {
-    userID: 432,
-    points: 50,
-    sponsorID: 'things',
-    reason: 'stuff'
-  }
-}
+let codeDict = require('./validCodes');
 
 module.exports = {
   leaderboard: (req, res) => {
@@ -59,6 +52,8 @@ module.exports = {
       res.send('Invalid point id.')
       return;
     }
+
+    console.log(req.params.pid);
 
     let points = codeDict[req.params.pid];
     points.userID = req.user._id,

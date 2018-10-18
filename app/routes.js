@@ -27,7 +27,7 @@ module.exports = function (router) {
   let users = require('./users/controller');
   let application = require('./users/application/controller');
   let sponsors = require('./sponsors/controller');
-  let gamify = require('./gamify/controller');
+  let gamify = require('./gamifyV1/controller'); 
 
   /*
   ------------------------------------------------------------------------------
@@ -137,15 +137,7 @@ module.exports = function (router) {
   // DELETE-AUTH Remove
   router.delete('/sponsors/:id', auth('admin', 'staff'), sponsors.remove);
 
-  // Gamify
-  // GET points() <-- Scoreboard
-  router.get('/points/scoreboard', gamify.scoreboard);
-  // GET points(user)
-  router.get('/points/user/:userId', gamify.userPoints);
-  // POST createSingleUse(sponsor)
-  router.get('/points/singleuse/:sId/:pVal', gamify.createSingleUse);
-  // POST createMultiUse() <-- AUTH
-  router.get('/points/multiuse/:pVal', auth('staff', 'admin'), gamify.createMultiUse);
-  // GET redeem(userID, pointID)
-  router.get('/points/redeem/:userId/:pointId', gamify.redeem);
+  // gamify
+  router.get('/gamify/scoreboard', gamify.leaderboard);
+  router.get('/gamify/:pid/:points/:src/:reason', auth(), gamify.addPoints);
 };

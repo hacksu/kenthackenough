@@ -16,12 +16,12 @@ module.exports = {
 
   // Database to save users and other data to
   mongo: {
-    uri: 'mongodb://localhost:27017/test'
+    uri: 'mongodb://mongo:27017/test'
   },
 
   // Redis is used for caching
   redis: {
-    host: '127.0.0.1',
+    host: 'redis',
     port: 6379
   },
 

@@ -37,4 +37,7 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
-Dockerfile
+
+# ignore db
+data
+

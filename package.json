@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "The world's best hackathon website.",
   "scripts": {
-    "test": "make test"
+    "start": "node app.js | bunyan",
+    "test": "mocha test/test.js"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,7 @@
   "dependencies": {
     "bcryptjs": "2.3.x",
     "body-parser": "1.14.x",
-    "bunyan": "^1.5.1",
+    "bunyan": "^1.8.12",
     "compression": "1.5.x",
     "cors": "2.7.x",
     "csv": "0.4.x",

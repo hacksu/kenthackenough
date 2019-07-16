@@ -5,9 +5,31 @@ The world's best hackathon website.
 [![Travis](https://img.shields.io/travis/rust-lang/rust.svg)]()
 
 ## About
-This API was made in an effort to ease the organization of Kent Hack Enough as we continue to grow in size. This project was built and is maintained by Paul Dilyard (@pdilyard). Feel free to contact me with any questions.
+This API was made in an effort to ease the organization of Kent Hack Enough as we continue to grow in size. This project was built by Paul Dilyard (@pdilyard), and is currently maintained by HacKSU leadership.
 
-To get familiar with this repository, please check out the documentation in the sidebar on the right. If you're interested in contributing, check out the [Contributing](Contributing) guide. If you're building a client for the API, you can get started by checking out the [API](API) guides.
+## Installation
+First, make sure that the appropriate version of Docker is installed (consult Google if you aren't sure what to install on your OS).
+
+Next, clone the repository
+
+``` git clone https://github.com/hacksu/kenthackenough.git ```
+
+After cloning the repository, navigate into it and install the npm packages
+
+``` cd kenthackenough ```
+
+``` npm install ```
+
+You should now be ready to run the API and contribute to the code!
+
+## Running
+Running the API is very simple thanks to Docker
+
+Simply run
+``` docker-compose up ```
+to start the API, and then 
+``` docker-compose down ```
+to stop the containers.
 
 ## Documentation
 See the repository's [Wiki](https://github.com/hacksu/kenthackenough/wiki) for detailed documentation.

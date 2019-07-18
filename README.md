@@ -20,6 +20,12 @@ After cloning the repository, navigate into it and install the npm packages
 
 ``` npm install ```
 
+Finally, you'll want to set up a `config.js` file
+
+``` cp config/config_example.js config/config.js ```
+
+Then edit `config/config.js` and enter your desired values
+
 You should now be ready to run the API and contribute to the code!
 
 ## Running

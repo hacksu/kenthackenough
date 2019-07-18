@@ -31,11 +31,20 @@ You should now be ready to run the API and contribute to the code!
 ## Running
 Running the API is very simple thanks to Docker
 
+Then, you'll want to set up a `config.js` file
+
+``` cp config/config_example.js config/config.js ```
+
+Then edit `config/config.js` and enter your desired values
+
 Simply run
 ``` docker-compose up ```
 to start the API, and then 
 ``` docker-compose down ```
 to stop the containers.
+If you make changes to the config file or any other file in the project, make sure to run 
+`docker-compose build` to ensure that those changes got copied to your container!
+Then you're ready to restart the container with `docker-compose up`
 
 ## Documentation
 See the repository's [Wiki](https://github.com/hacksu/kenthackenough/wiki) for detailed documentation.

@@ -139,5 +139,6 @@ module.exports = function (router) {
 
   // gamify
   router.get('/gamify/scoreboard', gamify.leaderboard);
-  router.get('/gamify/:pid/:points/:src/:reason', auth(), gamify.addPoints);
+  router.get('/gamify/:sid', gamify.sponsorPoints)
+  router.get('/gamify/:pid/:reason/:sid/:uid', gamify.addPoints);
 };

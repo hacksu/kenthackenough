@@ -4,7 +4,7 @@ module.exports = {
     example: {
         pointID: 123,
         points: 0,
-        sponsorerID: 'things',
+        sponsorID: 'things',
         reason: 'stuff'
       }
 };

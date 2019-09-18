@@ -6,7 +6,7 @@ let GAMIFY_COLLECTION = 'collection';
 let Gamify = mongoose.model('gamify', {
     userID: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } ,
     points: Number,
-    sponsorerID: String,
+    sponsorID: String,
     reason: String,
     pointID: Number,
     email: String
@@ -25,7 +25,7 @@ function validate(gamify)
             required: true,
             message: 'Must specify points.'
         },
-        sponsorerID: {
+        sponsorID: {
             type: 'string',
             required: true,
             message: 'Must specify a source.'

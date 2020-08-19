@@ -40,7 +40,7 @@ module.exports = {
             'RSVPd?': (user.application.going) ? 'Yes' : 'No',
             'Link': user.application.link || '',
             'Status': help.capitalizeFirstLetter(user.application.status) || '',
-            'Checked In?': (user.application.checked) ? 'Yes' : 'No'
+            'Checked In?': (user.application.checked) ? 'Yes' : 'No',
           };
         });
         res.setHeader('Content-disposition', 'attachment; filename=attendees.csv');
@@ -61,16 +61,18 @@ module.exports = {
         if (err) return res.internalError();
 
         let files = applications.filter((application) => {
-          return application.resume && application.resume.length > 0;
+          return application.resume && application.resume.length > 0 && application.resume.length <= 40;
         }).map((application) => {
 
           // normalize file names
           let newName = titleCase(application.name).replace(/\s/g, '');
           let newExt = path.extname(application.resume);
-          return {
-            path: path.join(__dirname, '../../uploads/', application.resume),
+          let a = {
+            path: path.join(__dirname, '../../resumes/', application.resume),
             name: newName + newExt
           };
+		  console.log(a);
+		  return a;
 
         });
 

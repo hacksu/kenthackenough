@@ -14,6 +14,7 @@ let projectRoot = require('../../../app').projectRoot;
 let config = require('../../../config/config');
 let mv = require('mv');
 
+let RegisteredEmail = fs.readFileSync(__dirname + '/templates/registrationTemplate.html').toString();
 
 module.exports = {
 
@@ -28,7 +29,7 @@ module.exports = {
       .select('email application role created')
       .exec((err, user) => {
         if (err) return res.internalError();
-        if (user.application) return res.clientError('You have already submitted an application', 409);
+        try { if (user.application) return res.clientError('You have already submitted an application', 409); } catch(e) { };
         let errors = Application.validate(req.body);
         if (errors.length) return res.multiError(errors, 400);
         extend(req.body, {
@@ -39,6 +40,10 @@ module.exports = {
         });
         if (req.body.dietary) req.body.dietary = req.body.dietary.split('|');
 
+		if (user == null) {
+			console.log("No user was defined...");
+			return res.clientError('An error occured. No User was defined...? umm.....', 409);
+		}
         new Application(req.body).save((err, application) => {
           if (err) return res.internalError();
           user.application = application._id;
@@ -48,7 +53,7 @@ module.exports = {
             if (process.env.NODE_ENV == 'production') {
               let email = new Email({
                 subject: 'Your Kent Hack Enough Application',
-                body: '# Thanks for applying to Kent Hack Enough!\nWe appreciate your interest.',
+                body: RegisteredEmail, //'# Thanks for applying to Kent Hack Enough!\nWe appreciate your interest.',
                 recipients: {
                   emails: [user.email]
                 }
@@ -323,7 +328,7 @@ module.exports = {
   * GET /users/application/resume/:filename
   */
   getResume: (req, res) => {
-    let file = path.join(__dirname, '../../../uploads', req.params.filename);
+    let file = path.join(__dirname, '../../../resumes', req.params.filename);
     res.download(file);
   },
 

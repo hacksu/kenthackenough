@@ -1,3 +1,12 @@
+
+```
+git remote add live ssh://root@khe.io/var/www/kenthackenough.git
+git push live master
+```
+
+## The following information is likely out of date
+
+
 ![Kent Hack Enough](https://khe.io/img/blue_logo.svg "Kent Hack Enough")
 ---
 The world's best hackathon website.
@@ -39,10 +48,10 @@ Then edit `config/config.js` and enter your desired values
 
 Simply run
 ``` docker-compose up ```
-to start the API, and then 
+to start the API, and then
 ``` docker-compose down ```
 to stop the containers.
-If you make changes to the config file or any other file in the project, make sure to run 
+If you make changes to the config file or any other file in the project, make sure to run
 `docker-compose build` to ensure that those changes got copied to your container!
 Then you're ready to restart the container with `docker-compose up`
 

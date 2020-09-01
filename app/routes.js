@@ -27,7 +27,7 @@ module.exports = function (router) {
   let users = require('./users/controller');
   let application = require('./users/application/controller');
   let sponsors = require('./sponsors/controller');
-  let gamify = require('./gamifyV1/controller'); 
+  let gamify = require('./gamifyV1/controller');
 
   /*
   ------------------------------------------------------------------------------
@@ -118,21 +118,22 @@ module.exports = function (router) {
   router.patch('/users/:id', auth('admin'), users.patchById);
   router.delete('/users/:id', auth('admin'), users.delete);
   router.post('/users/reset', users.resetPassword);
+  router.get('/verify/email/:email', users.emailExists);
 
   // sponsors
   // GET Sponsor List
   router.get('/sponsors', sponsors.allSponsors);
   // GET Sponsor
-  router.get('/sponsors/:id', sponsors.getSponsor);  
+  router.get('/sponsors/:id', sponsors.getSponsor);
   // GET Logo
   router.get('/sponsors/:id/logo', sponsors.getLogo);
-  
+
   // POST-AUTH New Sponsor
   router.post('/sponsors/', auth('admin', 'staff'), sponsors.add);
   // POST-AUTH Update Sponsor
   router.post('/sponsors/:id', auth('admin', 'staff'), sponsors.update);
-  // POST-AUTH Logo 
-  router.post('/sponsors/:id/logo', auth('admin', 'staff'), sponsors.putLogo);  
+  // POST-AUTH Logo
+  router.post('/sponsors/:id/logo', auth('admin', 'staff'), sponsors.putLogo);
 
   // DELETE-AUTH Remove
   router.delete('/sponsors/:id', auth('admin', 'staff'), sponsors.remove);

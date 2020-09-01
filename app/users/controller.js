@@ -398,6 +398,35 @@ module.exports = {
           return res.status(200).json({});
         });
       });
-  }
+  },
+
+  emailExists: (req, res) => {
+    try {
+      let email = req.params.email;
+      User.findOne({
+        email: email,
+      }).exec((err, user) => {
+        if (err || user == null) {
+          res.json({
+            valid: false,
+            email: email,
+            msg: (err || 'User does not exist'),
+          })
+        } else {
+          res.json({
+            valid: true,
+            email: email,
+          })
+        }
+      })
+    } catch(e) {
+      console.error(e);
+      res.json({
+        valid: false,
+        email: email,
+        error: 'An error occured',
+      })
+    }
+  },
 
 };

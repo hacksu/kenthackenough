@@ -36,7 +36,7 @@ module.exports = function (router) {
   */
 
   // debug version to check if deploy actually works
-  router.get('/debug_version', (req, res) => res.send('1.2'));
+  router.get('/debug_version', (req, res) => res.send('1.3'));
 
   // about
   router.put('/about', auth('admin', 'staff'), about.put);

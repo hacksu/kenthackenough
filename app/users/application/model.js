@@ -59,7 +59,7 @@ let Helpers = {
       phone: {
         required: true,
         type: 'number',
-        match: /^[0-9]{10,20}$/,
+        match: /^[0-9]{9,20}$/,
         message: 'You must provide a valid phone number'
       },
       shirt: {

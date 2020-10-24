@@ -122,6 +122,7 @@ module.exports = function (router) {
   router.delete('/users/:id', auth('admin'), users.delete);
   router.post('/users/reset', users.resetPassword);
   router.get('/verify/email/:email', users.emailExists);
+  router.get('/verify/email', users.emailExists);
 
   // sponsors
   // GET Sponsor List

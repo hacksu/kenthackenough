@@ -402,7 +402,7 @@ module.exports = {
 
   emailExists: (req, res) => {
     try {
-      let email = req.params.email;
+      let email = req.params.email || req.query.email;
       User.findOne({
         email: email,
       }).exec((err, user) => {

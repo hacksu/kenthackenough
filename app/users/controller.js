@@ -408,15 +408,28 @@ module.exports = {
       }).exec((err, user) => {
         if (err || user == null) {
           res.json({
+            success: true,
             valid: false,
             email: email,
             msg: (err || 'User does not exist'),
           })
         } else {
-          res.json({
-            valid: true,
-            email: email,
-          })
+          Application.findByIdAndUpdate(user.application, { checked: true }).exec((err, application) => { // Checkin users when their email is verified via discord
+            if (err) {
+              res.json({
+                success: false,
+                valid: null,
+                error: "Failed to checkin user",
+                msg: err.toString(),
+              });
+              return;
+            }
+            res.json({
+              success: true,
+              valid: true,
+              email: email,
+            })
+          });
         }
       })
     } catch(e) {

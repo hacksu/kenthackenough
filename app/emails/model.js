@@ -3,7 +3,7 @@
 let mongoose = require('mongoose');
 let schema = require('validate');
 let config = rootRequire('config/config');
-let sendgrid = require('sendgrid')(config.sendgrid.username, config.sendgrid.password);
+let sendgrid = require('sendgrid')(config.sendgrid.key); // (config.sendgrid.username, config.sendgrid.password)
 let marked = require('marked');
 
 /**

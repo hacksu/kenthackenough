@@ -1,11 +1,41 @@
 import { mergeTypeDefs } from "@graphql-tools/merge";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { ApolloServer } from "apollo-server-express";
+import { GraphQLSchema } from "graphql";
+import { DocumentNode } from "graphql";
 
 
-export async function createApolloServer(config: any) {
+export interface ApolloModule {
+    typeDefs?: DocumentNode | string;
+    query?: {
+        [key: string]: any;
+    };
+    mutation?: {
+        [key: string]: any;
+    };
+    [key: string]: any;
+}
+
+export interface ApolloDirective {
+    (schema: GraphQLSchema, directiveName: string): GraphQLSchema;
+    typeDefs?: DocumentNode | string;
+    [key: string]: any;
+}
+export interface ApolloConfiguration {
+    modules?: {
+        [key: string]: ApolloModule;
+    };
+    directives?: {
+        [key: string]: ApolloDirective;
+    };
+    playground?: boolean;
+    [key: string]: any;
+}
+
+
+export async function createApolloServer(config: ApolloConfiguration) {
     const { modules, directives } = config;
-    let typeDefs = Object.values(directives).map((o: any) => o.typeDefs); // preload typeDefs with directive schemas
+    let typeDefs = Object.values(directives || []).map((o: any) => o.typeDefs); // preload typeDefs with directive schemas
     let Query = {};
     let Mutation = {};
     for (const name in modules) {
@@ -32,17 +62,17 @@ export async function createApolloServer(config: any) {
         //   upper: directiveToUpperCase
         // }
     }
-    config = Object.assign({
+    let config2: any = Object.assign({
         schema
     }, config)
-    delete config.directives;
-    delete config.modules;
-    const apollo = new ApolloServer(config)
+    delete config2.directives;
+    delete config2.modules;
+    const apollo = new ApolloServer(config2)
     await apollo.start()
     return apollo
 }
 
-export async function createApolloMiddleware(app: any, config) {
+export async function createApolloMiddleware(app: any, config: ApolloConfiguration) {
     config = Object.assign({
         modules: {},
         directives: {},

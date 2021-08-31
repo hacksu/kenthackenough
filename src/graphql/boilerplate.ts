@@ -12,7 +12,7 @@ export function gql(str: any) {
 }
 
 
-import { createApolloMiddleware } from "./apollo";
-export default ((config) => (app) => {
+import { ApolloConfiguration, createApolloMiddleware } from "./apollo";
+export default ((config: ApolloConfiguration) => (app: any) => {
     return createApolloMiddleware(app, config)
 })

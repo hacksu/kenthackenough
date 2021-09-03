@@ -10,7 +10,7 @@ export const ApolloServerConfig = {
     resolvers: {
         Query: {
             hello() {
-                return 'hi there!2'
+                return 'why is this not updating'
             }
         }
     }

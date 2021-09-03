@@ -6,7 +6,7 @@ Kent Hack Enough
 Let's try to organize organizing.
 @author Paul Dilyard
 */
-GLOBAL.rootRequire = function(name) {
+global.rootRequire = function(name) {
     return require(__dirname + '/' + name);
 };
 

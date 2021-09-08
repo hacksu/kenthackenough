@@ -31,6 +31,7 @@ let Application = mongoose.model('Application', {
   gender: String,         // gender
   major: String,          // degree
   conduct: Boolean,       // agree to MLH code of conduct?
+  mlh_emails: Boolean,       // receive pre and post-event emails from MLH?
   travel: Boolean,        // need travel reimbursement?
   resume: String,         // the file name of their resume
   link: String            // a link to github/linkedin/personal

@@ -1,0 +1,5 @@
+node_modules
+dist
+docker
+config/secrets.js
+docker/data

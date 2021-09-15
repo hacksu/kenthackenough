@@ -13,6 +13,8 @@ let uuid = require('uuid');
 let projectRoot = require('../../../app').projectRoot;
 let config = require('../../../config/config');
 let mv = require('mv');
+const formidable = require('formidable');
+require('os').tmpDir = require('os').tmpdir;
 
 let RegisteredEmail = fs.readFileSync(__dirname + '/templates/registrationTemplate.html').toString();
 
@@ -301,26 +303,60 @@ module.exports = {
   * POST /users/application/resume
   */
   uploadResume: (req, res) => {
-    let form = new multiparty.Form();
-    form.parse(req, (err, fields, files) => {
-      if (err || !files.resume) return res.singleError('Resume file required', 400);
-      if (err) return res.internalError();
-      let ext = path.extname(files.resume[0].path);
+    let fileData = [];
+    req.on('data', data => {
+      fileData.push(data);
+    });
+    req.on('end', () => {
+      fileData = Buffer.concat(fileData);
+      let boundary = req.get('content-type').split('; boundary=').pop();
+      let hexb = Buffer.from('\n--' + boundary, 'utf8').toString('hex');
+      let hexnl = Buffer.from('\r\n\r\n', 'utf8').toString('hex');
+      let hexfd = fileData.toString('hex');
+      let stuff = hexfd.split(hexnl);
+      let info = stuff.shift();
+      hexfd = stuff.join(hexnl);
+      info = Buffer.from(info, 'hex').toString('utf8');
+      let ext = path.extname(info.split('filename="').pop().split('"')[0]);
       let name = uuid.v4();
       let dest = path.join(projectRoot, '/' + config.resumeDir + name + ext);
-      mv(files.resume[0].path, dest, {
-        mkdirp: true,
-        clobber: true
-      }, (err) => {
+      fs.writeFile(dest, Buffer.from(hexfd.split(hexb)[0], 'hex'), function(err) {
         if (err) {
-          return res.status(500);
+          res.status(500).send('Upload Failed');
           throw err;
+          return;
         }
         return res.status(200).json({
           filename: name + ext
         });
-      });
-    });
+      })
+      
+    })
+    // let form = new multiparty.Form();
+    // form.parse(req, (err, fields, files) => {
+    //   Object.keys(fields).forEach(function(name) {
+    //     console.log('got field named ' + name);
+    //   });
+    //   console.log('uhh', files);
+    //   console.log(req.get('content-length'))
+    //   if (err || !files.resume) return res.singleError('Resume file required', 400);
+    //   if (err) return res.internalError();
+    //   let ext = path.extname(files.resume[0].path);
+    //   let name = uuid.v4();
+    //   let dest = path.join(projectRoot, '/' + config.resumeDir + name + ext);
+    //   mv(files.resume[0].path, dest, {
+    //     mkdirp: true,
+    //     clobber: true
+    //   }, (err) => {
+    //     if (err) {
+    //       return res.status(500);
+    //       throw err;
+    //     }
+    //     return res.status(200).json({
+    //       filename: name + ext
+    //     });
+    //   });
+    // });
   },
 
   /**

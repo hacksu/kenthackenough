@@ -17,6 +17,16 @@ const SUBSTITUTION_TAG = (name) => `%{${name}}%`;
 const UNSUBSCRIBE = SUBSTITUTION_TAG('unsubscribe');
 
 
+import sass from 'sass';
+export function Stylesheet(props) {
+    const file = props?.file || (__dirname + '/templates/styles/index.scss');
+    const data = sass.renderSync({
+        file,
+    }).css.toString('utf8');
+    return React.createElement('style', null, data)
+}
+
+
 interface EmailConfig<EmailContext = DefaultEmailContext> {
     subject?: string | Function;
     content: any;

@@ -16,7 +16,7 @@ services:
       file: docker/services.yml
       service: nginx
     environment:
-      - NGINX_HOST_API=http://host.docker.internal:3079
+      - NGINX_HOST_API=http://host.docker.internal:3080
       - NGINX_HOST_WEB=http://host.docker.internal:3000
     ports:
       - 80:80

@@ -1,5 +1,5 @@
 node_modules
 dist
 docker
-config/secrets.js
+config/secrets.*
 docker/data

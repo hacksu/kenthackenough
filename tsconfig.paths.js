@@ -5,9 +5,12 @@ const JSON5 = require('json5')
 const tsConfig = JSON5.parse(readFileSync('./tsconfig.json', { encoding: 'utf8' }))
 const tsConfigPaths = require('tsconfig-paths')
 
-const { compilerOptions: { paths, outDir } } = tsConfig;
+let { compilerOptions: { paths, outDir, rootDir, baseUrl } } = tsConfig;
 
-const baseUrl = outDir
+for (const key in paths) {
+    paths[key] = paths[key].map(o => o.split(rootDir).join(outDir))
+}
+
 tsConfigPaths.register({
     baseUrl,
     paths,

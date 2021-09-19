@@ -17,32 +17,40 @@ const SUBSTITUTION_TAG = (name) => `%{${name}}%`;
 const UNSUBSCRIBE = SUBSTITUTION_TAG('unsubscribe');
 
 
-interface EmailConfig {
-    subject?: string;
+interface EmailConfig<EmailContext = DefaultEmailContext> {
+    subject?: string | Function;
     content: any;
-    context?: any;
+    context?: EmailContext;
     [key: string]: any;
 }
 
-export class Email<TypeContext> implements EmailConfig {
+export interface DefaultEmailContext {
+    [key: string]: any;
+}
+
+export class Email<TypeContext = DefaultEmailContext> implements EmailConfig<TypeContext> {
     subject = "Kent Hack Enough";
     context: any = {};
     attachments = [];
     content: any;
 
-    constructor(args: EmailConfig) {
+    constructor(args: EmailConfig<TypeContext>) {
         Object.assign(this, args);
     }
 
-    contents(ctx?: TypeContext) {
-        const contentType = typeof this.content;
-        let content = this.content;
-        const context = {
+    ctx(ctx?: TypeContext) {
+        return {
             ...(this.context),
             ...(ctx || {}),
             UNSUBSCRIBE,
             __proto__: this,
         };
+    }
+
+    contents(ctx?: TypeContext) {
+        const contentType = typeof this.content;
+        let content = this.content;
+        const context = this.ctx(ctx);
         if (contentType == 'function') {
             content = content(context)
         }
@@ -57,6 +65,11 @@ export class Email<TypeContext> implements EmailConfig {
     }
 
     async send(email: string, ctx?: TypeContext) {
+        let subject = this.subject;
+        if (typeof subject == 'function') {
+            // @ts-ignore
+            subject = subject(this.ctx(ctx));
+        }
         const payload: MailDataRequired = {
             from: {
                 email: SENDGRID_FROM,
@@ -64,7 +77,7 @@ export class Email<TypeContext> implements EmailConfig {
             },
             to: email,
             ...this.contents(ctx),
-            subject: this.subject,
+            subject,
             trackingSettings: {
                 subscriptionTracking: {
                     enable: true,

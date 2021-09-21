@@ -1,5 +1,8 @@
+import config from 'config';
 import express from 'express';
-import { apollo } from '@graphql';
+import { apollo } from '@/graphql';
+
+Object.keys(config.get('paths')).forEach(key => config.path(key));
 
 const server = express()
 apollo(server, {

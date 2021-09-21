@@ -7,7 +7,7 @@ RUN npm install
 # Copy source code and build the project
 COPY ./src ./src
 COPY tsconfig.json .
-COPY dist.paths.js .
+COPY tsconfig.paths.js .
 RUN npm run build
 
 ENV NODE_ENV=production

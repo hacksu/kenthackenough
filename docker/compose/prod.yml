@@ -3,28 +3,30 @@ services:
 
   redis:
     extends:
-      file: docker/services.yml
+      file: ../services.yml
       service: redis
 
   mongo:
     extends:
-      file: docker/services.yml
+      file: ../services.yml
       service: mongo
 
   api:
     extends:
-      file: docker/services.yml
+      file: ../services.yml
       service: api
 
   nginx:
     extends:
-      file: docker/services.yml
+      file: ../services.yml
       service: nginx
     environment:
       - NGINX_HOST_API=http://api
       - NGINX_HOST_WEB=http://host.docker.internal:3000
     ports:
-      - 80:80
+      - ${NGINX_EXPOSE}:80
+      - ${MONGO_EXPOSE}:27017
+      - ${REDIS_EXPOSE}:6379
     links:
       - redis:redis
       - mongo:mongo

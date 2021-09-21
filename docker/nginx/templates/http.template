@@ -1,0 +1,11 @@
+
+server {
+    listen 80;
+    server_name khe.io default_server;
+    location /api {
+        proxy_pass $NGINX_HOST_API;
+    }
+    location / {
+        proxy_pass $NGINX_HOST_WEB;
+    }
+}

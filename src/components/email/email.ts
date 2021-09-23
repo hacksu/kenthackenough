@@ -2,11 +2,19 @@ import React from 'react';
 import sendgrid, { MailDataRequired } from '@sendgrid/mail';
 import { renderToStaticMarkup } from 'react-dom/server';
 
+import { EmailSent } from '@/events';
+
 import config from 'config';
 
 const SENDGRID_API_KEY = config.get('sendgrid.key');
 const SENDGRID_FROM = config.get('sendgrid.from');
 const SENDGRID_FROMNAME = config.get('sendgrid.fromName');
+
+sendgrid.setApiKey(SENDGRID_API_KEY);
+
+// todo: extract linked assets from emails and embed them as attachments
+
+// todo: have frontend "backdrops" that can be injected into pages (not email thing, just idk where to write this todo yet lol)
 
 
 // Used to define string-replacing for various substitutions
@@ -96,6 +104,7 @@ export class Email<TypeContext = DefaultEmailContext> implements EmailConfig<Typ
             },
         };
         console.log(payload);
-        // sendgrid.send(payload);
+        EmailSent.emit(payload);
+        return await sendgrid.send(payload);
     }
 }

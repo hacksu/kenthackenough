@@ -17,6 +17,11 @@ export type Post = {
   title?: Maybe<Scalars['String']>;
 };
 
+export type User = {
+  __typename?: 'User';
+  name?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   posts?: Maybe<Post>;

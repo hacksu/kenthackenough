@@ -12,6 +12,8 @@ import { Email } from "./email";
 
 import { WelcomeEmail } from './templates/welcome';
 
-WelcomeEmail.send('cseitz5@kent.edu', {
-    name: 'Chris'
-})
+// setTimeout(function() {
+//     WelcomeEmail.send('cseitz5@kent.edu', {
+//         name: 'Chris'
+//     }).then(console.log).catch(console.log);
+// }, 5000)

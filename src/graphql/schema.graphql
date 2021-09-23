@@ -3,6 +3,10 @@ type Post {
     title: String
 }
 
+type User {
+    name: String
+}
+
 type Query {
     posts: Post
 }

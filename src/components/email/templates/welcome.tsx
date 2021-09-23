@@ -6,7 +6,7 @@ export interface WelcomeEmailConfig {
 }
 
 export const WelcomeEmail = new Email<WelcomeEmailConfig>({
-    subject: ({ name }) => `Welcome to KHE, ${name}`,
+    subject: ({ name }) => `Welcome to KHE, ${name}!`,
     content(props: WelcomeEmailConfig) {
         return (
             <div>

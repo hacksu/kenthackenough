@@ -1,0 +1,85 @@
+
+* {
+    font-family: Ropa Sans,sans-serif;
+}
+
+.logo {
+    max-width: 500px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.logo-container {
+    text-align: center;
+    margin-top: 3em;
+}
+
+.background {
+    background: linear-gradient(45deg,#ffecb8,#ffe499 95%);
+    height: 100%;
+    width: 100vw;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: -1;
+}
+
+.squiggly-back {
+    opacity: 0.02;
+    margin-top: 8vh;
+    height: 84vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: url(https://khe.io/squiggly-back.svg);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: cover;
+    z-index: -2;
+}
+
+.center-card {
+    background-color: white;
+    border-radius: 0.5em;
+    max-width: 500px;
+    width: calc(80% - 2em);
+    padding: 2em;
+    margin: 2em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.inner-card {
+    border-radius: 0.5em;
+    padding: 1em;
+}
+
+h2 {
+    margin-bottom: 0.5em;
+}
+p {
+    margin-top: 0.25em;
+}
+
+h2.first {
+    margin-top: 0px;
+}
+
+a {
+    color: #1464cc;
+    text-decoration: none;
+}
+
+.hr-bottom {
+    border-bottom: 0.1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 0.2em;
+}
+
+.mail-disclaimer {
+    margin-top: 1em;
+    text-align: center;
+    opacity: 0.5;
+    padding: 0.5em;
+}

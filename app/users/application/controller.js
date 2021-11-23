@@ -16,7 +16,17 @@ let mv = require('mv');
 const formidable = require('formidable');
 require('os').tmpDir = require('os').tmpdir;
 
-let RegisteredEmail = fs.readFileSync(__dirname + '/templates/registrationTemplate.html').toString();
+
+const TemplateStyles = `<style>` + fs.readFileSync(__dirname + '/templates/styles.css', 'utf8') + `</style>`;
+global.ReplaceEmailStyles = function(str) {
+  return str.split(`<link href="./styles.css" rel="stylesheet" type="text/css">`)
+  .join(TemplateStyles);
+}
+
+let RegisteredEmail = ReplaceEmailStyles(
+  fs.readFileSync(__dirname + '/templates/registrationTemplate.html').toString()
+);
+
 
 module.exports = {
 
@@ -177,18 +187,18 @@ module.exports = {
             .exec((err, application) => {
               if (err) return res.internalError();
               if (req.body.status == Application.Status.APPROVED) {
-                var template = fs.readFileSync('app/users/application/templates/acceptedTemplate.html', 'utf8');
+                var template = ReplaceEmailStyles(fs.readFileSync('app/users/application/templates/acceptedTemplate.html', 'utf8'));
 
                 // Send acceptance email
                 new Email({
-                  subject: 'You\'ve been accepted to KHE!',
+                  subject: 'Your Kent Hack Enough registration has been approved!',
                   body: template,
                   recipients: {
                     emails: [user.email]
                   }
                 }).send();
               } else if (req.body.status == Application.Status.WAITLISTED) {
-                var template = fs.readFileSync('app/users/application/templates/waitlistTemplate.html', 'utf8');
+                var template = ReplaceEmailStyles(fs.readFileSync('app/users/application/templates/waitlistTemplate.html', 'utf8'));
 
                 // Send waitlist email
                 new Email({
@@ -210,7 +220,7 @@ module.exports = {
               }
 
               if (req.body.checked) {
-                var template = fs.readFileSync('app/users/application/templates/dayOfTemplate.html', 'utf8');
+                var template = ReplaceEmailStyles(fs.readFileSync('app/users/application/templates/dayOfTemplate.html', 'utf8'));
 
 
                 // Send email with day-of information

@@ -5,6 +5,7 @@ public/bower_components
 app.log
 config.js
 app/emails/general/content.md
+app/users/application/oldtemplates
 
 # Logs
 logs

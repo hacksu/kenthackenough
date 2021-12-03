@@ -414,22 +414,42 @@ module.exports = {
             msg: (err || 'User does not exist'),
           })
         } else {
-          Application.findByIdAndUpdate(user.application, { checked: true }).exec((err, application) => { // Checkin users when their email is verified via discord
-            if (err) {
+          Application.findById(user.application).exec((err_, application_) => {
+            if (err_) {
               res.json({
                 success: false,
                 valid: null,
                 error: "Failed to checkin user",
-                msg: err.toString(),
+                msg: err_.toString(),
               });
               return;
             }
-            res.json({
-              success: true,
-              valid: true,
-              email: email,
-            })
-          });
+            if (application_.status === 'approved') {
+              Application.findByIdAndUpdate(user.application, { checked: true }).exec((err, application) => { // Checkin users when their email is verified via discord
+                if (err) {
+                  res.json({
+                    success: false,
+                    valid: null,
+                    error: "Failed to checkin user",
+                    msg: err.toString(),
+                  });
+                  return;
+                }
+                res.json({
+                  success: true,
+                  valid: true,
+                  email: email,
+                })
+              });
+            } else {
+              res.json({
+                valid: false,
+                email: email,
+                error: 'Not Approved'
+              })
+            }
+          })
+          
         }
       })
     } catch(e) {

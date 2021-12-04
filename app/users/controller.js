@@ -439,6 +439,7 @@ module.exports = {
                   success: true,
                   valid: true,
                   email: email,
+                  name: application.name,
                 })
               });
             } else {

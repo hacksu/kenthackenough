@@ -28,6 +28,7 @@ module.exports = {
         if (!users || !users.length) return res.clientError('No attendees match that query');
         let list = users.map((user) => {
           return {
+            'Registered': user.created || '',
             'Name': user.application.name || '',
             'Email': user.email || '',
             'Phone': user.application.phone || '',

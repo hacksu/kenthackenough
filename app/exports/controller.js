@@ -16,7 +16,7 @@ module.exports = {
   attendees: (req, res) => {
     User
       .find()
-      .select('email application')
+      .select('created email application')
       .where({application: {$exists: true}})
       .sort('-created')
       .populate({
@@ -28,7 +28,7 @@ module.exports = {
         if (!users || !users.length) return res.clientError('No attendees match that query');
         let list = users.map((user) => {
           return {
-            'Registered': user.created || '',
+            'Registered': new Date(user.created).toUTCString(),
             'Name': user.application.name || '',
             'Email': user.email || '',
             'Phone': user.application.phone || '',

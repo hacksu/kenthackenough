@@ -40,10 +40,11 @@ module.exports = {
             'Shirt Size': user.application.shirt || '',
             'RSVPd?': (user.application.going) ? 'Yes' : 'No',
             'Link': user.application.link || '',
+            'First Time Hacker': user.application.first ? 'Yes' : 'No',
             'Status': help.capitalizeFirstLetter(user.application.status) || '',
             'Checked In?': (user.application.checked) ? 'Yes' : 'No',
             'Conduct': user.application.conduct ? 'Yes' : 'No',
-            'MLH Emails': user.application.mlh_emails ? 'Yes' : 'No'
+            'MLH Emails': user.application.mlh_emails ? 'Yes' : 'No',
           };
         });
         res.setHeader('Content-disposition', 'attachment; filename=attendees.csv');

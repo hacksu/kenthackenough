@@ -19,7 +19,7 @@
   "devDependencies": {
     "mocha": "2.3.x",
     "should": "7.1.x",
-    "supertest": "1.1.x"
+    "supertest": "6.3.x"
   },
   "dependencies": {
     "bcryptjs": "2.3.x",
